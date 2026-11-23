@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.MatrixMeasurableSpace
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSchwartzBruhatSupportedNhdsIntegralOne
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FourierTransformInversionLocalFieldPi
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -28,6 +29,7 @@ import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
 import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
 import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
 import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.NormNum.Irrational
 import Mathlib.Tactic.NormNum.IsCoprime
 import Mathlib.Tactic.NormNum.IsSquare
@@ -44,9 +46,100 @@ import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.FourierJacobiAverage
 import Development.AbelianVarietyTheory.Definitions.Foundations.SimpleSum
 
+-- This file was produced by scripts/clump.py from the modules listed below.
+-- Members: Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSchwartzBruhatSupportedNhdsIntegralOne, Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSchwartzBruhatSupportedNhdsIntegralOneStatement
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSchwartzBruhatSupportedNhdsIntegralOne =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSchwartzBruhatSupportedNhdsIntegralOne", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Foundations.MatrixMeasurableSpace\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FourierTransformInversionLocalFieldPi\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.FourierJacobiAverage\nimport Development.AbelianVarietyTheory.Definitions.Foundations.SimpleSum\npublic import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open MeasureTheory ValuativeRel Matrix GlobalTheory.SplitWeil GlobalTheory.RootEx GlobalTheory.IndefiniteRowSideFullHecke.FourierJacobiAverage
+
+namespace GlobalTheory.RootEx
+
+private theorem isLocallyConstant_indicator_const_of_isClopen {X : Type} [TopologicalSpace X] {B : Set X}
+    (hB : IsClopen B) (c : ℂ) : IsLocallyConstant (B.indicator fun _ => c) := by
+  rw [IsLocallyConstant.iff_exists_open]
+  intro x
+  by_cases hx : x ∈ B
+  · refine ⟨B, hB.isOpen, hx, fun y hy => ?_⟩
+    rw [Set.indicator_of_mem hy, Set.indicator_of_mem hx]
+  · refine ⟨Bᶜ, hB.isClosed.isOpen_compl, hx, fun y hy => ?_⟩
+    rw [Set.indicator_of_notMem hy, Set.indicator_of_notMem hx]
+
+private theorem sigmaCompactSpace_of_isNonarchimedeanLocalField (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
+    [IsNonarchimedeanLocalField k] : SigmaCompactSpace k := by
+  obtain ⟨g, hg⟩ := IsCyclic.exists_generator (α := (ValueGroupWithZero k)ˣ)
+  refine SigmaCompactSpace.of_countable
+    (Set.range fun m : ℤ => {x : k | valuation k x ≤ ((g ^ m : (ValueGroupWithZero k)ˣ) : ValueGroupWithZero k)})
+    (Set.countable_range _) ?_ ?_
+  · rintro _ ⟨m, rfl⟩
+    exact IsNonarchimedeanLocalField.isCompact_closedBall k _
+  · refine Set.eq_univ_of_forall fun x => ?_
+    by_cases hx : x = 0
+    · subst hx
+      refine Set.mem_sUnion.mpr ⟨_, ⟨0, rfl⟩, ?_⟩
+      rw [Set.mem_ofPred_eq, map_zero]
+      exact zero_le
+    · obtain ⟨m, hm⟩ := Subgroup.mem_zpowers_iff.mp
+        (hg (Units.mk0 (valuation k x) ((map_ne_zero (valuation k)).mpr hx)))
+      refine Set.mem_sUnion.mpr ⟨_, ⟨m, rfl⟩, ?_⟩
+      rw [Set.mem_ofPred_eq, hm, Units.val_mk0]
+
+
+open GlobalTheory.SplitWeil.FourierPi in
+theorem exists_SB_supported_integral_one : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (n : Type) [Fintype n] [DecidableEq n] (ν : Measure k) [ν.IsAddHaarMeasure] (U : Set (n → k)) (_ : U ∈ nhds (0 : n → k)), ∃ Ψ : SB (n → k), (∀ y, y ∉ U → Ψ.1 y = 0) ∧ ∫ y, Ψ.1 y ∂(Measure.pi fun _ => ν) = 1 := by
+  intro k _ _ _ _ _ _ n _ _ ν _ U hU
+  have := sigmaCompactSpace_of_isNonarchimedeanLocalField k
+  obtain ⟨s, hsU⟩ := exists_box_subset (k := k) (n := n) hU
+  have hBo : IsOpen (box (k := k) n s) := isOpen_box s
+  have hBc : IsCompact (box (k := k) n s) := isCompact_box s
+  have hBcl : IsClosed (box (k := k) n s) := isClosed_set_pi fun _ _ =>
+    AddSubgroup.isClosed_of_isOpen
+      { carrier := cball s
+        zero_mem' := by
+          show valuation k (0 : k) ≤ valuation k (s : k)
+          rw [map_zero]
+          exact zero_le
+        add_mem' := add_mem_cball
+        neg_mem' := neg_mem_cball } (isOpen_cball s)
+  have hBm : MeasurableSet (box (k := k) n s) :=
+    MeasurableSet.univ_pi fun _ => (isOpen_cball s).measurableSet
+  have h0 : (0 : n → k) ∈ box (k := k) n s := by
+    intro i _
+    show valuation k (0 : k) ≤ valuation k (s : k)
+    rw [map_zero]
+    exact zero_le
+  have hpos : 0 < (Measure.pi fun _ : n => ν) (box n s) := hBo.measure_pos _ ⟨0, h0⟩
+  have hfin : (Measure.pi fun _ : n => ν) (box n s) < ⊤ := hBc.measure_lt_top
+  have hreal : (Measure.pi fun _ : n => ν).real (box n s) ≠ 0 :=
+    (ENNReal.toReal_pos hpos.ne' hfin.ne).ne'
+  set c : ℂ := (((Measure.pi fun _ : n => ν).real (box n s) : ℝ) : ℂ)⁻¹ with hc
+  refine ⟨⟨(box (k := k) n s).indicator fun _ => c,
+    isLocallyConstant_indicator_const_of_isClopen ⟨hBcl, hBo⟩ c,
+    HasCompactSupport.intro' hBc hBcl fun y hy => Set.indicator_of_notMem hy _⟩, ?_, ?_⟩
+  · intro y hy
+    show (box (k := k) n s).indicator (fun _ => c) y = 0
+    exact Set.indicator_of_notMem (fun hb => hy (hsU hb)) _
+  · show ∫ y, (box (k := k) n s).indicator (fun _ => c) y ∂(Measure.pi fun _ => ν) = 1
+    rw [integral_indicator_const c hBm, Complex.real_smul, hc,
+      mul_inv_cancel₀ (Complex.ofReal_ne_zero.mpr hreal)]
+
+end GlobalTheory.RootEx
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSchwartzBruhatSupportedNhdsIntegralOne =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSchwartzBruhatSupportedNhdsIntegralOneStatement =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSchwartzBruhatSupportedNhdsIntegralOneStatement", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Foundations.MatrixMeasurableSpace\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSchwartzBruhatSupportedNhdsIntegralOne\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.FourierJacobiAverage\nimport Development.AbelianVarietyTheory.Definitions.Foundations.SimpleSum\n\n"}
+section -- clump:auto
 @[expose] public section
 
 open MeasureTheory ValuativeRel Matrix GlobalTheory.SplitWeil GlobalTheory.RootEx GlobalTheory.IndefiniteRowSideFullHecke.FourierJacobiAverage
 
 theorem _root_.GlobalTheory.T.exists_schwartzBruhat_supported_nhds_integral_one : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (n : Type) [Fintype n] [DecidableEq n] (ν : Measure k) [ν.IsAddHaarMeasure] (U : Set (n → k)) (_ : U ∈ nhds (0 : n → k)), ∃ Ψ : SB (n → k), (∀ y, y ∉ U → Ψ.1 y = 0) ∧ ∫ y, Ψ.1 y ∂(Measure.pi fun _ => ν) = 1 := by
   first | exact @GlobalTheory.RootEx.exists_SB_supported_integral_one | exact GlobalTheory.RootEx.exists_SB_supported_integral_one | (intros; apply GlobalTheory.RootEx.exists_SB_supported_integral_one <;> assumption)
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSchwartzBruhatSupportedNhdsIntegralOneStatement =====

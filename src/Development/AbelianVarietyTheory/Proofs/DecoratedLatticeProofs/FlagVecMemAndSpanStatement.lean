@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlagLevelCharacterEqPsiDivN
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlagVecMemAndSpan
+import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LevelSubgroupCharacterUnitary
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -25,6 +25,7 @@ import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
 import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
 import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
 import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.NormNum.Irrational
 import Mathlib.Tactic.NormNum.IsCoprime
 import Mathlib.Tactic.NormNum.IsSquare
@@ -39,6 +40,93 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 
+-- This file was produced by scripts/clump.py from the modules listed below.
+-- Members: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlagVecMemAndSpan, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlagVecMemAndSpanStatement
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlagVecMemAndSpan =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlagVecMemAndSpan", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlagLevelCharacterEqPsiDivN\nimport Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LevelSubgroupCharacterUnitary\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open NumberField IsDedekindDomain Matrix Formalism.MainNotions.S Formalism.L2.SG.HidaSetting Formalism.L2.DIV GlobalTheory.FlagBasis
+open scoped TensorProduct
+
+namespace GlobalTheory.FlagBasis
+
+theorem flagVec_mem_and_span (I : AutInst) (g : ℕ) {ρ k : ℕ} (e0 f0 : Fin ρ → VA I) (z0 : VA I)
+    (bw bwd : Fin k → VA I) (ew : I.E ⊗[I.F] Formalism.MainNotions.S.Af I.F) :
+    IsRefFrame I g e0 f0 z0 bw bwd ew → I.n = 2 * ρ + k + 1 →
+      (∀ j, flagVec e0 f0 z0 bw bwd j ∈ I.Lf) ∧
+        ∀ y ∈ I.Lf, InMod I g (Set.range fun j : Fin I.n => flagVec e0 f0 z0 bw bwd j.val) y := by
+  intro hF hn
+  obtain ⟨⟨hef, hz, hb⟩, -, -, -, ⟨hidem, horth, hint, -⟩, ⟨hbw, hbwd⟩, -, hspan⟩ := hF
+  refine ⟨fun j => ?_, fun y hy => ?_⟩
+  · unfold flagVec
+    split_ifs with h1 h2 h3 h4
+    · exact (hef _).1
+    · exact I.Lf.add_mem (hb _).1 (hb _).2
+    · exact hz
+    · exact (hef _).2
+    · exact I.Lf.zero_mem
+  · set R : Set (VA I) := Set.range fun j : Fin I.n => flagVec e0 f0 z0 bw bwd j.val with hR
+    have hmem : ∀ j, j < I.n → flagVec e0 f0 z0 bw bwd j ∈ Submodule.span (IntAf I.F I.E) R :=
+      fun j hj => Submodule.subset_span ⟨⟨j, hj⟩, rfl⟩
+    have hsig : sigA I ew ∈ IntAf I.F I.E := Formalism.L2.SG.Pf.unitaryCongruence.sigA_mem I hint
+    have hc : ∀ l : Fin k, flagVec e0 f0 z0 bw bwd (ρ + l.val) = bw l + bwd (Fin.rev l) := by
+      intro l
+      have h1 : ¬ (ρ + l.val < ρ) := by omega
+      have h2 : ρ + l.val - ρ < k := by omega
+      unfold flagVec
+      rw [dite_eq_right h1, dite_eq_left h2]
+      congr <;> simp
+    have hcl : ∀ l : Fin k, flagVec e0 f0 z0 bw bwd (ρ + l.val) ∈ Submodule.span (IntAf I.F I.E) R :=
+      fun l => hmem _ (by omega)
+    have hsub : Set.range e0 ∪ Set.range f0 ∪ {z0} ∪ Set.range bw ∪ Set.range bwd ⊆
+        (Submodule.span (IntAf I.F I.E) R : Set (VA I)) := by
+      rintro v ((((⟨a, rfl⟩ | ⟨a, rfl⟩) | hv) | ⟨l, rfl⟩) | ⟨l, rfl⟩)
+      · have h := hmem a.val (by omega)
+        unfold flagVec at h
+        rwa [dite_eq_left a.isLt] at h
+      · have h := hmem (2 * ρ + k - a.val) (by omega)
+        have h1 : ¬ (2 * ρ + k - a.val < ρ) := by omega
+        have h2 : ¬ (2 * ρ + k - a.val - ρ < k) := by omega
+        have h3 : ¬ (2 * ρ + k - a.val = ρ + k) := by omega
+        have h4 : 2 * ρ + k - (2 * ρ + k - a.val) < ρ := by omega
+        unfold flagVec at h
+        rw [dite_eq_right h1, dite_eq_right h2, if_neg h3, dite_eq_left h4] at h
+        have e : (⟨2 * ρ + k - (2 * ρ + k - a.val), h4⟩ : Fin ρ) = a := by ext; simp; omega
+        rwa [e] at h
+      · rw [Set.mem_singleton_iff] at hv
+        subst hv
+        have h := hmem (ρ + k) (by omega)
+        have h1 : ¬ (ρ + k < ρ) := by omega
+        have h2 : ¬ (ρ + k - ρ < k) := by omega
+        unfold flagVec at h
+        rwa [dite_eq_right h1, dite_eq_right h2, if_pos rfl] at h
+      · have h := Submodule.smul_mem _ (⟨ew, hint⟩ : IntAf I.F I.E) (hcl l)
+        rw [hc l] at h
+        have e : ((⟨ew, hint⟩ : IntAf I.F I.E) • (bw l + bwd (Fin.rev l)) : VA I) = bw l := by
+          show ew • (bw l + bwd (Fin.rev l)) = bw l
+          rw [smul_add, hbwd (Fin.rev l), smul_smul, horth, zero_smul, add_zero, ← hbw l]
+        rwa [e] at h
+      · have h := Submodule.smul_mem _ (⟨sigA I ew, hsig⟩ : IntAf I.F I.E) (hcl (Fin.rev l))
+        rw [hc (Fin.rev l), Fin.rev_rev] at h
+        have e : ((⟨sigA I ew, hsig⟩ : IntAf I.F I.E) • (bw (Fin.rev l) + bwd l) : VA I) = bwd l := by
+          show sigA I ew • (bw (Fin.rev l) + bwd l) = bwd l
+          rw [smul_add, hbw (Fin.rev l), smul_smul, mul_comm, horth, zero_smul, zero_add,
+            hbwd l, smul_smul, ← map_mul, hidem]
+        rwa [e] at h
+    have := hspan y hy
+    exact sup_le_sup_right (Submodule.span_le.2 hsub) _ this
+
+end GlobalTheory.FlagBasis
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlagVecMemAndSpan =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlagVecMemAndSpanStatement =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlagVecMemAndSpanStatement", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlagLevelCharacterEqPsiDivN\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlagVecMemAndSpan\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
 @[expose] public section
 
 open NumberField IsDedekindDomain Matrix Formalism.MainNotions.S Formalism.L2.SG.HidaSetting Formalism.L2.DIV GlobalTheory.FlagBasis
@@ -46,3 +134,6 @@ open scoped TensorProduct
 
 theorem _root_.GlobalTheory.T.flagVec_mem_Lf_and_inMod : ∀ (I : AutInst) (g : ℕ) {ρ k : ℕ} (e0 f0 : Fin ρ → VA I) (z0 : VA I) (bw bwd : Fin k → VA I) (ew : I.E ⊗[I.F] Formalism.MainNotions.S.Af I.F), IsRefFrame I g e0 f0 z0 bw bwd ew → I.n = 2 * ρ + k + 1 → (∀ j, flagVec e0 f0 z0 bw bwd j ∈ I.Lf) ∧ ∀ y ∈ I.Lf, InMod I g (Set.range fun j : Fin I.n => flagVec e0 f0 z0 bw bwd j.val) y := by
   first | exact @GlobalTheory.FlagBasis.flagVec_mem_and_span | exact GlobalTheory.FlagBasis.flagVec_mem_and_span | (intros; apply GlobalTheory.FlagBasis.flagVec_mem_and_span <;> assumption)
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlagVecMemAndSpanStatement =====

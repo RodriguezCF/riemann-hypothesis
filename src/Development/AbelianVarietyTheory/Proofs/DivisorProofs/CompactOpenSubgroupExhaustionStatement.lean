@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.UnipVal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompactOpenSubgroupExhaustion
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FourierTransformInversionLocalFieldPi
+import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -20,6 +21,8 @@ import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.Order.CompletePartialOrder
+import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.Tactic.Echelon.Zsqrtd
 import Mathlib.Tactic.Inclusion.Extension.Core.Core
@@ -28,6 +31,7 @@ import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
 import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
 import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
 import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.NormNum.Irrational
 import Mathlib.Tactic.NormNum.IsCoprime
 import Mathlib.Tactic.NormNum.IsSquare
@@ -42,6 +46,116 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 
+-- This file was produced by scripts/clump.py from the modules listed below.
+-- Members: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompactOpenSubgroupExhaustion, Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompactOpenSubgroupExhaustionStatement
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompactOpenSubgroupExhaustion =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompactOpenSubgroupExhaustion", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.UnipVal\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FourierTransformInversionLocalFieldPi\nimport Mathlib.Algebra.Module.StablyFree.Basic\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.Order.CompletePartialOrder\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open MeasureTheory Matrix GlobalTheory.KSp GlobalTheory.SplitUnitary
+open GlobalTheory.WeilM (UG IsQuad IsHerm ResEtaPow)
+open GlobalTheory.SplitWeil (SB nabs)
+open scoped Topology
+
+namespace GlobalTheory.KSp.GoodSpace
+
+open GlobalTheory.SplitWeil GlobalTheory.SplitWeil.FourierPi ValuativeRel
+
+theorem good_of_addEquiv {X Y : Type} [AddCommGroup X] [TopologicalSpace X] [AddCommGroup Y] [TopologicalSpace Y]
+    (f : X ≃+ Y) (hf : Continuous f) (hg : Continuous f.symm) (h : Good Y) : Good X := by
+  let H : X ≃ₜ Y := { toEquiv := f.toEquiv, continuous_toFun := hf, continuous_invFun := hg }
+  haveI := h.grp; haveI := h.t2; haveI := h.lc; haveI := h.sc
+  refine ⟨?_, H.isEmbedding.t2Space, H.isClosedEmbedding.locallyCompactSpace, H.isInducing.secondCountableTopology,
+    ?_, ?_⟩
+  · haveI : ContinuousAdd X := by
+      refine ⟨?_⟩
+      have : (fun p : X × X => p.1 + p.2) = fun p => f.symm (f p.1 + f p.2) := by
+        funext p; simp
+      rw [this]; exact hg.comp ((hf.comp continuous_fst).add (hf.comp continuous_snd))
+    haveI : ContinuousNeg X := by
+      refine ⟨?_⟩
+      have : (fun x : X => -x) = fun x => f.symm (-f x) := by funext x; simp
+      rw [this]; exact hg.comp hf.neg
+    exact {}
+  · intro K hK
+    obtain ⟨L, hLc, hLo, hKL⟩ := h.large (f '' K) (hK.image hf)
+    refine ⟨L.comap f.toAddMonoidHom, ?_, ?_, ?_⟩
+    · have : ((L.comap f.toAddMonoidHom : AddSubgroup X) : Set X) = H ⁻¹' (L : Set Y) := rfl
+      rw [this]; exact H.isCompact_preimage.mpr hLc
+    · exact hLo.preimage hf
+    · intro x hx; exact hKL ⟨x, hx, rfl⟩
+  · intro U hU
+    have hU' : f.symm ⁻¹' U ∈ 𝓝 (0 : Y) := by
+      apply hg.continuousAt.preimage_mem_nhds; simpa using hU
+    obtain ⟨L, hLc, hLo, hLU⟩ := h.small _ hU'
+    refine ⟨L.comap f.toAddMonoidHom, ?_, hLo.preimage hf, ?_⟩
+    · have : ((L.comap f.toAddMonoidHom : AddSubgroup X) : Set X) = H ⁻¹' (L : Set Y) := rfl
+      rw [this]; exact H.isCompact_preimage.mpr hLc
+    · intro x hx
+      have := hLU hx
+      simpa using this
+
+variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F]
+
+def boxSub (n : Type) [Fintype n] [DecidableEq n] (s : Fˣ) : AddSubgroup (n → F) where
+  carrier := box n s
+  zero_mem' := fun i _ => by simp [cball]
+  add_mem' := fun ha hb i _ => add_mem_cball (ha i trivial) (hb i trivial)
+  neg_mem' := fun ha i _ => neg_mem_cball (ha i trivial)
+
+theorem cball_mono {s t : Fˣ} (h : valuation F (s : F) ≤ valuation F (t : F)) : cball s ⊆ cball t :=
+  fun x hx => show valuation F x ≤ valuation F (t : F) from le_trans hx h
+
+theorem mem_some_cball (y : F) : ∃ s : Fˣ, y ∈ cball s := by
+  by_cases hy : y = 0
+  · exact ⟨1, by simp [cball, hy]⟩
+  · exact ⟨Units.mk0 y hy, by simp [cball]⟩
+
+theorem mem_some_box (n : Type) [Fintype n] [DecidableEq n] (x : n → F) : ∃ s : Fˣ, x ∈ box n s := by
+  rcases isEmpty_or_nonempty n with hn | hn
+  · exact ⟨1, fun i => isEmptyElim i⟩
+  · choose u hu using fun i => mem_some_cball (x i)
+    obtain ⟨j, hj⟩ := Finite.exists_max fun i => valuation F (u i : F)
+    exact ⟨u j, fun i _ => cball_mono (hj i) (hu i)⟩
+
+theorem good_pi (n : Type) [Fintype n] [DecidableEq n] : Good (n → F) := by
+  haveI := secondCountable F
+  haveI := t2Space F
+  refine ⟨inferInstance, inferInstance, inferInstance, inferInstance, ?_, ?_⟩
+  · intro K hK
+    obtain ⟨s, hs⟩ := hK.elim_directed_cover (fun s : Fˣ => box n s) (fun s => isOpen_box s)
+      (fun x _ => Set.mem_iUnion.mpr (mem_some_box n x)) (by
+        intro s t
+        rcases le_total (valuation F (s : F)) (valuation F (t : F)) with h | h
+        · exact ⟨t, fun x hx i _ => cball_mono h (hx i trivial), le_rfl⟩
+        · exact ⟨s, le_rfl, fun x hx i _ => cball_mono h (hx i trivial)⟩)
+    exact ⟨boxSub n s, isCompact_box s, isOpen_box s, hs⟩
+  · intro U hU
+    obtain ⟨s, hs⟩ := exists_box_subset hU
+    exact ⟨boxSub n s, isCompact_box s, isOpen_box s, hs⟩
+
+end GlobalTheory.KSp.GoodSpace
+
+theorem GlobalTheory.KSp.good_of_finiteDimensional : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRel F] [TopologicalSpace F]
+    [IsNonarchimedeanLocalField F] (V : Type) [AddCommGroup V] [Module F V] [FiniteDimensional F V]
+    [TopologicalSpace V] [IsModuleTopology F V], Good V := by
+  intro F _ _ _ _ _ V _ _ _ _ _
+  haveI := IsModuleTopology.topologicalAddGroup F V
+  let b := Module.finBasis F V
+  let e := b.equivFun
+  exact GlobalTheory.KSp.GoodSpace.good_of_addEquiv e.toAddEquiv
+    (IsModuleTopology.continuous_of_linearMap (R := F) e.toLinearMap)
+    (IsModuleTopology.continuous_of_linearMap (R := F) e.symm.toLinearMap)
+    (GlobalTheory.KSp.GoodSpace.good_pi _)
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompactOpenSubgroupExhaustion =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompactOpenSubgroupExhaustionStatement =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompactOpenSubgroupExhaustionStatement", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.UnipVal\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompactOpenSubgroupExhaustion\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
 @[expose] public section
 
 open MeasureTheory Matrix GlobalTheory.KSp GlobalTheory.SplitUnitary
@@ -50,3 +164,6 @@ open GlobalTheory.SplitWeil (SB nabs)
 
 theorem _root_.GlobalTheory.T.isSelfDualCompactOpenGroup_of_finiteDimensional : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] (V : Type) [AddCommGroup V] [Module F V] [FiniteDimensional F V] [TopologicalSpace V] [IsModuleTopology F V], Good V := by
   first | exact @GlobalTheory.KSp.good_of_finiteDimensional | exact GlobalTheory.KSp.good_of_finiteDimensional | (intros; apply GlobalTheory.KSp.good_of_finiteDimensional <;> assumption)
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompactOpenSubgroupExhaustionStatement =====

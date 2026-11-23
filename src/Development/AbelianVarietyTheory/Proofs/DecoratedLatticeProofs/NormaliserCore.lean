@@ -1,20 +1,17 @@
 module
 
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSingle
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdjoinRangeGLEqTopMatrixStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdjoinUnitaryGroupHermitianLocalEqTopStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsNormOneWithResiduesAtSplitPlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsUnitaryIntegralOfSplitPlaceComponentStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsScalarMulIntegralOfConjIntegralGeneratorsStatement
+public import Formalism.SatakeDualWeyl.Statement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsEqTransposeMulMapOfIdempotent
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsScalarMulIntegralOfNormalizesSymmetricLevelStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NormaliserUnipSymCharPatternStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryScalarMulIntegralLocalToGlobalStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
+import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
@@ -26,11 +23,7 @@ import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
-import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Echelon.Zsqrtd
 import Mathlib.Tactic.Inclusion.Extension.Core.Core
 import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
@@ -38,8 +31,6 @@ import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
 import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
 import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
 import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Linter.HaveILetI
-import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.NormNum.Irrational
 import Mathlib.Tactic.NormNum.IsCoprime
 import Mathlib.Tactic.NormNum.IsSquare
@@ -52,10 +43,1618 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+import Formalism.LocalToGlobal.Divisibility.DefGroup
+import Mathlib.RingTheory.WittVector.IsPoly
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Tactic.Linter.Style
+import Mathlib.Tactic.Linter.HaveILetI
 
+-- This file was produced by scripts/clump.py from the modules listed below.
+-- Members: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdjoinRangeGLEqTopMatrix, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdjoinRangeGLEqTopMatrixStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdjoinUnitaryGroupHermitianLocalEqTop, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdjoinUnitaryGroupHermitianLocalEqTopStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsNormOneWithResiduesAtSplitPlaces, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsNormOneWithResiduesAtSplitPlacesStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsUnitaryIntegralOfSplitPlaceComponent, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsUnitaryIntegralOfSplitPlaceComponentStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsScalarMulIntegralOfConjIntegralGenerators, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsScalarMulIntegralOfConjIntegralGeneratorsStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NormaliserUnipSymCharPattern, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NormaliserUnipSymCharPatternStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryScalarMulIntegralLocalToGlobal, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryScalarMulIntegralLocalToGlobalStatement, Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NormaliserCore
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdjoinRangeGLEqTopMatrix =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdjoinRangeGLEqTopMatrix", "h": "module\n\npublic import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSingle\nimport Formalism.LocalToGlobal.Divisibility.DefGroup\nimport Formalism.SatakeDualWeyl.Statement\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open Matrix Formalism.UG Formalism.L2.DIV GlobalTheory.LevNorm
+
+namespace GlobalTheory
+
+theorem adjoin_range_GL_eq_top (R : Type) [CommRing R] (n : ℕ) :
+    Algebra.adjoin R ((fun x : GL (Fin n) R => (x : Matrix (Fin n) (Fin n) R)) '' Set.univ) = ⊤ := by
+  set S := Algebra.adjoin R ((fun x : GL (Fin n) R => (x : Matrix (Fin n) (Fin n) R)) '' Set.univ)
+  have hoff : ∀ i j : Fin n, i ≠ j → Matrix.single i j (1:R) ∈ S := by
+    intro i j hij
+    have hu : IsUnit (Matrix.transvection i j (1:R)) :=
+      (Matrix.isUnit_iff_isUnit_det _).mpr (by rw [det_transvection_of_ne _ _ hij]; exact isUnit_one)
+    have hmem : Matrix.transvection i j (1:R) ∈ S :=
+      Algebra.subset_adjoin ⟨hu.unit, Set.mem_univ _, rfl⟩
+    have : Matrix.single i j (1:R) = Matrix.transvection i j 1 - 1 := by
+      simp [Matrix.transvection]
+    rw [this]; exact S.sub_mem hmem S.one_mem
+  have hall : ∀ i j : Fin n, Matrix.single i j (1:R) ∈ S := by
+    intro i j
+    by_cases hij : i = j
+    · subst hij
+      by_cases h : ∃ k, k ≠ i
+      · obtain ⟨k, hk⟩ := h
+        have : Matrix.single i i (1:R) = Matrix.single i k 1 * Matrix.single k i 1 := by
+          rw [Matrix.single_mul_single_same, mul_one]
+        rw [this]; exact S.mul_mem (hoff _ _ (Ne.symm hk)) (hoff _ _ hk)
+      · push_neg at h
+        have : Matrix.single i i (1:R) = 1 := by
+          ext a b
+          rw [h a, h b]; simp
+        rw [this]; exact S.one_mem
+    · exact hoff i j hij
+  rw [eq_top_iff]
+  intro M _
+  rw [Matrix.matrix_eq_sum_single M]
+  refine S.sum_mem fun i _ => S.sum_mem fun j _ => ?_
+  have : Matrix.single i j (M i j) = M i j • Matrix.single i j 1 := by
+    rw [Matrix.smul_single, smul_eq_mul, mul_one]
+  rw [this]; exact S.smul_mem (hall i j) _
+
+end GlobalTheory
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdjoinRangeGLEqTopMatrix =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdjoinRangeGLEqTopMatrixStatement =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdjoinRangeGLEqTopMatrixStatement", "h": "module\n\npublic import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdjoinRangeGLEqTopMatrix\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSingle\nimport Formalism.LocalToGlobal.Divisibility.DefGroup\nimport Formalism.SatakeDualWeyl.Statement\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open Matrix Formalism.UG Formalism.L2.DIV GlobalTheory.LevNorm
+
+theorem _root_.GlobalTheory.T.adjoin_range_GL_eq_top_matrix : ∀ (R : Type) [CommRing R] (n : ℕ), Algebra.adjoin R ((fun x : GL (Fin n) R => (x : Matrix (Fin n) (Fin n) R)) '' Set.univ) = ⊤ := by
+  first | exact @GlobalTheory.adjoin_range_GL_eq_top | exact GlobalTheory.adjoin_range_GL_eq_top | (intros; apply GlobalTheory.adjoin_range_GL_eq_top <;> assumption)
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdjoinRangeGLEqTopMatrixStatement =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdjoinUnitaryGroupHermitianLocalEqTop =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdjoinUnitaryGroupHermitianLocalEqTop", "h": "module\n\npublic import Formalism.SatakeDualWeyl.Statement\npublic import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsEqTransposeMulMapOfIdempotent\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\nimport Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSingle\nimport Formalism.LocalToGlobal.Divisibility.DefGroup\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open Matrix Formalism.UG Formalism.L2.DIV GlobalTheory.LevNorm
+
+noncomputable section
+
+namespace GlobalTheory.UnitaryGen
+variable {R : Type} [CommRing R] (s : R →+* R)
+
+theorem refl_unitary (hs : ∀ x, s (s x) = x) {n : ℕ} (d : Fin n → R) (hd : ∀ k, s (d k) = d k)
+    (c : R) (v : Fin n → R) (hc : c + s c + c * s c * ∑ k, s (v k) * d k * v k = 0) :
+    cT s (1 + c • vecMulVec v (fun k => s (v k) * d k)) * diagonal d *
+      (1 + c • vecMulVec v (fun k => s (v k) * d k)) = diagonal d := by
+  ext a b
+  set r := 1 + c • vecMulVec v (fun k => s (v k) * d k) with hr
+  have e1 : ∀ k, cT s r a k * d k = (1 : Matrix (Fin n) (Fin n) R) a k * d k +
+      (s c * (v a * d a)) * (s (v k) * d k) := by
+    intro k
+    simp only [hr, cT, transpose_apply, map_apply, Matrix.add_apply, Matrix.smul_apply, vecMulVec_apply, smul_eq_mul,
+      map_add, map_mul, hs, hd]
+    by_cases h : k = a
+    · subst h; simp only [one_apply_eq, map_one]; ring
+    · rw [one_apply_ne h, one_apply_ne (Ne.symm h), map_zero]; ring
+  have e2 : ∀ k, r k b = (1 : Matrix (Fin n) (Fin n) R) k b + c * v k * (s (v b) * d b) := by
+    intro k
+    simp only [hr, Matrix.add_apply, Matrix.smul_apply, vecMulVec_apply, smul_eq_mul]; ring
+  rw [Matrix.mul_apply]
+  simp only [mul_diagonal]
+  rw [Finset.sum_congr rfl (fun k _ => by rw [e1, e2])]
+  have e3 : ∀ k, ((1 : Matrix (Fin n) (Fin n) R) a k * d k + (s c * (v a * d a)) * (s (v k) * d k)) *
+      ((1 : Matrix (Fin n) (Fin n) R) k b + c * v k * (s (v b) * d b)) =
+      (1 : Matrix (Fin n) (Fin n) R) a k * (d k * (1 : Matrix (Fin n) (Fin n) R) k b) +
+      (1 : Matrix (Fin n) (Fin n) R) a k * (d k * (c * v k * (s (v b) * d b))) +
+      (1 : Matrix (Fin n) (Fin n) R) k b * ((s c * (v a * d a)) * (s (v k) * d k)) +
+      (s c * (v a * d a) * c * (s (v b) * d b)) * (s (v k) * d k * v k) := fun k => by ring
+  rw [Finset.sum_congr rfl (fun k _ => e3 k)]
+  simp only [Finset.sum_add_distrib, ← Finset.mul_sum, Matrix.one_apply, ite_mul, one_mul, zero_mul,
+    Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  by_cases hab : a = b
+  · subst hab; simp; linear_combination (v a * d a * (s (v a) * d a)) * hc
+  · simp [hab]; linear_combination (v a * d a * (s (v b) * d b)) * hc
+
+abbrev uAlg {n : ℕ} (J : Matrix (Fin n) (Fin n) R) : Subalgebra R (Matrix (Fin n) (Fin n) R) :=
+  Algebra.adjoin R ((fun x : GL (Fin n) R => (x : Matrix (Fin n) (Fin n) R)) '' (UJ s J : Set (GL (Fin n) R)))
+
+theorem mem_uAlg_of_unitary {n : ℕ} {J : Matrix (Fin n) (Fin n) R} (hJ : IsUnit J.det)
+    {M : Matrix (Fin n) (Fin n) R} (hM : cT s M * J * M = J) : M ∈ uAlg s J := by
+  have hdet : IsUnit M.det := by
+    have h := congrArg Matrix.det hM
+    rw [det_mul] at h
+    exact isUnit_of_mul_isUnit_right (h ▸ hJ)
+  exact Algebra.subset_adjoin ⟨nonsingInvUnit M hdet, hM, rfl⟩
+
+theorem isUnit_det_diagonal {n : ℕ} {d : Fin n → R} (hdu : ∀ k, IsUnit (d k)) : IsUnit (diagonal d).det := by
+  rw [det_diagonal, isUnit_iff_exists_inv]
+  exact ⟨∏ k, ((hdu k).unit⁻¹ : Rˣ), by rw [← Finset.prod_mul_distrib]; simp⟩
+
+theorem vec_mem (hs : ∀ x, s (s x) = x) {ζ : R} (hζ : ζ * s ζ = 1) (hζ1 : IsUnit (ζ - 1)) {n : ℕ}
+    {d : Fin n → R} (hdu : ∀ k, IsUnit (d k)) (hd : ∀ k, s (d k) = d k) (v : Fin n → R)
+    (hN : IsUnit (∑ k, s (v k) * d k * v k)) :
+    vecMulVec v (fun k => s (v k) * d k) ∈ uAlg s (diagonal d) := by
+  set N := ∑ k, s (v k) * d k * v k with hNdef
+  have hsN : s N = N := by
+
+    rw [hNdef, map_sum]
+    exact Finset.sum_congr rfl fun k _ => by rw [map_mul, map_mul, hs, hd]; ring
+  set Ni : R := ((hN.unit⁻¹ : Rˣ) : R) with hNidef
+  have hNi : Ni * N = 1 := hN.val_inv_mul
+  have hsNi' : s Ni * N = 1 := by rw [← hsN, ← map_mul, hNi, map_one]
+  have hsNi : s Ni = Ni := by
+    calc s Ni = s Ni * (N * Ni) := by rw [mul_comm N, hNi, mul_one]
+      _ = (s Ni * N) * Ni := by ring
+      _ = Ni := by rw [hsNi', one_mul]
+  set c := (ζ - 1) * Ni with hcdef
+  have hc : c + s c + c * s c * N = 0 := by
+    rw [hcdef, map_mul, hsNi, map_sub, map_one]
+    linear_combination ((ζ - 1) * (s ζ - 1) * Ni) * hNi + Ni * hζ
+  have hcu : IsUnit c := hζ1.mul (Units.isUnit _)
+  have hr := mem_uAlg_of_unitary s (isUnit_det_diagonal hdu) (refl_unitary s hs d hd c v hc)
+  have hX : vecMulVec v (fun k => s (v k) * d k) =
+      ((hcu.unit⁻¹ : Rˣ) : R) • ((1 + c • vecMulVec v (fun k => s (v k) * d k)) - 1) := by
+    rw [add_sub_cancel_left, smul_smul, hcu.val_inv_mul, one_smul]
+  rw [hX]
+  exact Subalgebra.smul_mem _ (Subalgebra.sub_mem _ hr (Subalgebra.one_mem _)) _
+
+theorem single_mem_of_isUnit {n : ℕ} {J : Matrix (Fin n) (Fin n) R} (i j : Fin n) {u : R} (hu : IsUnit u)
+    (h : single i j u ∈ uAlg s J) : single i j (1 : R) ∈ uAlg s J := by
+  have : single i j (1 : R) = ((hu.unit⁻¹ : Rˣ) : R) • single i j u := by
+    rw [smul_single, smul_eq_mul, hu.val_inv_mul]
+  rw [this]; exact Subalgebra.smul_mem _ h _
+
+theorem ind_mem (hs : ∀ x, s (s x) = x) {ζ : R} (hζ : ζ * s ζ = 1) (hζ1 : IsUnit (ζ - 1)) {n : ℕ}
+    {d : Fin n → R} (hdu : ∀ k, IsUnit (d k)) (hd : ∀ k, s (d k) = d k) (S : Finset (Fin n))
+    (hN : IsUnit (∑ k ∈ S, d k)) :
+    vecMulVec (fun k => if k ∈ S then (1 : R) else 0) (fun k => if k ∈ S then d k else 0) ∈ uAlg s (diagonal d) := by
+  have h := vec_mem s hs hζ hζ1 hdu hd (fun k => if k ∈ S then (1 : R) else 0) (by
+    convert hN using 1
+    rw [← Finset.univ_inter S, ← Finset.sum_ite_mem]
+    refine Finset.sum_congr rfl fun k _ => ?_
+    split_ifs <;> simp_all)
+  convert h using 2
+  funext k
+  split_ifs <;> simp
+
+theorem single_mem_diag (hs : ∀ x, s (s x) = x) [IsLocalRing R] {ζ : R} (hζ : ζ * s ζ = 1) (hζ1 : IsUnit (ζ - 1))
+    {n : ℕ} (hn : 3 ≤ n) {d : Fin n → R} (hdu : ∀ k, IsUnit (d k)) (hd : ∀ k, s (d k) = d k) (i j : Fin n) :
+    single i j (1 : R) ∈ uAlg s (diagonal d) := by
+  have hii : ∀ i, single i i (1 : R) ∈ uAlg s (diagonal d) := by
+    intro i
+    have h := ind_mem s hs hζ hζ1 hdu hd {i} (by simpa using hdu i)
+    refine single_mem_of_isUnit s i i (hdu i) ?_
+    convert h using 1
+    ext a b
+    by_cases ha : a = i <;> by_cases hb : b = i <;> simp [vecMulVec_apply, single_apply, ha, hb] <;> intros <;> simp_all
+  have hS : ∀ S : Finset (Fin n), i ∈ S → j ∈ S → IsUnit (∑ k ∈ S, d k) →
+      single i j (1 : R) ∈ uAlg s (diagonal d) := by
+    intro S hi hj hN
+    have h := ind_mem s hs hζ hζ1 hdu hd S hN
+    have h2 := Subalgebra.mul_mem _ (Subalgebra.mul_mem _ (hii i) h) (hii j)
+    rw [single_mul_mul_single] at h2
+    refine single_mem_of_isUnit s i j ?_ h2
+    simpa [vecMulVec_apply, hi, hj] using hdu j
+  by_cases hij : i = j
+  · subst hij; exact hii i
+  by_cases hu : IsUnit (d i + d j)
+  · exact hS {i, j} (by simp) (by simp) (by rwa [Finset.sum_pair hij])
+  obtain ⟨l, -, hl⟩ := Finset.exists_mem_notMem_of_card_lt_card (s := {i, j}) (t := Finset.univ) (by
+    rw [Finset.card_univ, Fintype.card_fin]; exact lt_of_le_of_lt Finset.card_le_two (by omega))
+  refine hS {l, i, j} (by simp) (by simp) ?_
+  rw [Finset.sum_insert hl, Finset.sum_pair hij]
+  by_contra h
+  have h1 : d l + (d i + d j) + -(d i + d j) ∈ nonunits R :=
+    IsLocalRing.nonunits_add h (by rw [mem_nonunits_iff, IsUnit.neg_iff]; exact hu)
+  rw [add_neg_cancel_right] at h1
+  exact h1 (hdu l)
+
+theorem eq_top_of_single {n : ℕ} {A : Subalgebra R (Matrix (Fin n) (Fin n) R)}
+    (h : ∀ i j, single i j (1 : R) ∈ A) : A = ⊤ := by
+  refine eq_top_iff.2 fun M _ => ?_
+  rw [matrix_eq_sum_single M]
+  refine Subalgebra.sum_mem _ fun i _ => Subalgebra.sum_mem _ fun j _ => ?_
+  have : single i j (M i j) = M i j • single i j (1 : R) := by rw [smul_single, smul_eq_mul, mul_one]
+  rw [this]; exact Subalgebra.smul_mem _ (h i j) _
+
+theorem isUnit_det_cT {n : ℕ} {Q : Matrix (Fin n) (Fin n) R} (hQ : IsUnit Q.det) : IsUnit (cT s Q).det := by
+  rw [cT, det_transpose, ← RingHom.mapMatrix_apply, ← RingHom.map_det]
+  exact hQ.map s
+
+theorem uAlg_conj {n : ℕ} {J Q : Matrix (Fin n) (Fin n) R} (hQ : IsUnit Q.det) (hJ : IsUnit J.det)
+    {M : Matrix (Fin n) (Fin n) R} (hM : M ∈ uAlg s J) : Q⁻¹ * M * Q ∈ uAlg s (cT s Q * J * Q) := by
+  have hQQ : Q * Q⁻¹ = 1 := Matrix.mul_nonsing_inv Q hQ
+  have hQQ' : Q⁻¹ * Q = 1 := Matrix.nonsing_inv_mul Q hQ
+  refine Algebra.adjoin_induction (p := fun M _ => Q⁻¹ * M * Q ∈ uAlg s (cT s Q * J * Q)) ?_ ?_ ?_ ?_ hM
+  · rintro x ⟨g, hg, rfl⟩
+    refine mem_uAlg_of_unitary s ?_ ?_
+    · rw [det_mul, det_mul]
+      exact ((isUnit_det_cT s hQ).mul hJ).mul hQ
+    · have hg' : cT s (g : Matrix (Fin n) (Fin n) R) * J * (g : Matrix (Fin n) (Fin n) R) = J := hg
+      have hc1 : cT s (Q⁻¹) * cT s Q = 1 := by rw [← cT_mul, hQQ, cT_one]
+      calc cT s (Q⁻¹ * (g : Matrix (Fin n) (Fin n) R) * Q) * (cT s Q * J * Q) * (Q⁻¹ * (g : Matrix (Fin n) (Fin n) R) * Q)
+          = cT s Q * (cT s (g : Matrix (Fin n) (Fin n) R) * (cT s (Q⁻¹) * cT s Q) * J * (Q * Q⁻¹) *
+              (g : Matrix (Fin n) (Fin n) R)) * Q := by
+            rw [cT_mul, cT_mul]; simp only [Matrix.mul_assoc]
+        _ = cT s Q * J * Q := by rw [hc1, hQQ, Matrix.mul_one, Matrix.mul_one, hg']
+  · intro r
+    rw [Algebra.algebraMap_eq_smul_one, Matrix.mul_smul, Matrix.smul_mul, Matrix.mul_one, hQQ', ← Algebra.algebraMap_eq_smul_one]
+    exact Subalgebra.algebraMap_mem _ r
+  · intro x y _ _ hx hy
+    rw [Matrix.mul_add, Matrix.add_mul]; exact Subalgebra.add_mem _ hx hy
+  · intro x y _ _ hx hy
+    have : Q⁻¹ * (x * y) * Q = (Q⁻¹ * x * Q) * (Q⁻¹ * y * Q) := by
+      calc Q⁻¹ * (x * y) * Q = Q⁻¹ * x * (Q * Q⁻¹) * y * Q := by rw [hQQ, Matrix.mul_one]; simp only [Matrix.mul_assoc]
+        _ = (Q⁻¹ * x * Q) * (Q⁻¹ * y * Q) := by simp only [Matrix.mul_assoc]
+    rw [this]; exact Subalgebra.mul_mem _ hx hy
+
+theorem adjoin_unitary_eq_top : ∀ (R : Type) [CommRing R] [IsLocalRing R] (s : R →+* R), (∀ x, s (s x) = x) →
+    (∃ δ : R, IsUnit (δ - s δ)) → ∀ n : ℕ, 3 ≤ n → ∀ G : Matrix (Fin n) (Fin n) R, cT s G = G → IsUnit G →
+    Algebra.adjoin R ((fun x : GL (Fin n) R => (x : Matrix (Fin n) (Fin n) R)) '' (UJ s G : Set (GL (Fin n) R))) = ⊤ := by
+  intro R _ _ s hs ⟨δ, hδ⟩ n hn G hG hGu
+  obtain ⟨δ', hδ'u, hδ'⟩ : ∃ δ', IsUnit δ' ∧ IsUnit (δ' - s δ') := by
+    rcases IsLocalRing.isUnit_or_isUnit_one_sub_self δ with h | h
+    · exact ⟨δ, h, hδ⟩
+    · refine ⟨1 - δ, h, ?_⟩
+      have : 1 - δ - s (1 - δ) = -(δ - s δ) := by rw [map_sub, map_one]; ring
+      rw [this, IsUnit.neg_iff]; exact hδ
+  have hsu : IsUnit (s δ') := hδ'u.map s
+  set i : R := ((hsu.unit⁻¹ : Rˣ) : R) with hidef
+  have h1 : i * s δ' = 1 := hsu.val_inv_mul
+  have h2 : s i * δ' = 1 := by have := congrArg s h1; rwa [map_mul, hs, map_one] at this
+  have hζ : δ' * i * s (δ' * i) = 1 := by
+    rw [map_mul]; linear_combination (δ' * s i) * h1 + h2
+  have hζ1 : IsUnit (δ' * i - 1) := by
+    have : δ' * i - 1 = (δ' - s δ') * i := by linear_combination h1
+    rw [this]; exact hδ'.mul (Units.isUnit _)
+
+  have hw : ∃ w, w + s w = 1 := by
+    set ui : R := ((hδ.unit⁻¹ : Rˣ) : R)
+    have e1 : ui * (δ - s δ) = 1 := hδ.val_inv_mul
+    have e2 : s ui * (s δ - δ) = 1 := by have := congrArg s e1; rwa [map_mul, map_sub, hs, map_one] at this
+    have e3 : s ui = -ui := by
+      calc s ui = s ui * ((δ - s δ) * ui) := by rw [mul_comm (δ - s δ), e1, mul_one]
+        _ = -(s ui * (s δ - δ)) * ui := by ring
+        _ = -ui := by rw [e2]; ring
+    refine ⟨δ * ui, ?_⟩
+    rw [map_mul, e3]; linear_combination e1
+  have hGab : ∀ a b, s (G a b) = G b a := fun a b => congrFun (congrFun hG b) a
+  have hdetG : IsUnit G.det := (Matrix.isUnit_iff_isUnit_det G).1 hGu
+  obtain ⟨P, d, hP, hdu, hd, hGe⟩ := GlobalTheory.UnramifiedHermitian.exists_eq_diagonal_of_isUnit_or s hs
+    (fun x _ => IsLocalRing.isUnit_or_isUnit_one_sub_self x) hw hGab hdetG
+  set Q := P.map s with hQdef
+  have hcQ : cT s Q = Pᵀ := by
+    ext a b; simp [cT, hQdef, hs]
+  have hQ : IsUnit Q.det := by
+    rw [hQdef, ← RingHom.mapMatrix_apply, ← RingHom.map_det]; exact hP.map s
+  have hGQ : cT s Q * diagonal d * Q = G := by rw [hcQ, hGe]
+  have htop := eq_top_of_single (single_mem_diag s hs hζ hζ1 hn hdu hd)
+  refine eq_top_of_single (A := uAlg s G) fun a b => ?_
+  have hm := uAlg_conj s hQ (isUnit_det_diagonal hdu) (M := Q * single a b (1 : R) * Q⁻¹) (by rw [htop]; trivial)
+  rw [hGQ] at hm
+  have : Q⁻¹ * (Q * single a b (1 : R) * Q⁻¹) * Q = single a b 1 := by
+    simp only [← Matrix.mul_assoc, Matrix.nonsing_inv_mul Q hQ, Matrix.one_mul]
+    rw [Matrix.mul_assoc, Matrix.nonsing_inv_mul Q hQ, Matrix.mul_one]
+  rwa [this] at hm
+
+end GlobalTheory.UnitaryGen
+
+end
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdjoinUnitaryGroupHermitianLocalEqTop =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdjoinUnitaryGroupHermitianLocalEqTopStatement =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdjoinUnitaryGroupHermitianLocalEqTopStatement", "h": "module\n\npublic import Formalism.SatakeDualWeyl.Statement\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdjoinUnitaryGroupHermitianLocalEqTop\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSingle\nimport Formalism.LocalToGlobal.Divisibility.DefGroup\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open Matrix Formalism.UG Formalism.L2.DIV GlobalTheory.LevNorm
+
+theorem _root_.GlobalTheory.T.adjoin_unitaryGroup_hermitian_local_eq_top : ∀ (R : Type) [CommRing R] [IsLocalRing R] (s : R →+* R), (∀ x, s (s x) = x) → (∃ δ : R, IsUnit (δ - s δ)) → ∀ n : ℕ, 3 ≤ n → ∀ G : Matrix (Fin n) (Fin n) R, cT s G = G → IsUnit G → Algebra.adjoin R ((fun x : GL (Fin n) R => (x : Matrix (Fin n) (Fin n) R)) '' (UJ s G : Set (GL (Fin n) R))) = ⊤ := by
+  first | exact @GlobalTheory.UnitaryGen.adjoin_unitary_eq_top | exact GlobalTheory.UnitaryGen.adjoin_unitary_eq_top | (intros; apply GlobalTheory.UnitaryGen.adjoin_unitary_eq_top <;> assumption)
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdjoinUnitaryGroupHermitianLocalEqTopStatement =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsNormOneWithResiduesAtSplitPlaces =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsNormOneWithResiduesAtSplitPlaces", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSingle\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open Matrix Formalism.UG Formalism.L2.DIV GlobalTheory.LevNorm
+
+namespace GlobalTheory.LevNorm
+
+theorem exists_normOne_residues {A : Type} [CommRing A] {S : Subring A} {P : Type} {k : P → Type} [∀ Q, Field (k Q)]
+    {r : ∀ Q, S →+* k Q} (Z : PlaceSys A S P k r) (σ : A →+* A) (hσ : ∀ a, σ (σ a) = a) (hS : ∀ a ∈ S, σ a ∈ S)
+    (T : Finset P) (hT : ∀ Q ∈ T, ∀ Q' ∈ T, σ (Z.e Q) ≠ Z.e Q') (c : ∀ Q, (k Q)ˣ) :
+    ∃ z : S, (z : A) * σ z = 1 ∧ (∀ Q ∈ T, r Q z = c Q) ∧
+      ∀ b : A, (∀ Q ∈ T, Z.p Q b ∈ Z.O Q ∧ Z.p Q (σ b) ∈ Z.O Q) → (1 - (z : A)) * b ∈ S := by
+  classical
+
+  have comp : ∀ (f : P → A) Q0, Z.p Q0 (∑ Q ∈ T, Z.e Q * f Q) = if Q0 ∈ T then Z.p Q0 (f Q0) else 0 := by
+    intro f Q0
+
+    rw [map_sum]
+    by_cases h : Q0 ∈ T
+    · rw [if_pos h, Finset.sum_eq_single_of_mem Q0 h
+        (fun Q _ hQ => by rw [map_mul, Z.e_ne Q Q0 (Ne.symm hQ), zero_mul]), map_mul, Z.e_self, one_mul]
+    · rw [if_neg h]
+      exact Finset.sum_eq_zero fun Q hQ => by
+        rw [map_mul, Z.e_ne Q Q0 (by rintro rfl; exact h hQ), zero_mul]
+  have smem : ∀ f : P → A, (∀ Q, f Q ∈ S) → (∑ Q ∈ T, Z.e Q * f Q) ∈ S := fun f hf =>
+    Subring.sum_mem _ fun Q _ => Subring.mul_mem _ (Z.e_mem Q) (hf Q)
+
+  choose s hs using fun Q => Z.r_surj Q (c Q : k Q)
+  have hval : ∀ Q, (Z.O Q).valuation (Z.p Q (s Q)) = 1 := fun Q => by
+    have hm : Z.p Q (s Q) ∈ Z.O Q := (Z.int _).1 (s Q).2 Q
+    refine le_antisymm (((Z.O Q).valuation_le_one_iff _).2 hm) (not_lt.1 fun hc => ?_)
+    have := (Z.r_ker Q (s Q)).2 hc
+    rw [hs Q] at this
+    exact (c Q).ne_zero this
+  have hne : ∀ Q, Z.p Q (s Q) ≠ 0 := fun Q e => by
+    have := hval Q; rw [e, map_zero] at this; exact zero_ne_one this
+  have hinv : ∀ Q, (Z.p Q (s Q))⁻¹ ∈ Z.O Q := fun Q => by
+    rw [← ValuationSubring.valuation_le_one_iff, map_inv₀, hval Q, inv_one]
+  choose t ht using fun Q => Z.pO_surj Q ⟨_, hinv Q⟩
+  have hpt : ∀ Q, Z.p Q (t Q) = (Z.p Q (s Q))⁻¹ := fun Q => by
+    rw [← Z.pO_coe, ht Q]
+
+  obtain ⟨E, hEd⟩ : ∃ E, E = ∑ Q ∈ T, Z.e Q * 1 := ⟨_, rfl⟩
+  obtain ⟨a, had⟩ : ∃ a, a = ∑ Q ∈ T, Z.e Q * (s Q : A) := ⟨_, rfl⟩
+  obtain ⟨bb, hbd⟩ : ∃ bb, bb = ∑ Q ∈ T, Z.e Q * (t Q : A) := ⟨_, rfl⟩
+  have pE : ∀ Q0, Z.p Q0 E = if Q0 ∈ T then 1 else 0 := fun Q0 => by
+    rw [hEd, comp, map_one]
+  have pa : ∀ Q0, Z.p Q0 a = if Q0 ∈ T then Z.p Q0 (s Q0) else 0 := fun Q0 => by rw [had, comp]
+  have pb : ∀ Q0, Z.p Q0 bb = if Q0 ∈ T then Z.p Q0 (t Q0) else 0 := fun Q0 => by rw [hbd, comp]
+  have pF : ∀ Q0 ∈ T, Z.p Q0 (σ E) = 0 := fun Q0 hQ0 => by
+
+    rw [hEd, map_sum, map_sum]
+    refine Finset.sum_eq_zero fun Q hQ => ?_
+    obtain ⟨Q3, h3⟩ := Z.exists_bar hσ Q
+    rw [map_mul, map_one, mul_one, h3, Z.e_ne Q3 Q0 (fun h => hT Q hQ Q0 hQ0 (by rw [h3, h]))]
+  have Emem : E ∈ S := hEd ▸ smem _ fun _ => one_mem _
+  have amem : a ∈ S := had ▸ smem _ fun Q => (s Q).2
+  have bmem : bb ∈ S := hbd ▸ smem _ fun Q => (t Q).2
+  have hE : E * E = E := Z.ext' fun Q0 => by rw [map_mul, pE]; split_ifs <;> simp
+  have hEF : E * σ E = 0 := Z.ext' fun Q0 => by
+    rw [map_mul, map_zero]
+    by_cases h : Q0 ∈ T
+    · rw [pF Q0 h, mul_zero]
+    · rw [pE, if_neg h, zero_mul]
+  have ha : E * a = a := Z.ext' fun Q0 => by rw [map_mul, pE, pa]; split_ifs <;> simp
+  have hb : E * bb = bb := Z.ext' fun Q0 => by rw [map_mul, pE, pb]; split_ifs <;> simp
+  have hab : a * bb = E := Z.ext' fun Q0 => by
+    rw [map_mul, pE, pa, pb]
+    split_ifs
+    · rw [hpt, mul_inv_cancel₀ (hne Q0)]
+    · simp
+  set F := σ E with hFd
+  set x := σ a with hxd
+  set y := σ bb with hyd
+  have hF : F * F = F := by rw [hFd, ← map_mul, hE]
+  have hFx : F * x = x := by rw [hFd, hxd, ← map_mul, ha]
+  have hFy : F * y = y := by rw [hFd, hyd, ← map_mul, hb]
+  have hxy : x * y = F := by rw [hFd, hxd, hyd, ← map_mul, hab]
+  have hEx : E * x = 0 := by rw [← hFx, ← mul_assoc, hEF, zero_mul]
+  have hEy : E * y = 0 := by rw [← hFy, ← mul_assoc, hEF, zero_mul]
+  have hFa : F * a = 0 := by rw [← ha, ← mul_assoc, mul_comm F E, hEF, zero_mul]
+  have hFb : F * bb = 0 := by rw [← hb, ← mul_assoc, mul_comm F E, hEF, zero_mul]
+  have hax : a * x = 0 := by
+    calc a * x = (E * a) * (F * x) := by rw [ha, hFx]
+      _ = (E * F) * (a * x) := by ring
+      _ = 0 := by rw [hEF, zero_mul]
+  have hby : bb * y = 0 := by
+    calc bb * y = (E * bb) * (F * y) := by rw [hb, hFy]
+      _ = (E * F) * (bb * y) := by ring
+      _ = 0 := by rw [hEF, zero_mul]
+  have zmem : 1 - E - F + a + y ∈ S :=
+    add_mem (add_mem (sub_mem (sub_mem (one_mem _) Emem) (hS _ Emem)) amem) (hS _ bmem)
+  refine ⟨⟨1 - E - F + a + y, zmem⟩, ?_, ?_, ?_⟩
+  · show (1 - E - F + a + y) * σ (1 - E - F + a + y) = 1
+    have hσF : σ F = E := hσ E
+    have hσy : σ y = bb := hσ bb
+    rw [map_add (f := _), map_add (f := _), map_sub, map_sub, map_one, hσF, hσy]
+    linear_combination hE + hF + 2 * hEF - hEx - hb - hFx - hFb - ha - hFy - hFa - hEy + hax + hab + hxy + hby
+  · intro Q hQ
+    rw [← hs Q]
+    refine Z.r_congr Q ?_
+    show Z.p Q (1 - E - F + a + y) = Z.p Q (s Q)
+    have hy0 : Z.p Q y = 0 := by rw [← hFy, map_mul, pF Q hQ, zero_mul]
+    rw [map_add (f := _), map_add (f := _), map_sub, map_sub, map_one, pE, if_pos hQ, pF Q hQ, pa, if_pos hQ, hy0]
+    ring
+  · intro w hw
+    show (1 - (1 - E - F + a + y)) * w ∈ S
+    have key : (1 - (1 - E - F + a + y)) * w = (E - a) * w + σ ((E - bb) * σ w) := by
+      rw [map_mul, map_sub, hσ w]; ring
+    rw [key]
+    refine add_mem ((Z.int _).2 fun Q0 => ?_) (hS _ ((Z.int _).2 fun Q0 => ?_))
+    · rw [map_mul, map_sub, pE, pa]
+      by_cases h : Q0 ∈ T
+      · rw [if_pos h, if_pos h]
+        exact Subring.mul_mem _ (sub_mem (one_mem _) ((Z.int _).1 (s Q0).2 Q0)) (hw Q0 h).1
+      · rw [if_neg h, if_neg h, sub_zero, zero_mul]; exact zero_mem _
+    · rw [map_mul, map_sub, pE, pb]
+      by_cases h : Q0 ∈ T
+      · rw [if_pos h, if_pos h]
+        exact Subring.mul_mem _ (sub_mem (one_mem _) ((Z.int _).1 (t Q0).2 Q0)) (hw Q0 h).2
+      · rw [if_neg h, if_neg h, sub_zero, zero_mul]; exact zero_mem _
+
+end GlobalTheory.LevNorm
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsNormOneWithResiduesAtSplitPlaces =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsNormOneWithResiduesAtSplitPlacesStatement =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsNormOneWithResiduesAtSplitPlacesStatement", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSingle\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsNormOneWithResiduesAtSplitPlaces\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open Matrix Formalism.UG Formalism.L2.DIV GlobalTheory.LevNorm
+
+theorem _root_.GlobalTheory.T.exists_normOne_with_residues_at_splitPlaces : ∀ {A : Type} [CommRing A] {S : Subring A} {P : Type} {k : P → Type} [∀ Q, Field (k Q)] {r : ∀ Q, S →+* k Q} (Z : PlaceSys A S P k r) (σ : A →+* A), (∀ a, σ (σ a) = a) → (∀ a ∈ S, σ a ∈ S) → ∀ (T : Finset P), (∀ Q ∈ T, ∀ Q' ∈ T, σ (Z.e Q) ≠ Z.e Q') → ∀ c : ∀ Q, (k Q)ˣ, ∃ z : S, (z : A) * σ z = 1 ∧ (∀ Q ∈ T, r Q z = c Q) ∧ ∀ b : A, (∀ Q ∈ T, Z.p Q b ∈ Z.O Q ∧ Z.p Q (σ b) ∈ Z.O Q) → (1 - (z : A)) * b ∈ S := by
+  first | exact @GlobalTheory.LevNorm.exists_normOne_residues | exact GlobalTheory.LevNorm.exists_normOne_residues | (intros; apply GlobalTheory.LevNorm.exists_normOne_residues <;> assumption)
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsNormOneWithResiduesAtSplitPlacesStatement =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsUnitaryIntegralOfSplitPlaceComponent =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsUnitaryIntegralOfSplitPlaceComponent", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSingle\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open Matrix Formalism.UG Formalism.L2.DIV GlobalTheory.LevNorm
+
+namespace GlobalTheory.LevNorm
+
+section Idem
+
+variable {R : Type} [CommRing R] {n : ℕ}
+
+theorem matrix_mul_orthogonal_three_idempotents_smul (a b c : R) (hab : a * b = 0) (hac : a * c = 0) (hbc : b * c = 0) (ha : a * a = a)
+    (hb : b * b = b) (hc : c * c = c) (M₁ M₂ M₃ N₁ N₂ N₃ : Matrix (Fin n) (Fin n) R) :
+    (a • M₁ + b • M₂ + c • M₃) * (a • N₁ + b • N₂ + c • N₃) = a • (M₁ * N₁) + b • (M₂ * N₂) + c • (M₃ * N₃) := by
+  have hba : b * a = 0 := by rw [mul_comm]; exact hab
+  have hca : c * a = 0 := by rw [mul_comm]; exact hac
+  have hcb : c * b = 0 := by rw [mul_comm]; exact hbc
+  simp only [Matrix.add_mul, Matrix.mul_add, Matrix.smul_mul, Matrix.mul_smul, smul_add, smul_smul, hab, hac, hbc, hba, hca, hcb,
+    ha, hb, hc, zero_smul, add_zero, zero_add]
+
+theorem cT_smul' (τ : R →+* R) (a : R) (M : Matrix (Fin n) (Fin n) R) : cT τ (a • M) = τ a • cT τ M := by
+  ext i j; simp [cT]
+
+theorem cT_add' (τ : R →+* R) (M N : Matrix (Fin n) (Fin n) R) : cT τ (M + N) = cT τ M + cT τ N := by
+  ext i j; simp [cT]
+
+theorem cT_cT' (τ : R →+* R) (hτ : ∀ x, τ (τ x) = x) (M : Matrix (Fin n) (Fin n) R) : cT τ (cT τ M) = M := by
+  ext i j; simp [cT, hτ]
+
+theorem map_idem3 (a b c : R) (X Y : Matrix (Fin n) (Fin n) R) {T : Type} [CommRing T] (f : R →+* T) :
+    (a • X + b • Y + c • (1 : Matrix (Fin n) (Fin n) R)).map f
+      = f a • X.map f + f b • Y.map f + f c • (1 : Matrix (Fin n) (Fin n) T) := by
+  ext i j; simp [Matrix.one_apply]; split_ifs <;> simp
+
+theorem idem_split_inv (τ : R →+* R) (a b : R) (ha : a * a = a) (hb : b * b = b) (hab : a * b = 0)
+    (G Gi X Xi : Matrix (Fin n) (Fin n) R) (hG : G * Gi = 1) (hGi : Gi * G = 1) (hX : X * Xi = 1) :
+    (a • X + b • (Gi * cT τ Xi * G) + (1 - a - b) • (1 : Matrix (Fin n) (Fin n) R)) *
+      (a • Xi + b • (Gi * cT τ X * G) + (1 - a - b) • (1 : Matrix (Fin n) (Fin n) R)) = 1 := by
+  have hac : a * (1 - a - b) = 0 := by linear_combination -ha - hab
+  have hbc : b * (1 - a - b) = 0 := by linear_combination -hb - hab
+  have hc : (1 - a - b) * (1 - a - b) = 1 - a - b := by linear_combination ha + hb + 2 * hab
+  rw [matrix_mul_orthogonal_three_idempotents_smul a b _ hab hac hbc ha hb hc]
+  have h1 : Gi * cT τ Xi * G * (Gi * cT τ X * G) = 1 := by
+    calc _ = Gi * (cT τ Xi * (G * Gi) * cT τ X) * G := by simp only [Matrix.mul_assoc]
+      _ = 1 := by rw [hG, Matrix.mul_one, ← cT_mul, hX, cT_one, Matrix.mul_one, hGi]
+  rw [hX, h1, Matrix.mul_one, ← add_smul, ← add_smul, show a + b + (1 - a - b) = 1 by ring, one_smul]
+
+theorem idem_split_unitary (τ : R →+* R) (hτ : ∀ x, τ (τ x) = x) (a b : R) (ha : a * a = a) (hb : b * b = b)
+    (hab : a * b = 0) (hτa : τ a = b)
+    (G Gi X Xi : Matrix (Fin n) (Fin n) R) (hG : G * Gi = 1) (hXi : Xi * X = 1) (hGh : cT τ G = G) :
+    cT τ (a • X + b • (Gi * cT τ Xi * G) + (1 - a - b) • (1 : Matrix (Fin n) (Fin n) R)) * G *
+      (a • X + b • (Gi * cT τ Xi * G) + (1 - a - b) • (1 : Matrix (Fin n) (Fin n) R)) = G := by
+  have hac : a * (1 - a - b) = 0 := by linear_combination -ha - hab
+  have hbc : b * (1 - a - b) = 0 := by linear_combination -hb - hab
+  have hc : (1 - a - b) * (1 - a - b) = 1 - a - b := by linear_combination ha + hb + 2 * hab
+  have hτb : τ b = a := by rw [← hτa, hτ]
+  have hτc : τ (1 - a - b) = 1 - a - b := by rw [map_sub, map_sub, map_one, hτa, hτb]; ring
+  have hGc : cT τ Gi * G = 1 := by
+    have : cT τ Gi * cT τ G = 1 := by rw [← cT_mul, hG, cT_one]
+    rwa [hGh] at this
+  have hct : cT τ (a • X + b • (Gi * cT τ Xi * G) + (1 - a - b) • (1 : Matrix (Fin n) (Fin n) R))
+      = a • (G * (Xi * cT τ Gi)) + b • cT τ X + (1 - a - b) • (1 : Matrix (Fin n) (Fin n) R) := by
+    rw [cT_add', cT_add', cT_smul', cT_smul', cT_smul', hτa, hτb, hτc, cT_one, cT_mul, cT_mul, hGh, cT_cT' τ hτ]
+    abel
+  have hGs : G = a • G + b • G + (1 - a - b) • G := by
+    rw [← add_smul, ← add_smul, show a + b + (1 - a - b) = 1 by ring, one_smul]
+  rw [hct, show (a • (G * (Xi * cT τ Gi)) + b • cT τ X + (1 - a - b) • (1 : Matrix (Fin n) (Fin n) R)) * G
+      = a • (G * (Xi * cT τ Gi) * G) + b • (cT τ X * G) + (1 - a - b) • (1 * G) by
+    simp only [Matrix.add_mul, Matrix.smul_mul]]
+  rw [matrix_mul_orthogonal_three_idempotents_smul a b _ hab hac hbc ha hb hc]
+  have e1 : G * (Xi * cT τ Gi) * G * X = G := by
+    calc _ = G * (Xi * (cT τ Gi * G) * X) := by simp only [Matrix.mul_assoc]
+      _ = G := by rw [hGc, Matrix.mul_one, hXi, Matrix.mul_one]
+  have e2 : cT τ X * G * (Gi * cT τ Xi * G) = G := by
+    calc _ = cT τ X * (G * Gi) * cT τ Xi * G := by simp only [Matrix.mul_assoc]
+      _ = G := by rw [hG, Matrix.mul_one, ← cT_mul, hXi, cT_one, Matrix.one_mul]
+  rw [e1, e2, Matrix.one_mul, Matrix.mul_one, ← hGs]
+
+end Idem
+
+end GlobalTheory.LevNorm
+
+namespace GlobalTheory.LevNorm
+
+theorem exists_unitary_int_of_component {A : Type} [CommRing A] {S : Subring A} {P : Type} {k : P → Type}
+    [∀ Q, Field (k Q)] {r : ∀ Q, S →+* k Q} (Z : PlaceSys A S P k r) (σ : A →+* A) (hσ : ∀ a, σ (σ a) = a)
+    (hS : ∀ a ∈ S, σ a ∈ S) (n : ℕ) (G : GL (Fin n) S)
+    (hG : cT σ ((bc S.subtype G : GL (Fin n) A) : Matrix (Fin n) (Fin n) A)
+      = ((bc S.subtype G : GL (Fin n) A) : Matrix (Fin n) (Fin n) A))
+    (Q Q' : P) (hQ : σ (Z.e Q) = Z.e Q') (hne : Q ≠ Q') (y : GL (Fin n) (Z.O Q)) :
+    ∃ u : GL (Fin n) S, bc S.subtype u ∈ UJ σ ((bc S.subtype G : GL (Fin n) A) : Matrix (Fin n) (Fin n) A) ∧
+      bc (Z.pO Q) u = y ∧ ∀ Q'', Q'' ≠ Q → Q'' ≠ Q' → bc (Z.pO Q'') u = 1 := by
+  obtain ⟨x, hx1, hx2⟩ := Z.gl_single Q (bc (Z.O Q).subtype y)
+  obtain ⟨X, hX⟩ := Z.gl_int (x := x) fun R => by
+    by_cases h : R = Q
+    · subst h; exact ⟨y, hx1.symm⟩
+    · exact ⟨1, by rw [map_one, hx2 R h]⟩
+  have hcomp : ∀ R, bc (Z.O R).subtype (bc (Z.pO R) X) = bc (Z.p R) x := fun R => by
+    rw [← hX]; rfl
+  have binj : ∀ R, Function.Injective (bc (n := Fin n) (Z.O R).subtype) := fun R g h e =>
+    Units.ext (Matrix.map_injective Subtype.val_injective (congrArg Units.val e))
+  have hXQ : bc (Z.pO Q) X = y := binj Q (by rw [hcomp, hx1])
+  have hXR : ∀ R, R ≠ Q → bc (Z.pO R) X = 1 := fun R h => binj R (by rw [hcomp, hx2 R h, map_one])
+  let τ : S →+* S := σ.restrict S S hS
+  have hτv : ∀ s : S, (τ s : A) = σ s := fun s => rfl
+  have hτ : ∀ s, τ (τ s) = s := fun s => Subtype.ext (by rw [hτv, hτv, hσ])
+  let a : S := ⟨Z.e Q, Z.e_mem Q⟩
+  let b : S := ⟨Z.e Q', Z.e_mem Q'⟩
+  have ha : a * a = a := Subtype.ext (Z.e_idem Q)
+  have hb : b * b = b := Subtype.ext (Z.e_idem Q')
+  have hab : a * b = 0 := Subtype.ext (by
+    show Z.e Q * Z.e Q' = 0
+    refine Z.ext _ fun R => ?_
+    rw [map_mul]
+    by_cases h : R = Q
+    · subst h; rw [Z.e_ne Q' R hne, mul_zero]
+    · rw [Z.e_ne Q R h, zero_mul])
+  have hτa : τ a = b := Subtype.ext hQ
+  have hmap : ∀ M : Matrix (Fin n) (Fin n) S, (cT τ M).map S.subtype = cT σ (M.map S.subtype) := fun M => by
+    ext i j; rfl
+  have hGh : cT τ (G : Matrix (Fin n) (Fin n) S) = G :=
+    Matrix.map_injective (f := (S.subtype : S → A)) S.subtype_injective ((hmap _).trans hG)
+  let uM : Matrix (Fin n) (Fin n) S := a • (X : Matrix (Fin n) (Fin n) S) +
+    b • (((G⁻¹ : GL (Fin n) S) : Matrix (Fin n) (Fin n) S) * cT τ ((X⁻¹ : GL (Fin n) S) : Matrix (Fin n) (Fin n) S) * G) +
+    (1 - a - b) • (1 : Matrix (Fin n) (Fin n) S)
+  let vM : Matrix (Fin n) (Fin n) S := a • ((X⁻¹ : GL (Fin n) S) : Matrix (Fin n) (Fin n) S) +
+    b • (((G⁻¹ : GL (Fin n) S) : Matrix (Fin n) (Fin n) S) * cT τ (X : Matrix (Fin n) (Fin n) S) * G) +
+    (1 - a - b) • (1 : Matrix (Fin n) (Fin n) S)
+  let u : GL (Fin n) S := ⟨uM, vM,
+    idem_split_inv τ a b ha hb hab _ _ _ _ (Units.mul_inv G) (Units.inv_mul G) (Units.mul_inv X),
+    idem_split_inv τ a b ha hb hab _ _ _ _ (Units.mul_inv G) (Units.inv_mul G) (Units.inv_mul X)⟩
+  have hcompU : ∀ R, ((bc (Z.pO R) u : GL (Fin n) (Z.O R)) : Matrix (Fin n) (Fin n) (Z.O R)) =
+      Z.pO R a • (X : Matrix (Fin n) (Fin n) S).map (Z.pO R) + Z.pO R b • _ + Z.pO R (1 - a - b) • 1 :=
+    fun R => map_idem3 _ _ _ _ _ _
+  refine ⟨u, ?_, ?_, ?_⟩
+  · show cT σ (uM.map S.subtype) * (G : Matrix (Fin n) (Fin n) S).map S.subtype * uM.map S.subtype
+      = (G : Matrix (Fin n) (Fin n) S).map S.subtype
+    rw [← hmap, ← Matrix.map_mul, ← Matrix.map_mul,
+      idem_split_unitary τ hτ a b ha hb hab hτa _ _ _ _ (Units.mul_inv G) (Units.inv_mul X) hGh]
+  · have hpa : Z.pO Q a = 1 := Subtype.ext (Z.e_self Q)
+    have hpb : Z.pO Q b = 0 := Subtype.ext (Z.e_ne Q' Q hne)
+    refine Units.ext ?_
+    rw [hcompU, map_sub, map_sub, map_one, hpa, hpb]
+    simp only [one_smul, zero_smul, add_zero, sub_self]
+    exact congrArg Units.val hXQ
+  · intro R h1 h2
+    have hpa : Z.pO R a = 0 := Subtype.ext (Z.e_ne Q R h1)
+    have hpb : Z.pO R b = 0 := Subtype.ext (Z.e_ne Q' R h2)
+    refine Units.ext ?_
+    rw [hcompU, map_sub, map_sub, map_one, hpa, hpb]
+    simp
+
+end GlobalTheory.LevNorm
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsUnitaryIntegralOfSplitPlaceComponent =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsUnitaryIntegralOfSplitPlaceComponentStatement =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsUnitaryIntegralOfSplitPlaceComponentStatement", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSingle\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsUnitaryIntegralOfSplitPlaceComponent\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open Matrix Formalism.UG Formalism.L2.DIV GlobalTheory.LevNorm
+
+theorem _root_.GlobalTheory.T.exists_unitary_integral_of_splitPlace_component : ∀ {A : Type} [CommRing A] {S : Subring A} {P : Type} {k : P → Type} [∀ Q, Field (k Q)] {r : ∀ Q, S →+* k Q} (Z : PlaceSys A S P k r) (σ : A →+* A), (∀ a, σ (σ a) = a) → (∀ a ∈ S, σ a ∈ S) → ∀ (n : ℕ) (G : GL (Fin n) S), cT σ ((bc S.subtype G : GL (Fin n) A) : Matrix (Fin n) (Fin n) A) = ((bc S.subtype G : GL (Fin n) A) : Matrix (Fin n) (Fin n) A) → ∀ Q Q' : P, σ (Z.e Q) = Z.e Q' → Q ≠ Q' → ∀ y : GL (Fin n) (Z.O Q), ∃ u : GL (Fin n) S, bc S.subtype u ∈ UJ σ ((bc S.subtype G : GL (Fin n) A) : Matrix (Fin n) (Fin n) A) ∧ bc (Z.pO Q) u = y ∧ ∀ Q'', Q'' ≠ Q → Q'' ≠ Q' → bc (Z.pO Q'') u = 1 := by
+  first | exact @GlobalTheory.LevNorm.exists_unitary_int_of_component | exact GlobalTheory.LevNorm.exists_unitary_int_of_component | (intros; apply GlobalTheory.LevNorm.exists_unitary_int_of_component <;> assumption)
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsUnitaryIntegralOfSplitPlaceComponentStatement =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsScalarMulIntegralOfConjIntegralGenerators =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsScalarMulIntegralOfConjIntegralGenerators", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSingle\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open Matrix Formalism.UG Formalism.L2.DIV GlobalTheory.LevNorm
+
+noncomputable section
+namespace GlobalTheory.ScalConj
+
+theorem single_conj_apply {K : Type} [Field K] {n : ℕ} (A B : Matrix (Fin n) (Fin n) K) (a b i j : Fin n) :
+    (A * (Matrix.single a b (1 : K) : Matrix (Fin n) (Fin n) K) * B) i j = A i a * B b j := by
+  rw [Matrix.mul_apply]
+  simp [Matrix.mul_apply, Matrix.single_apply, Finset.sum_ite_eq, Finset.sum_ite_eq', ite_and]
+
+def conjInt {K : Type} [Field K] (O : ValuationSubring K) {n : ℕ} (m : GL (Fin n) K) :
+    Subalgebra O (Matrix (Fin n) (Fin n) O) where
+  carrier := {X | ∃ Y : Matrix (Fin n) (Fin n) O,
+    Y.map O.subtype = (m : Matrix (Fin n) (Fin n) K) * X.map O.subtype * ((m⁻¹ : GL (Fin n) K) : Matrix (Fin n) (Fin n) K)}
+  mul_mem' := by
+    rintro X X' ⟨Y, hY⟩ ⟨Y', hY'⟩
+    refine ⟨Y * Y', ?_⟩
+    rw [Matrix.map_mul, Matrix.map_mul, hY, hY']
+    have : ((m⁻¹ : GL (Fin n) K) : Matrix (Fin n) (Fin n) K) * (m : Matrix (Fin n) (Fin n) K) = 1 := Units.inv_mul m
+    simp only [Matrix.mul_assoc]
+    rw [← Matrix.mul_assoc ((m⁻¹ : GL (Fin n) K) : Matrix (Fin n) (Fin n) K), this, Matrix.one_mul]
+  add_mem' := by
+    rintro X X' ⟨Y, hY⟩ ⟨Y', hY'⟩
+    refine ⟨Y + Y', ?_⟩
+    rw [Matrix.map_add _ (map_add _), Matrix.map_add _ (map_add _), hY, hY', Matrix.mul_add, Matrix.add_mul]
+  algebraMap_mem' := by
+    intro r
+    refine ⟨algebraMap O _ r, ?_⟩
+    have h : (algebraMap O (Matrix (Fin n) (Fin n) O) r).map O.subtype = (r : K) • (1 : Matrix (Fin n) (Fin n) K) := by
+      ext i j
+      by_cases h : i = j
+      · subst h; simp [Matrix.algebraMap_matrix_apply]
+      · simp [Matrix.algebraMap_matrix_apply, h, Matrix.one_apply_ne h]
+    rw [h, Matrix.mul_smul, Matrix.mul_one, Matrix.smul_mul, Units.mul_inv]
+
+theorem single_map_subtype {K : Type} [Field K] (O : ValuationSubring K) {n : ℕ} (a b : Fin n) :
+    (Matrix.single a b (1 : O)).map O.subtype = (Matrix.single a b (1 : K) : Matrix (Fin n) (Fin n) K) := by
+  ext i j
+  simp only [Matrix.map_apply, Matrix.single_apply]
+  split_ifs <;> simp
+
+theorem entry_mul_inv_entry_mem {K : Type} [Field K] (O : ValuationSubring K) {n : ℕ} (m : GL (Fin n) K)
+    (T : Set (GL (Fin n) O))
+    (hT : Algebra.adjoin O ((fun x : GL (Fin n) O => (x : Matrix (Fin n) (Fin n) O)) '' T) = ⊤)
+    (hc : ∀ x ∈ T, ∃ x' : GL (Fin n) O, bc O.subtype x' = m * bc O.subtype x * m⁻¹) (i a b j : Fin n) :
+    (m : Matrix (Fin n) (Fin n) K) i a * ((m⁻¹ : GL (Fin n) K) : Matrix (Fin n) (Fin n) K) b j ∈ O := by
+  have hle : Algebra.adjoin O ((fun x : GL (Fin n) O => (x : Matrix (Fin n) (Fin n) O)) '' T) ≤ conjInt O m := by
+    rw [Algebra.adjoin_le_iff]
+    rintro _ ⟨x, hx, rfl⟩
+    obtain ⟨x', hx'⟩ := hc x hx
+    exact ⟨x', congrArg (fun g : GL (Fin n) K => (g : Matrix (Fin n) (Fin n) K)) hx'⟩
+  rw [hT] at hle
+  obtain ⟨Y, hY⟩ := hle (Algebra.mem_top : Matrix.single a b (1 : O) ∈ (⊤ : Subalgebra O (Matrix (Fin n) (Fin n) O)))
+  have h := congrFun (congrFun hY i) j
+  rw [single_map_subtype, single_conj_apply] at h
+  rw [← h]
+  exact (Y i j).2
+
+theorem isScal_of_conj (K : Type) [Field K] (O : ValuationSubring K) (n : ℕ) (m : GL (Fin n) K)
+    (T : Set (GL (Fin n) O))
+    (hT : Algebra.adjoin O ((fun x : GL (Fin n) O => (x : Matrix (Fin n) (Fin n) O)) '' T) = ⊤)
+    (hc : ∀ x ∈ T, ∃ x' : GL (Fin n) O, bc O.subtype x' = m * bc O.subtype x * m⁻¹) : IsScal O m := by
+  have H := entry_mul_inv_entry_mem O m T hT hc
+  rcases Nat.eq_zero_or_pos n with rfl | hn
+  · exact ⟨1, 1, Subsingleton.elim _ _⟩
+  set M : Matrix (Fin n) (Fin n) K := (m : Matrix (Fin n) (Fin n) K) with hM
+  set N : Matrix (Fin n) (Fin n) K := ((m⁻¹ : GL (Fin n) K) : Matrix (Fin n) (Fin n) K) with hN
+  have hMN : M * N = 1 := Units.mul_inv m
+  obtain ⟨⟨i0, a0⟩, -, hmax⟩ := Finset.exists_max_image (Finset.univ : Finset (Fin n × Fin n))
+    (fun p => O.valuation (M p.1 p.2)) ⟨(⟨0, hn⟩, ⟨0, hn⟩), Finset.mem_univ _⟩
+  set c := M i0 a0 with hcdef
+  have hc0 : c ≠ 0 := by
+    intro h0
+    have hz : ∀ i a, M i a = 0 := fun i a => by
+      have h1 := hmax (i, a) (Finset.mem_univ _)
+      simp only [h0, map_zero] at h1
+      exact (Valuation.zero_iff _).1 (le_antisymm h1 zero_le')
+    have h1 := congrFun (congrFun hMN ⟨0, hn⟩) ⟨0, hn⟩
+    simp [Matrix.mul_apply, hz] at h1
+  have hv : 0 < O.valuation c := (Valuation.pos_iff _).2 hc0
+  have hy : ∀ i a, c⁻¹ * M i a ∈ O := fun i a => by
+    rw [← O.valuation_le_one_iff, map_mul, map_inv₀]
+    exact (inv_mul_le_one₀ hv).2 (hmax (i, a) (Finset.mem_univ _))
+  have hz : ∀ b j, c * N b j ∈ O := fun b j => H i0 a0 b j
+  let Y : Matrix (Fin n) (Fin n) O := Matrix.of fun i j => ⟨_, hy i j⟩
+  let Z : Matrix (Fin n) (Fin n) O := Matrix.of fun i j => ⟨_, hz i j⟩
+  have hYm : Y.map O.subtype = c⁻¹ • M := by ext i j; rfl
+  have hZm : Z.map O.subtype = c • N := by ext i j; rfl
+  have inj : Function.Injective fun X : Matrix (Fin n) (Fin n) O => X.map O.subtype :=
+    Matrix.map_injective (Subtype.val_injective)
+  have key : ∀ {A B : Matrix (Fin n) (Fin n) K}, A * B = 1 → (c⁻¹ • A) * (c • B) = 1 := fun {A B} h => by
+    rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul, inv_mul_cancel₀ hc0, one_smul, h]
+  have hNM : N * M = 1 := Units.inv_mul m
+  have e1 : Y * Z = 1 := inj (by
+    show (Y * Z).map O.subtype = (1 : Matrix (Fin n) (Fin n) O).map O.subtype
+    rw [Matrix.map_mul, Matrix.map_one _ (map_zero _) (map_one _), hYm, hZm, key hMN])
+  have e2 : Z * Y = 1 := inj (by
+    show (Z * Y).map O.subtype = (1 : Matrix (Fin n) (Fin n) O).map O.subtype
+    rw [Matrix.map_mul, Matrix.map_one _ (map_zero _) (map_one _), hYm, hZm, Matrix.smul_mul, Matrix.mul_smul, smul_smul,
+      mul_inv_cancel₀ hc0, one_smul, hNM])
+  refine ⟨Units.mk0 c hc0, ⟨Y, Z, e1, e2⟩, ?_⟩
+  show M = c • (Y.map O.subtype)
+  rw [hYm, smul_smul, mul_inv_cancel₀ hc0, one_smul]
+
+end GlobalTheory.ScalConj
+end -- clump:auto
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsScalarMulIntegralOfConjIntegralGenerators =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsScalarMulIntegralOfConjIntegralGeneratorsStatement =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsScalarMulIntegralOfConjIntegralGeneratorsStatement", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSingle\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsScalarMulIntegralOfConjIntegralGenerators\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open Matrix Formalism.UG Formalism.L2.DIV GlobalTheory.LevNorm
+
+theorem _root_.GlobalTheory.T.isScalarMulIntegral_of_conj_integral_generators : ∀ (K : Type) [Field K] (O : ValuationSubring K) (n : ℕ) (m : GL (Fin n) K) (T : Set (GL (Fin n) O)), Algebra.adjoin O ((fun x : GL (Fin n) O => (x : Matrix (Fin n) (Fin n) O)) '' T) = ⊤ → (∀ x ∈ T, ∃ x' : GL (Fin n) O, bc O.subtype x' = m * bc O.subtype x * m⁻¹) → IsScal O m := by
+  first | exact @GlobalTheory.ScalConj.isScal_of_conj | exact GlobalTheory.ScalConj.isScal_of_conj | (intros; apply GlobalTheory.ScalConj.isScal_of_conj <;> assumption)
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsScalarMulIntegralOfConjIntegralGeneratorsStatement =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NormaliserUnipSymCharPattern =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NormaliserUnipSymCharPattern", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSingle\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+section -- clump:auto
+@[expose] public section
+
+noncomputable section
+
+open Matrix Formalism.UG Formalism.L2.DIV GlobalTheory.LevNorm
+
+namespace GlobalTheory.SymNorm
+
+variable {k : Type} [Field k] {n : ℕ}
+
+def Prec (ρ κ i j : ℕ) : Prop := i < j ∧ ¬(ρ ≤ i ∧ i < ρ + κ ∧ j = ρ + κ)
+
+def ht (ρ κ i : ℕ) : ℕ := if i < ρ + κ then i else if i = ρ + κ then ρ else i - 1
+
+def dp (n ρ κ i : ℕ) : ℕ := if i < ρ + κ then n - 2 - i else if i = ρ + κ then ρ else n - 1 - i
+
+theorem ht_lt {ρ κ i j : ℕ} (hκ : 1 ≤ κ) (h : Prec ρ κ i j) : ht ρ κ i + 1 ≤ ht ρ κ j := by
+  unfold Prec at h; unfold ht; split_ifs <;> omega
+
+theorem dp_lt {n ρ κ i j : ℕ} (hn : n = 2 * ρ + κ + 1) (hκ : 1 ≤ κ) (hj : j < n) (h : Prec ρ κ i j) : dp n ρ κ j + 1 ≤ dp n ρ κ i := by
+  unfold Prec at h; unfold dp; split_ifs <;> (try rw [Nat.sub_sub, Nat.sub_sub]) <;> omega
+
+theorem exists_succ {ρ κ : ℕ} (hn : n = 2 * ρ + κ + 1) (hρ : 1 ≤ ρ) (a : Fin n) (ha : 1 ≤ dp n ρ κ a.val) :
+    ∃ q : Fin n, Prec ρ κ a.val q.val ∧ dp n ρ κ a.val ≤ dp n ρ κ q.val + 1 := by
+  by_cases h : a.val + 1 = ρ + κ
+  · refine ⟨⟨ρ + κ + 1, by omega⟩, ?_, ?_⟩
+    all_goals (simp only [Prec, dp, Fin.val_mk] at *; split_ifs at * <;> omega)
+  · have : a.val + 1 < n := by unfold dp at ha; split_ifs at ha <;> omega
+    refine ⟨⟨a.val + 1, this⟩, ?_, ?_⟩
+    all_goals (simp only [Prec, dp, Fin.val_mk] at *; split_ifs at * <;> omega)
+
+theorem exists_pred {ρ κ : ℕ} (hn : n = 2 * ρ + κ + 1) (hρ : 1 ≤ ρ) (hκ : 2 ≤ κ) (a : Fin n) (ha : 1 ≤ ht ρ κ a.val) :
+    ∃ c : Fin n, Prec ρ κ c.val a.val ∧ ht ρ κ a.val ≤ ht ρ κ c.val + 1 := by
+  have := a.2
+  by_cases h : a.val = ρ + κ
+  · refine ⟨⟨ρ - 1, by omega⟩, ?_, ?_⟩
+    all_goals (simp only [Prec, ht, Fin.val_mk] at *; split_ifs at * <;> omega)
+  by_cases h' : a.val = ρ + κ + 1
+  · refine ⟨⟨ρ + κ - 1, by omega⟩, ?_, ?_⟩
+    all_goals (simp only [Prec, ht, Fin.val_mk] at *; split_ifs at * <;> omega)
+  · have : 1 ≤ a.val := by unfold ht at ha; split_ifs at ha <;> omega
+    refine ⟨⟨a.val - 1, by omega⟩, ?_, ?_⟩
+    all_goals (simp only [Prec, ht, Fin.val_mk] at *; split_ifs at * <;> omega)
+
+theorem allowed_of {ρ κ i a : ℕ} (hn : n = 2 * ρ + κ + 1) (hρ : 1 ≤ ρ) (hκ : 2 ≤ κ) (hi : i < n) (ha : a < n)
+    (h1 : dp n ρ κ a ≤ dp n ρ κ i) (h2 : ht ρ κ i ≤ ht ρ κ a) :
+    i = a ∨ Prec ρ κ i a ∨ (i = ρ ∧ a = ρ + κ) ∨ (i = ρ + κ ∧ a + 1 = ρ + κ) := by
+  unfold Prec; unfold dp at h1; unfold ht at h2; split_ifs at h1 h2 <;> omega
+
+section Pattern
+
+variable {ρ κ : ℕ} {X Y : Matrix (Fin n) (Fin n) k}
+
+theorem step_up (hYX : Y * X = 1)
+    (hP : ∀ p q : Fin n, Prec ρ κ p q → ∀ i j : Fin n, ¬ Prec ρ κ i j → X i p * Y q j = 0)
+    {i p q : Fin n} (hip : X i p ≠ 0) (hpq : Prec ρ κ p q) : ∃ j : Fin n, Prec ρ κ i j ∧ X j q ≠ 0 := by
+  by_contra hc
+  push_neg at hc
+  have h0 : (Y * X) q q = 0 := by
+    rw [Matrix.mul_apply]
+    refine Finset.sum_eq_zero fun j _ => ?_
+    by_cases hj : Prec ρ κ i j
+    · rw [hc j hj, mul_zero]
+    · rw [(mul_eq_zero.1 (hP p q hpq i j hj)).resolve_left hip, zero_mul]
+  rw [hYX, one_apply_eq] at h0
+  exact one_ne_zero h0
+
+theorem step_down (hXY : X * Y = 1)
+    (hP' : ∀ p q : Fin n, Prec ρ κ p q → ∀ i j : Fin n, ¬ Prec ρ κ i j → Y i p * X q j = 0)
+    {i a c : Fin n} (hia : X i a ≠ 0) (hci : Prec ρ κ c i) : ∃ j : Fin n, Prec ρ κ j a ∧ X c j ≠ 0 := by
+  by_contra hc
+  push_neg at hc
+  have h0 : (X * Y) c c = 0 := by
+    rw [Matrix.mul_apply]
+    refine Finset.sum_eq_zero fun j _ => ?_
+    by_cases hj : Prec ρ κ j a
+    · rw [hc j hj, zero_mul]
+    · rw [(mul_eq_zero.1 (hP' c i hci j a hj)).resolve_right hia, mul_zero]
+  rw [hXY, one_apply_eq] at h0
+  exact one_ne_zero h0
+
+theorem dp_le (hn : n = 2 * ρ + κ + 1) (hρ : 1 ≤ ρ) (hκ : 2 ≤ κ) (hYX : Y * X = 1)
+    (hP : ∀ p q : Fin n, Prec ρ κ p q → ∀ i j : Fin n, ¬ Prec ρ κ i j → X i p * Y q j = 0) :
+    ∀ d : ℕ, ∀ i a : Fin n, X i a ≠ 0 → d ≤ dp n ρ κ a → d ≤ dp n ρ κ i := by
+  intro d
+  induction d with
+  | zero => intros; exact Nat.zero_le _
+  | succ d ih =>
+    intro i a hia hd
+    obtain ⟨q, haq, hq⟩ := exists_succ hn hρ a (by omega)
+    obtain ⟨j, hij, hjq⟩ := step_up hYX hP hia haq
+    have h1 := ih j q hjq (by omega)
+    have h2 := dp_lt hn (by omega) j.2 hij
+    omega
+
+theorem ht_le (hn : n = 2 * ρ + κ + 1) (hρ : 1 ≤ ρ) (hκ : 2 ≤ κ) (hXY : X * Y = 1)
+    (hP' : ∀ p q : Fin n, Prec ρ κ p q → ∀ i j : Fin n, ¬ Prec ρ κ i j → Y i p * X q j = 0) :
+    ∀ d : ℕ, ∀ i a : Fin n, X i a ≠ 0 → d ≤ ht ρ κ i → d ≤ ht ρ κ a := by
+  intro d
+  induction d with
+  | zero => intros; exact Nat.zero_le _
+  | succ d ih =>
+    intro i a hia hd
+    obtain ⟨c, hci, hc⟩ := exists_pred hn hρ hκ i (by omega)
+    obtain ⟨j, hja, hcj⟩ := step_down hXY hP' hia hci
+    have h1 := ih c j hcj (by omega)
+    have h2 := ht_lt (by omega) hja
+    omega
+
+theorem pattern (hn : n = 2 * ρ + κ + 1) (hρ : 1 ≤ ρ) (hκ : 2 ≤ κ) (hXY : X * Y = 1) (hYX : Y * X = 1)
+    (hP : ∀ p q : Fin n, Prec ρ κ p q → ∀ i j : Fin n, ¬ Prec ρ κ i j → X i p * Y q j = 0)
+    (hP' : ∀ p q : Fin n, Prec ρ κ p q → ∀ i j : Fin n, ¬ Prec ρ κ i j → Y i p * X q j = 0)
+    (i a : Fin n) (h : X i a ≠ 0) :
+    i.val = a.val ∨ Prec ρ κ i a ∨ (i.val = ρ ∧ a.val = ρ + κ) ∨ (i.val = ρ + κ ∧ a.val + 1 = ρ + κ) :=
+  allowed_of hn hρ hκ i.2 a.2 (dp_le hn hρ hκ hYX hP _ i a h le_rfl) (ht_le hn hρ hκ hXY hP' _ i a h le_rfl)
+
+end Pattern
+
+section Conj
+
+theorem mul_single_mul' (X Y : Matrix (Fin n) (Fin n) k) (p q i j : Fin n) (s : k) :
+    (X * single p q s * Y) i j = X i p * s * Y q j := by
+  have h1 : X * single p q s = Matrix.of fun i x => if x = q then X i p * s else 0 := by
+    ext i x
+    rw [Matrix.mul_apply, Matrix.of_apply]
+    by_cases hx : x = q
+    · subst hx
+      rw [if_pos rfl, Finset.sum_eq_single p]
+      · simp [Matrix.single_apply]
+      · intro y _ hy; simp [Matrix.single_apply, Ne.symm hy]
+      · simp
+    · rw [if_neg hx]
+      exact Finset.sum_eq_zero fun y _ => by simp [Matrix.single_apply, Ne.symm hx]
+  rw [h1, Matrix.mul_apply, Finset.sum_eq_single q]
+  · simp [mul_assoc]
+  · intro y _ hy; simp [hy]
+  · simp
+
+def elemU (p q : Fin n) (hpq : p ≠ q) (s : k) : GL (Fin n) k :=
+  have hEE : single p q s * single p q s = 0 := by simp [hpq.symm]
+  ⟨1 + single p q s, 1 - single p q s,
+    by rw [add_mul, one_mul, mul_sub, hEE, sub_zero, mul_one, sub_add_cancel],
+    by rw [sub_mul, one_mul, mul_add, hEE, add_zero, mul_one, add_sub_cancel_right]⟩
+
+theorem elemU_apply (p q : Fin n) (hpq : p ≠ q) (s : k) (i j : Fin n) :
+    ((elemU p q hpq s : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) i j =
+      (1 : Matrix (Fin n) (Fin n) k) i j + single p q s i j := rfl
+
+theorem elemU_mem {ρ κ : ℕ} {p q : Fin n} (h : Prec ρ κ p q) (hpq : p ≠ q) (s : k) :
+    elemU p q hpq s ∈ unipSym k n ρ κ := by
+  refine ⟨⟨fun i j hij => ?_, fun i => ?_⟩, fun i j h0 h1 h2 => ?_⟩
+  · have hij' : j.val < i.val := hij
+    rw [elemU_apply, one_apply_ne (fun e => by rw [e] at hij'; omega), single_apply, if_neg, zero_add]
+    rintro ⟨rfl, rfl⟩; unfold Prec at h; omega
+  · rw [elemU_apply, one_apply_eq, single_apply, if_neg, add_zero]
+    rintro ⟨rfl, rfl⟩; exact hpq rfl
+  · rw [elemU_apply, one_apply_ne (fun e => by rw [e] at h1; omega), single_apply, if_neg, zero_add]
+    rintro ⟨rfl, rfl⟩; unfold Prec at h; omega
+
+theorem conj_elemU_apply (M : GL (Fin n) k) (p q : Fin n) (hpq : p ≠ q) (s : k) (i j : Fin n) :
+    ((M * elemU p q hpq s * M⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) i j =
+      (1 : Matrix (Fin n) (Fin n) k) i j +
+        (M : Matrix (Fin n) (Fin n) k) i p * s * ((M⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) q j := by
+  have : ((M * elemU p q hpq s * M⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) =
+      1 + (M : Matrix (Fin n) (Fin n) k) * single p q s * ((M⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) := by
+    rw [Units.val_mul, Units.val_mul]
+    show (M : Matrix (Fin n) (Fin n) k) * (1 + single p q s) * _ = _
+    rw [mul_add, mul_one, add_mul, ← Units.val_mul, mul_inv_cancel, Units.val_one]
+  rw [this, Matrix.add_apply, mul_single_mul']
+
+theorem unipSym_entry {ρ κ : ℕ} {g : GL (Fin n) k} (hg : g ∈ unipSym k n ρ κ) {i j : Fin n} (h : ¬ Prec ρ κ i j) :
+    (g : Matrix (Fin n) (Fin n) k) i j = (1 : Matrix (Fin n) (Fin n) k) i j := by
+  rcases lt_trichotomy i.val j.val with h1 | h1 | h1
+  · have h3 : ρ ≤ i.val ∧ i.val < ρ + κ ∧ j.val = ρ + κ := by
+      by_contra hc; exact h ⟨h1, hc⟩
+    rw [hg.2 i j h3.1 h3.2.1 h3.2.2, one_apply_ne (fun e => by rw [e] at h1; omega)]
+  · have := Fin.ext h1; subst this; rw [hg.1.2 i, one_apply_eq]
+  · rw [hg.1.1 (show j.val < i.val from h1), one_apply_ne (fun e => by rw [e] at h1; omega)]
+
+theorem apply_mul_inv_apply_eq_zero_of_normalizes {ρ κ : ℕ} (M : GL (Fin n) k) (hM : ∀ h ∈ unipSym k n ρ κ, M * h * M⁻¹ ∈ unipSym k n ρ κ) :
+    ∀ p q : Fin n, Prec ρ κ p q → ∀ i j : Fin n, ¬ Prec ρ κ i j →
+      (M : Matrix (Fin n) (Fin n) k) i p * ((M⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) q j = 0 := by
+  intro p q hpq i j hij
+  have hne : p ≠ q := fun e => by rw [e] at hpq; exact lt_irrefl _ hpq.1
+  have h := unipSym_entry (hM _ (elemU_mem hpq hne 1)) hij
+  rw [conj_elemU_apply, mul_one] at h
+  simpa using h
+
+def esum (ρ κ : ℕ) (a : Fin n → Fin n → k) (X Y : Matrix (Fin n) (Fin n) k) (p q : Fin n) : k :=
+  ∑ i, ∑ j, if symEdge ρ κ i j then a i j * (X i p * Y q j) else 0
+
+theorem edgeVal_conj {ρ κ : ℕ} (a : Fin n → Fin n → k) (M : GL (Fin n) k) (p q : Fin n) (hpq : p ≠ q) (s : k) :
+    edgeVal ρ κ a (M * elemU p q hpq s * M⁻¹) =
+      s * esum ρ κ a (M : Matrix (Fin n) (Fin n) k) ((M⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) p q := by
+  unfold edgeVal esum
+  rw [Finset.mul_sum]; refine Finset.sum_congr rfl fun i _ => ?_
+  rw [Finset.mul_sum]; refine Finset.sum_congr rfl fun j _ => ?_
+  split_ifs with he
+  · have hij : i ≠ j := fun e => by unfold symEdge at he; rw [e] at he; omega
+    rw [conj_elemU_apply, one_apply_ne hij, zero_add]; ring
+  · rw [mul_zero]
+
+theorem esum_single {ρ κ : ℕ} (a : Fin n → Fin n → k) (X Y : Matrix (Fin n) (Fin n) k) (p q i0 j0 : Fin n)
+    (hz : ∀ i j : Fin n, symEdge ρ κ i j → X i p * Y q j ≠ 0 → i = i0 ∧ j = j0) :
+    esum ρ κ a X Y p q = if symEdge ρ κ i0 j0 then a i0 j0 * (X i0 p * Y q j0) else 0 := by
+  unfold esum
+  rw [Finset.sum_eq_single i0, Finset.sum_eq_single j0]
+  · intro j _ hj
+    split_ifs with he
+    · rcases eq_or_ne (X i0 p * Y q j) 0 with h | h
+      · rw [h, mul_zero]
+      · exact absurd (hz _ _ he h).2 hj
+    · rfl
+  · intro h; exact absurd (Finset.mem_univ _) h
+  · intro i _ hi
+    refine Finset.sum_eq_zero fun j _ => ?_
+    split_ifs with he
+    · rcases eq_or_ne (X i p * Y q j) 0 with h | h
+      · rw [h, mul_zero]
+      · exact absurd (hz _ _ he h).1 hi
+    · rfl
+  · intro h; exact absurd (Finset.mem_univ _) h
+
+theorem char_cancel (ψ : AddChar k ℂ) (hψ : ψ ≠ 1) {A B : k} (h : ∀ s : k, ψ (s * A) = ψ (s * B)) : A = B := by
+  by_contra hne
+  obtain ⟨x, hx⟩ := AddChar.ne_one_iff.1 hψ
+  have hAB : A - B ≠ 0 := sub_ne_zero.2 hne
+  have e : x / (A - B) * A = x / (A - B) * B + x := by field_simp; ring
+  have h1 := h (x / (A - B))
+  rw [e, AddChar.map_add_eq_mul] at h1
+  have h0 : ψ (x / (A - B) * B) ≠ 0 := fun h0 => by
+    have := AddChar.map_add_eq_mul ψ (x / (A - B) * B) (-(x / (A - B) * B))
+    rw [add_neg_cancel, AddChar.map_zero_eq_one, h0, zero_mul] at this
+    exact one_ne_zero this
+  exact hx (mul_left_cancel₀ h0 (by rw [mul_one]; exact h1))
+
+theorem hC_of {ρ κ : ℕ} (ψ : AddChar k ℂ) (hψ : ψ ≠ 1) (a : Fin n → Fin n → k) (M : GL (Fin n) k)
+    (hM : ∀ h ∈ unipSym k n ρ κ, ψ (edgeVal ρ κ a (M * h * M⁻¹)) = ψ (edgeVal ρ κ a h))
+    (p q : Fin n) (hpq : Prec ρ κ p q) :
+    esum ρ κ a (M : Matrix (Fin n) (Fin n) k) ((M⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) p q =
+      if symEdge ρ κ p q then a p q else 0 := by
+  have hne : p ≠ q := fun e => by rw [e] at hpq; exact lt_irrefl _ hpq.1
+  have e1 : ∀ s, edgeVal ρ κ a (elemU p q hne s) = s * esum ρ κ a 1 1 p q := fun s => by
+    have := edgeVal_conj (ρ := ρ) (κ := κ) a (1 : GL (Fin n) k) p q hne s
+    rwa [one_mul, inv_one, mul_one, Units.val_one] at this
+  have key : esum ρ κ a (M : Matrix (Fin n) (Fin n) k) ((M⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) p q =
+      esum ρ κ a 1 1 p q := char_cancel ψ hψ fun s => by
+    rw [← edgeVal_conj (ρ := ρ) (κ := κ) a M p q hne s, ← e1]; exact hM _ (elemU_mem hpq hne s)
+  rw [key, esum_single a 1 1 p q p q]
+  · simp
+  · intro i j _ h
+    constructor
+    · by_contra hc; apply h; rw [one_apply_ne hc, zero_mul]
+    · by_contra hc; apply h; rw [one_apply_ne (Ne.symm hc), mul_zero]
+
+end Conj
+
+theorem normaliser_unipSym_char : ∀ (k : Type) [Field k] (n ρ κ : ℕ), n = 2 * ρ + κ + 1 → 1 ≤ ρ → 2 ≤ κ →
+    ∀ ψ : AddChar k ℂ, ψ ≠ 1 → ∀ a : Fin n → Fin n → k, (∀ i j, symEdge ρ κ i j → a i j ≠ 0) →
+    ∀ M : GL (Fin n) k, (∀ h ∈ unipSym k n ρ κ, M * h * M⁻¹ ∈ unipSym k n ρ κ ∧
+      ψ (edgeVal ρ κ a (M * h * M⁻¹)) = ψ (edgeVal ρ κ a h)) →
+    (∀ h ∈ unipSym k n ρ κ, M⁻¹ * h * M ∈ unipSym k n ρ κ) →
+    ∃ s c : kˣ, ∃ h ∈ unipSym k n ρ κ,
+      (M : Matrix (Fin n) (Fin n) k) = midDiag n ρ κ (s : k) (c : k) * (h : Matrix (Fin n) (Fin n) k) := by
+  intro k _ n ρ κ hn hρ hκ ψ hψ a ha M hM hM'
+  have hXY : (M : Matrix (Fin n) (Fin n) k) * ((M⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) = 1 := by
+    rw [← Units.val_mul, mul_inv_cancel, Units.val_one]
+  have hYX : ((M⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) * (M : Matrix (Fin n) (Fin n) k) = 1 := by
+    rw [← Units.val_mul, inv_mul_cancel, Units.val_one]
+  have hP := apply_mul_inv_apply_eq_zero_of_normalizes M (fun h hh => (hM h hh).1)
+  have hP' : ∀ p q : Fin n, Prec ρ κ p q → ∀ i j : Fin n, ¬ Prec ρ κ i j →
+      ((M⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) i p * (M : Matrix (Fin n) (Fin n) k) q j = 0 := by
+    have := apply_mul_inv_apply_eq_zero_of_normalizes M⁻¹ (fun h hh => by rw [inv_inv]; exact hM' h hh)
+    simpa only [inv_inv] using this
+  have hC := hC_of ψ hψ a M (fun h hh => (hM h hh).2)
+  obtain ⟨X, hX⟩ : ∃ X, X = (M : Matrix (Fin n) (Fin n) k) := ⟨_, rfl⟩
+  obtain ⟨Y, hY⟩ : ∃ Y, Y = ((M⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) := ⟨_, rfl⟩
+  rw [← hX, ← hY] at hXY hYX hP hP' hC
+  rw [← hX]
+  have patX := pattern hn hρ hκ hXY hYX hP hP'
+  have patY := pattern hn hρ hκ hYX hXY hP' hP
+  have diag : ∀ b : Fin n, X b b * Y b b = 1 := by
+    intro b
+    have h := congrFun (congrFun hXY b) b
+    rw [Matrix.mul_apply, Finset.sum_eq_single b, one_apply_eq] at h
+    · exact h
+    · intro j _ hj
+      rcases eq_or_ne (X b j) 0 with h1 | h1
+      · rw [h1, zero_mul]
+      rcases eq_or_ne (Y j b) 0 with h2 | h2
+      · rw [h2, mul_zero]
+      exfalso
+      have e1 := patX b j h1
+      have e2 := patY j b h2
+      have : j.val ≠ b.val := fun e => hj (Fin.ext e)
+      unfold Prec at e1 e2; omega
+    · intro h; exact absurd (Finset.mem_univ _) h
+  have hX0 : ∀ b, X b b ≠ 0 := fun b => left_ne_zero_of_mul_eq_one (diag b)
+  have hY0 : ∀ b, Y b b ≠ 0 := fun b => right_ne_zero_of_mul_eq_one (diag b)
+  obtain ⟨tF, htF⟩ : ∃ x : Fin n, x.val = ρ + κ := ⟨⟨ρ + κ, by omega⟩, rfl⟩
+  obtain ⟨tmF, htmF⟩ : ∃ x : Fin n, x.val = ρ + κ - 1 := ⟨⟨_, by omega⟩, rfl⟩
+  obtain ⟨tpF, htpF⟩ : ∃ x : Fin n, x.val = ρ + κ + 1 := ⟨⟨_, by omega⟩, rfl⟩
+  obtain ⟨rF, hrF⟩ : ∃ x : Fin n, x.val = ρ := ⟨⟨_, by omega⟩, rfl⟩
+  obtain ⟨rmF, hrmF⟩ : ∃ x : Fin n, x.val = ρ - 1 := ⟨⟨_, by omega⟩, rfl⟩
+
+  have S1 : X tF tmF = 0 := by
+    have h := hC tmF tpF (by unfold Prec; omega)
+    rw [esum_single a X Y tmF tpF tF tpF (fun i j he hne => by
+      have e1 := patX i tmF (left_ne_zero_of_mul hne)
+      have e2 := patY tpF j (right_ne_zero_of_mul hne)
+      unfold symEdge at he; unfold Prec at e1 e2
+      exact ⟨Fin.ext (by omega), Fin.ext (by omega)⟩),
+      if_pos (by unfold symEdge; omega), if_neg (by unfold symEdge; omega)] at h
+    rcases mul_eq_zero.1 h with h | h
+    · exact absurd h (ha _ _ (by unfold symEdge; omega))
+    · exact (mul_eq_zero.1 h).resolve_right (hY0 tpF)
+
+  have S2 : Y rF tF = 0 := by
+    have h := hC rmF rF (by unfold Prec; omega)
+    rw [esum_single a X Y rmF rF rmF tF (fun i j he hne => by
+      have e1 := patX i rmF (left_ne_zero_of_mul hne)
+      have e2 := patY rF j (right_ne_zero_of_mul hne)
+      unfold symEdge at he; unfold Prec at e1 e2
+      exact ⟨Fin.ext (by omega), Fin.ext (by omega)⟩),
+      if_pos (by unfold symEdge; omega), if_neg (by unfold symEdge; omega)] at h
+    rcases mul_eq_zero.1 h with h | h
+    · exact absurd h (ha _ _ (by unfold symEdge; omega))
+    · exact (mul_eq_zero.1 h).resolve_left (hX0 rmF)
+  have S3 : Y tF tmF = 0 := by
+    have h := congrFun (congrFun hYX tF) tmF
+    rw [Matrix.mul_apply, Finset.sum_eq_single tmF, one_apply_ne (fun e => by rw [e] at htF; omega)] at h
+    · exact (mul_eq_zero.1 h).resolve_right (hX0 tmF)
+    · intro j _ hj
+      rcases eq_or_ne (Y tF j) 0 with h1 | h1
+      · rw [h1, zero_mul]
+      rcases eq_or_ne (X j tmF) 0 with h2 | h2
+      · rw [h2, mul_zero]
+      exfalso
+      by_cases hjt : j = tF
+      · rw [hjt] at h2; exact h2 S1
+      have e1 := patY tF j h1
+      have e2 := patX j tmF h2
+      have : j.val ≠ tmF.val := fun e => hj (Fin.ext e)
+      have : j.val ≠ tF.val := fun e => hjt (Fin.ext e)
+      unfold Prec at e1 e2; omega
+    · intro h; exact absurd (Finset.mem_univ _) h
+  have S4 : X rF tF = 0 := by
+    have h := congrFun (congrFun hXY rF) tF
+    rw [Matrix.mul_apply, Finset.sum_eq_single tF, one_apply_ne (fun e => by rw [e] at hrF; omega)] at h
+    · exact (mul_eq_zero.1 h).resolve_right (hY0 tF)
+    · intro j _ hj
+      rcases eq_or_ne (X rF j) 0 with h1 | h1
+      · rw [h1, zero_mul]
+      rcases eq_or_ne (Y j tF) 0 with h2 | h2
+      · rw [h2, mul_zero]
+      exfalso
+      by_cases hjr : j = rF
+      · rw [hjr] at h2; exact h2 S2
+      have e1 := patX rF j h1
+      have e2 := patY j tF h2
+      have : j.val ≠ tF.val := fun e => hj (Fin.ext e)
+      have : j.val ≠ rF.val := fun e => hjr (Fin.ext e)
+      unfold Prec at e1 e2; omega
+    · intro h; exact absurd (Finset.mem_univ _) h
+  have patX' : ∀ i b : Fin n, X i b ≠ 0 → i.val = b.val ∨ Prec ρ κ i b := by
+    intro i b h
+    rcases patX i b h with h1 | h1 | h1 | h1
+    · exact Or.inl h1
+    · exact Or.inr h1
+    · exfalso; apply h
+      rw [show i = rF from Fin.ext (by omega), show b = tF from Fin.ext (by omega)]; exact S4
+    · exfalso; apply h
+      rw [show i = tF from Fin.ext (by omega), show b = tmF from Fin.ext (by omega)]; exact S1
+  have patY' : ∀ i b : Fin n, Y i b ≠ 0 → i.val = b.val ∨ Prec ρ κ i b := by
+    intro i b h
+    rcases patY i b h with h1 | h1 | h1 | h1
+    · exact Or.inl h1
+    · exact Or.inr h1
+    · exfalso; apply h
+      rw [show i = rF from Fin.ext (by omega), show b = tF from Fin.ext (by omega)]; exact S2
+    · exfalso; apply h
+      rw [show i = tF from Fin.ext (by omega), show b = tmF from Fin.ext (by omega)]; exact S3
+
+  have S5 : ∀ p q : Fin n, symEdge ρ κ p q → X p p = X q q := by
+    intro p q he
+    have hpq : Prec ρ κ p q := by unfold symEdge at he; unfold Prec; omega
+    have h := hC p q hpq
+    rw [esum_single a X Y p q p q (fun i j he' hne => by
+      have e1 := patX' i p (left_ne_zero_of_mul hne)
+      have e2 := patY' q j (right_ne_zero_of_mul hne)
+      unfold symEdge at he he'; unfold Prec at e1 e2 hpq
+      exact ⟨Fin.ext (by omega), Fin.ext (by omega)⟩), if_pos he, if_pos he] at h
+    have h1 : X p p * Y q q = 1 := mul_left_cancel₀ (ha p q he) (by rw [mul_one]; exact h)
+    exact mul_right_cancel₀ (hY0 q) (by rw [h1, diag q])
+  let D : ℕ → k := fun m => if h : m < n then X ⟨m, h⟩ ⟨m, h⟩ else 0
+  have hDX : ∀ i : Fin n, X i i = D i.val := fun i => by simp [D, i.2]
+  have hD : ∀ m m' (hm : m < n) (hm' : m' < n),
+      ((m' = m + 1 ∧ m + 1 ≠ ρ ∧ m + 1 ≠ ρ + κ) ∨ (m + 1 = ρ ∧ m' = ρ + κ)) → D m = D m' := by
+    intro m m' hm hm' he
+    have := S5 ⟨m, hm⟩ ⟨m', hm'⟩ he
+    simpa [D, hm, hm'] using this
+  have c1 : ∀ m, m < ρ → D m = D 0 := by
+    intro m hm
+    induction m with
+    | zero => rfl
+    | succ m ih =>
+      rw [← ih (by omega)]
+      exact (hD m (m + 1) (by omega) (by omega) (Or.inl ⟨rfl, by omega, by omega⟩)).symm
+  have c2 : D (ρ + κ) = D 0 := by
+    rw [← c1 (ρ - 1) (by omega)]
+    exact (hD (ρ - 1) (ρ + κ) (by omega) (by omega) (Or.inr ⟨by omega, rfl⟩)).symm
+  have c3 : ∀ m, ρ + κ + m < n → D (ρ + κ + m) = D 0 := by
+    intro m hm
+    induction m with
+    | zero => exact c2
+    | succ m ih =>
+      rw [← ih (by omega)]
+      exact (hD (ρ + κ + m) (ρ + κ + (m + 1)) (by omega) (by omega) (Or.inl ⟨by omega, by omega, by omega⟩)).symm
+  have c4 : ∀ m, m < κ → D (ρ + m) = D ρ := by
+    intro m hm
+    induction m with
+    | zero => rfl
+    | succ m ih =>
+      rw [← ih (by omega)]
+      exact (hD (ρ + m) (ρ + (m + 1)) (by omega) (by omega) (Or.inl ⟨by omega, by omega, by omega⟩)).symm
+  have diagX : ∀ i : Fin n, X i i = if ρ ≤ i.val ∧ i.val < ρ + κ then D ρ else D 0 := by
+    intro i
+    rw [hDX]
+    split_ifs with hi
+    · have := c4 (i.val - ρ) (by omega); rwa [show ρ + (i.val - ρ) = i.val by omega] at this
+    · by_cases h1 : i.val < ρ
+      · exact c1 _ h1
+      · have := c3 (i.val - (ρ + κ)) (by omega)
+        rwa [show ρ + κ + (i.val - (ρ + κ)) = i.val by omega] at this
+  have hs0 : D 0 ≠ 0 := by have := hX0 ⟨0, by omega⟩; rwa [hDX] at this
+  have hc0 : D ρ ≠ 0 := by have := hX0 ⟨ρ, by omega⟩; rwa [hDX] at this
+  have hDD : midDiag n ρ κ (D 0) (D ρ) * midDiag n ρ κ (D 0)⁻¹ (D ρ)⁻¹ = 1 := by
+    unfold midDiag; rw [diagonal_mul_diagonal, ← diagonal_one]; congr 1; funext i; split_ifs <;> field_simp
+  have hD'D : midDiag n ρ κ (D 0)⁻¹ (D ρ)⁻¹ * midDiag n ρ κ (D 0) (D ρ) = 1 := by
+    unfold midDiag; rw [diagonal_mul_diagonal, ← diagonal_one]; congr 1; funext i; split_ifs <;> field_simp
+  have hmd : ∀ (s c : k) (Z : Matrix (Fin n) (Fin n) k) (i j : Fin n),
+      (midDiag n ρ κ s c * Z) i j = (if ρ ≤ i.val ∧ i.val < ρ + κ then c else s) * Z i j := by
+    intro s c Z i j; unfold midDiag; rw [diagonal_mul]
+  let U : GL (Fin n) k := ⟨midDiag n ρ κ (D 0)⁻¹ (D ρ)⁻¹ * X, Y * midDiag n ρ κ (D 0) (D ρ),
+    by rw [mul_assoc, ← mul_assoc X, hXY, one_mul, hD'D],
+    by rw [mul_assoc, ← mul_assoc (midDiag n ρ κ (D 0) (D ρ)), hDD, one_mul, hYX]⟩
+  refine ⟨Units.mk0 (D 0) hs0, Units.mk0 (D ρ) hc0, U, ?_, ?_⟩
+  · refine ⟨⟨fun i j hij => ?_, fun i => ?_⟩, fun i j h0 h1 h2 => ?_⟩
+    · have hij' : j.val < i.val := hij
+      show (midDiag n ρ κ (D 0)⁻¹ (D ρ)⁻¹ * X) i j = 0
+      rw [hmd]
+      rcases eq_or_ne (X i j) 0 with h | h
+      · rw [h, mul_zero]
+      · exfalso; have := patX' i j h; unfold Prec at this; omega
+    · show (midDiag n ρ κ (D 0)⁻¹ (D ρ)⁻¹ * X) i i = 1
+      rw [hmd, diagX]
+      split_ifs with hi
+      · exact inv_mul_cancel₀ hc0
+      · exact inv_mul_cancel₀ hs0
+    · show (midDiag n ρ κ (D 0)⁻¹ (D ρ)⁻¹ * X) i j = 0
+      rw [hmd]
+      rcases eq_or_ne (X i j) 0 with h | h
+      · rw [h, mul_zero]
+      · exfalso; have := patX' i j h; unfold Prec at this; omega
+  · show X = midDiag n ρ κ (D 0) (D ρ) * (midDiag n ρ κ (D 0)⁻¹ (D ρ)⁻¹ * X)
+    rw [← mul_assoc, hDD, one_mul]
+
+end GlobalTheory.SymNorm
+
+end
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NormaliserUnipSymCharPattern =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NormaliserUnipSymCharPatternStatement =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NormaliserUnipSymCharPatternStatement", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSingle\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NormaliserUnipSymCharPattern\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open Matrix Formalism.UG Formalism.L2.DIV GlobalTheory.LevNorm
+
+theorem _root_.GlobalTheory.T.normaliser_unipSym_char_pattern : ∀ (k : Type) [Field k] (n ρ κ : ℕ), n = 2 * ρ + κ + 1 → 1 ≤ ρ → 2 ≤ κ → ∀ ψ : AddChar k ℂ, ψ ≠ 1 → ∀ a : Fin n → Fin n → k, (∀ i j, symEdge ρ κ i j → a i j ≠ 0) → ∀ M : GL (Fin n) k, (∀ h ∈ unipSym k n ρ κ, M * h * M⁻¹ ∈ unipSym k n ρ κ ∧ ψ (edgeVal ρ κ a (M * h * M⁻¹)) = ψ (edgeVal ρ κ a h)) → (∀ h ∈ unipSym k n ρ κ, M⁻¹ * h * M ∈ unipSym k n ρ κ) → ∃ s c : kˣ, ∃ h ∈ unipSym k n ρ κ, (M : Matrix (Fin n) (Fin n) k) = midDiag n ρ κ (s : k) (c : k) * (h : Matrix (Fin n) (Fin n) k) := by
+  first | exact @GlobalTheory.SymNorm.normaliser_unipSym_char | exact GlobalTheory.SymNorm.normaliser_unipSym_char | (intros; apply GlobalTheory.SymNorm.normaliser_unipSym_char <;> assumption)
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NormaliserUnipSymCharPatternStatement =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryScalarMulIntegralLocalToGlobal =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryScalarMulIntegralLocalToGlobal", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSingle\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open Matrix Formalism.UG Formalism.L2.DIV GlobalTheory.LevNorm
+
+noncomputable section
+
+namespace GlobalTheory.LevNorm.PlaceSys
+
+theorem gU_intM_mul {K : Type} [Field K] (O : ValuationSubring K) {n : ℕ} {M N : Matrix (Fin n) (Fin n) K}
+    (hM : ∀ i j, M i j ∈ O) (hN : ∀ i j, N i j ∈ O) : ∀ i j, (M * N) i j ∈ O := fun i j => by
+  rw [Matrix.mul_apply]; exact sum_mem fun k _ => mul_mem (hM i k) (hN k j)
+
+theorem gU_glO {K : Type} [Field K] (O : ValuationSubring K) {n : ℕ} (M N : Matrix (Fin n) (Fin n) K)
+    (hM : ∀ i j, M i j ∈ O) (hN : ∀ i j, N i j ∈ O) (h : M * N = 1) :
+    ∃ y : GL (Fin n) O, ((bc O.subtype y : GL (Fin n) K) : Matrix (Fin n) (Fin n) K) = M := by
+  have h' : N * M = 1 := mul_eq_one_comm.1 h
+  have inj : Function.Injective fun M : Matrix (Fin n) (Fin n) O => M.map O.subtype :=
+    Matrix.map_injective fun x y hxy => Subtype.ext hxy
+  refine ⟨⟨Matrix.of fun i j => ⟨M i j, hM i j⟩, Matrix.of fun i j => ⟨N i j, hN i j⟩, inj ?_, inj ?_⟩, rfl⟩
+  · show Matrix.map _ O.subtype = Matrix.map _ O.subtype
+    rw [Matrix.map_mul, Matrix.map_one _ (map_zero _) (map_one _)]
+    exact h
+  · show Matrix.map _ O.subtype = Matrix.map _ O.subtype
+    rw [Matrix.map_mul, Matrix.map_one _ (map_zero _) (map_one _)]
+    exact h'
+
+theorem gU_val_inv {R : Type} [CommRing R] {n : ℕ} (g : GL (Fin n) R) (L : Matrix (Fin n) (Fin n) R)
+    (h : L * (g : Matrix (Fin n) (Fin n) R) = 1) : ((g⁻¹ : GL (Fin n) R) : Matrix (Fin n) (Fin n) R) = L := by
+  calc ((g⁻¹ : GL (Fin n) R) : Matrix (Fin n) (Fin n) R)
+      = L * (g : Matrix (Fin n) (Fin n) R) * ((g⁻¹ : GL (Fin n) R) : Matrix (Fin n) (Fin n) R) := by
+        rw [h, Matrix.one_mul]
+    _ = L := by rw [Matrix.mul_assoc, ← Units.val_mul, mul_inv_cancel, Units.val_one, Matrix.mul_one]
+
+theorem gU_cT_smul {A : Type} [CommRing A] (σ : A →+* A) {n : ℕ} (w : A) (M : Matrix (Fin n) (Fin n) A) :
+    cT σ (w • M) = σ w • cT σ M := by
+  ext i j; simp [cT]
+
+theorem gU_mapMatrix_smul {A B : Type} [CommRing A] [CommRing B] (φ : A →+* B) {n : ℕ} (w : A)
+    (M : Matrix (Fin n) (Fin n) A) : φ.mapMatrix (w • M) = φ w • φ.mapMatrix M := by
+  ext i j; simp
+
+variable {A : Type} [CommRing A] {S : Subring A} {P : Type} {k : P → Type} [∀ Q, Field (k Q)] {r : ∀ Q, S →+* k Q}
+  (Z : PlaceSys A S P k r) {σ : A →+* A}
+
+theorem gU_inv_comp {Q Q' : P} {s : Z.K Q →+* Z.K Q'} (hs : ∀ a, s (Z.p Q a) = Z.p Q' (σ a))
+    (hsO : ∀ x ∈ Z.O Q, s x ∈ Z.O Q') {n : ℕ} (G : GL (Fin n) S) (u : GL (Fin n) A)
+    (hu : u ∈ UJ σ ((bc S.subtype G : GL (Fin n) A) : Matrix (Fin n) (Fin n) A))
+    (d : Z.K Q) (W : Matrix (Fin n) (Fin n) (Z.K Q)) (hW : ∀ i j, W i j ∈ Z.O Q)
+    (h : (Z.p Q).mapMatrix (u : Matrix (Fin n) (Fin n) A) = d • W) :
+    ∃ I : Matrix (Fin n) (Fin n) (Z.K Q'), (∀ i j, I i j ∈ Z.O Q') ∧
+      (Z.p Q').mapMatrix ((u⁻¹ : GL (Fin n) A) : Matrix (Fin n) (Fin n) A) = s d • I := by
+  set Gm : Matrix (Fin n) (Fin n) A := ((bc S.subtype G : GL (Fin n) A) : Matrix (Fin n) (Fin n) A) with hGm
+  set Gi : Matrix (Fin n) (Fin n) A := ((bc S.subtype G⁻¹ : GL (Fin n) A) : Matrix (Fin n) (Fin n) A) with hGi
+  have hu' : cT σ (u : Matrix (Fin n) (Fin n) A) * Gm * u = Gm := hu
+  have hGG : Gi * Gm = 1 := by
+    rw [hGi, hGm, ← Units.val_mul, ← map_mul, inv_mul_cancel, map_one, Units.val_one]
+  have key : ((u⁻¹ : GL (Fin n) A) : Matrix (Fin n) (Fin n) A) = Gi * cT σ (u : Matrix (Fin n) (Fin n) A) * Gm := by
+    apply gU_val_inv
+    calc Gi * cT σ (u : Matrix (Fin n) (Fin n) A) * Gm * u = Gi * (cT σ (u : Matrix (Fin n) (Fin n) A) * Gm * u) := by
+          simp only [Matrix.mul_assoc]
+      _ = 1 := by rw [hu', hGG]
+  have hcT : (Z.p Q').mapMatrix (cT σ (u : Matrix (Fin n) (Fin n) A)) = s d • (W.map s)ᵀ := by
+    ext i j
+    have := congrFun (congrFun h j) i
+    simp only [RingHom.mapMatrix_apply, Matrix.map_apply, Matrix.smul_apply, smul_eq_mul] at this
+    simp only [cT, RingHom.mapMatrix_apply, Matrix.map_apply, Matrix.transpose_apply, Matrix.smul_apply, smul_eq_mul]
+    rw [← hs, this, map_mul]
+  refine ⟨(Z.p Q').mapMatrix Gi * (W.map s)ᵀ * (Z.p Q').mapMatrix Gm, ?_, ?_⟩
+  · have hG1 : ∀ (g : GL (Fin n) S) i j,
+        (Z.p Q').mapMatrix ((bc S.subtype g : GL (Fin n) A) : Matrix (Fin n) (Fin n) A) i j ∈ Z.O Q' :=
+      fun g i j => (Z.int _).1 ((g : Matrix (Fin n) (Fin n) S) i j).2 Q'
+    exact gU_intM_mul _ (gU_intM_mul _ (hG1 _) fun i j => hsO _ (hW j i)) (hG1 _)
+  · rw [key, map_mul, map_mul, hcT, Matrix.mul_smul, Matrix.smul_mul]
+
+theorem gU_scal_conj {Q Q' : P} {s : Z.K Q →+* Z.K Q'} (hs : ∀ a, s (Z.p Q a) = Z.p Q' (σ a))
+    (hsO : ∀ x ∈ Z.O Q, s x ∈ Z.O Q') {n : ℕ} (G : GL (Fin n) S) (m : GL (Fin n) A)
+    (hm : m ∈ UJ σ ((bc S.subtype G : GL (Fin n) A) : Matrix (Fin n) (Fin n) A)) (c : (Z.K Q)ˣ)
+    (x : GL (Fin n) (Z.O Q))
+    (hc : (Z.p Q).mapMatrix (m : Matrix (Fin n) (Fin n) A) =
+      (c : Z.K Q) • ((bc (Z.O Q).subtype x : GL (Fin n) (Z.K Q)) : Matrix (Fin n) (Fin n) (Z.K Q))) :
+    ∃ y : GL (Fin n) (Z.O Q'), (Z.p Q').mapMatrix (m : Matrix (Fin n) (Fin n) A) =
+      (s c)⁻¹ • ((bc (Z.O Q').subtype y : GL (Fin n) (Z.K Q')) : Matrix (Fin n) (Fin n) (Z.K Q')) := by
+  set X := ((bc (Z.O Q).subtype x : GL (Fin n) (Z.K Q)) : Matrix (Fin n) (Fin n) (Z.K Q)) with hX
+  set Xi := ((bc (Z.O Q).subtype x⁻¹ : GL (Fin n) (Z.K Q)) : Matrix (Fin n) (Fin n) (Z.K Q)) with hXi
+  have hXint : ∀ i j, X i j ∈ Z.O Q := fun i j => ((x : Matrix (Fin n) (Fin n) (Z.O Q)) i j).2
+  have hXiint : ∀ i j, Xi i j ∈ Z.O Q := fun i j => (((x⁻¹ : GL (Fin n) (Z.O Q)) : Matrix (Fin n) (Fin n) (Z.O Q)) i j).2
+  have hXX : Xi * X = 1 := by rw [hXi, hX, ← Units.val_mul, ← map_mul, inv_mul_cancel, map_one, Units.val_one]
+  have hinv : (Z.p Q).mapMatrix ((m⁻¹ : GL (Fin n) A) : Matrix (Fin n) (Fin n) A) = (c : Z.K Q)⁻¹ • Xi := by
+    show ((bc (Z.p Q) m⁻¹ : GL (Fin n) (Z.K Q)) : Matrix (Fin n) (Fin n) (Z.K Q)) = _
+    rw [map_inv]
+    apply gU_val_inv
+    show _ * (Z.p Q).mapMatrix (m : Matrix (Fin n) (Fin n) A) = 1
+    rw [hc, Matrix.smul_mul, Matrix.mul_smul, smul_smul, inv_mul_cancel₀ c.ne_zero, one_smul, hXX]
+  obtain ⟨I1, hI1, e1⟩ := gU_inv_comp Z hs hsO G m hm c X hXint hc
+  obtain ⟨I2, hI2, e2⟩ := gU_inv_comp Z hs hsO G m⁻¹ (inv_mem hm) ((c : Z.K Q)⁻¹) Xi hXiint hinv
+  rw [inv_inv, map_inv₀] at e2
+  have hsc : s c ≠ 0 := (map_ne_zero s).2 c.ne_zero
+  have h2 : I2 = s c • (Z.p Q').mapMatrix (m : Matrix (Fin n) (Fin n) A) := by
+    rw [e2, smul_smul, mul_inv_cancel₀ hsc, one_smul]
+  have h1 : I1 = (s c)⁻¹ • (Z.p Q').mapMatrix ((m⁻¹ : GL (Fin n) A) : Matrix (Fin n) (Fin n) A) := by
+    rw [e1, smul_smul, inv_mul_cancel₀ hsc, one_smul]
+  have hprod : I2 * I1 = 1 := by
+    rw [h1, h2, Matrix.smul_mul, Matrix.mul_smul, smul_smul, mul_inv_cancel₀ hsc, one_smul, ← map_mul,
+      ← Units.val_mul, mul_inv_cancel, Units.val_one, map_one]
+  obtain ⟨y, hy⟩ := gU_glO _ I2 I1 hI2 hI1 hprod
+  exact ⟨y, by rw [hy]; exact e2⟩
+
+end GlobalTheory.LevNorm.PlaceSys
+
+namespace GlobalTheory.LevNorm.PlaceSys
+
+variable {A : Type} [CommRing A] {S : Subring A} {P : Type} {k : P → Type} [∀ Q, Field (k Q)] {r : ∀ Q, S →+* k Q}
+  (Z : PlaceSys A S P k r) {σ : A →+* A}
+
+theorem gU_good_self (hS : ∀ a ∈ S, σ a ∈ S) {Q : P} (hQ : σ (Z.e Q) = Z.e Q) {n : ℕ} (G : GL (Fin n) S)
+    (m : GL (Fin n) A) (hm : m ∈ UJ σ ((bc S.subtype G : GL (Fin n) A) : Matrix (Fin n) (Fin n) A))
+    (h : IsScal (Z.O Q) (bc (Z.p Q) m)) :
+    ∃ y : GL (Fin n) (Z.O Q), bc (Z.O Q).subtype y = bc (Z.p Q) m := by
+  obtain ⟨s, hs, hsO⟩ := Z.exists_conj hS hQ
+  obtain ⟨c, x, hc⟩ := h
+  have hc' : (Z.p Q).mapMatrix (m : Matrix (Fin n) (Fin n) A) =
+      (c : Z.K Q) • ((bc (Z.O Q).subtype x : GL (Fin n) (Z.K Q)) : Matrix (Fin n) (Fin n) (Z.K Q)) := hc
+  obtain ⟨y, hy⟩ := gU_scal_conj Z hs hsO G m hm c x hc'
+  rcases Nat.eq_zero_or_pos n with hn | hn
+  · subst hn; exact ⟨1, Subsingleton.elim _ _⟩
+  set X := ((bc (Z.O Q).subtype x : GL (Fin n) (Z.K Q)) : Matrix (Fin n) (Fin n) (Z.K Q)) with hX
+  set Xi := ((bc (Z.O Q).subtype x⁻¹ : GL (Fin n) (Z.K Q)) : Matrix (Fin n) (Fin n) (Z.K Q)) with hXi
+  set Y := ((bc (Z.O Q).subtype y : GL (Fin n) (Z.K Q)) : Matrix (Fin n) (Fin n) (Z.K Q)) with hY
+  set Yi := ((bc (Z.O Q).subtype y⁻¹ : GL (Fin n) (Z.K Q)) : Matrix (Fin n) (Fin n) (Z.K Q)) with hYi
+  have hXint : ∀ i j, X i j ∈ Z.O Q := fun i j => ((x : Matrix (Fin n) (Fin n) (Z.O Q)) i j).2
+  have hXiint : ∀ i j, Xi i j ∈ Z.O Q := fun i j => (((x⁻¹ : GL (Fin n) (Z.O Q)) : Matrix (Fin n) (Fin n) (Z.O Q)) i j).2
+  have hYint : ∀ i j, Y i j ∈ Z.O Q := fun i j => ((y : Matrix (Fin n) (Fin n) (Z.O Q)) i j).2
+  have hYiint : ∀ i j, Yi i j ∈ Z.O Q := fun i j => (((y⁻¹ : GL (Fin n) (Z.O Q)) : Matrix (Fin n) (Fin n) (Z.O Q)) i j).2
+  have hXXi : X * Xi = 1 := by rw [hXi, hX, ← Units.val_mul, ← map_mul, mul_inv_cancel, map_one, Units.val_one]
+  have hYYi : Y * Yi = 1 := by rw [hYi, hY, ← Units.val_mul, ← map_mul, mul_inv_cancel, map_one, Units.val_one]
+  have hsc : s c ≠ 0 := (map_ne_zero s).2 c.ne_zero
+  set t : Z.K Q := (c : Z.K Q) * s c with ht
+  have ht0 : t ≠ 0 := mul_ne_zero c.ne_zero hsc
+  have hYX : t • X = Y := by
+    have e : (c : Z.K Q) • X = (s c)⁻¹ • Y := hc'.symm.trans hy
+    calc t • X = s c • ((c : Z.K Q) • X) := by rw [smul_smul, ht, mul_comm]
+      _ = s c • ((s c)⁻¹ • Y) := by rw [e]
+      _ = Y := by rw [smul_smul, mul_inv_cancel₀ hsc, one_smul]
+  have hXY : t⁻¹ • Y = X := by rw [← hYX, smul_smul, inv_mul_cancel₀ ht0, one_smul]
+  let i0 : Fin n := ⟨0, hn⟩
+  have htO : t ∈ Z.O Q := by
+    have e : (Y * Xi) i0 i0 = t := by
+      rw [← hYX, Matrix.smul_mul, hXXi, Matrix.smul_apply, Matrix.one_apply_eq, smul_eq_mul, mul_one]
+    rw [← e]; exact gU_intM_mul _ hYint hXiint i0 i0
+  have htiO : t⁻¹ ∈ Z.O Q := by
+    have e : (X * Yi) i0 i0 = t⁻¹ := by
+      rw [← hXY, Matrix.smul_mul, hYYi, Matrix.smul_apply, Matrix.one_apply_eq, smul_eq_mul, mul_one]
+    rw [← e]; exact gU_intM_mul _ hXint hYiint i0 i0
+  have hcO : (c : Z.K Q) ∈ Z.O Q ∧ (c : Z.K Q)⁻¹ ∈ Z.O Q := by
+    rcases (Z.O Q).mem_or_inv_mem (c : Z.K Q) with h1 | h1
+    · refine ⟨h1, ?_⟩
+      have e : (c : Z.K Q)⁻¹ = s c * t⁻¹ := by
+        rw [ht, _root_.mul_inv_rev, ← mul_assoc, mul_inv_cancel₀ hsc, one_mul]
+      rw [e]; exact mul_mem (hsO _ h1) htiO
+    · refine ⟨?_, h1⟩
+      have e : (c : Z.K Q) = t * (s c)⁻¹ := by rw [ht, mul_assoc, mul_inv_cancel₀ hsc, mul_one]
+      have h2 : (s c)⁻¹ ∈ Z.O Q := by rw [← map_inv₀]; exact hsO _ h1
+      rw [e]; exact mul_mem htO h2
+  obtain ⟨y', hy'⟩ := gU_glO _ ((c : Z.K Q) • X) ((c : Z.K Q)⁻¹ • Xi) (fun i j => mul_mem hcO.1 (hXint i j))
+    (fun i j => mul_mem hcO.2 (hXiint i j))
+    (by rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul, mul_inv_cancel₀ c.ne_zero, one_smul, hXXi])
+  exact ⟨y', Units.ext (hy'.trans hc'.symm)⟩
+
+theorem gU_comp_sigma (hσ : ∀ a, σ (σ a) = a) (hS : ∀ a ∈ S, σ a ∈ S) (Q : P) :
+    ∃ R, σ (Z.e R) = Z.e Q ∧ ∃ t : Z.K R →+* Z.K Q, ∀ a, t (Z.p R a) = Z.p Q (σ a) := by
+  obtain ⟨R, hR⟩ := Z.exists_bar hσ Q
+  have h : σ (Z.e R) = Z.e Q := by rw [← hR, hσ]
+  obtain ⟨t, ht, -⟩ := Z.exists_conj hS h
+  exact ⟨R, h, t, ht⟩
+
+end GlobalTheory.LevNorm.PlaceSys
+
+namespace GlobalTheory.LevNorm.PlaceSys
+
+variable {A : Type} [CommRing A] {S : Subring A} {P : Type} {k : P → Type} [∀ Q, Field (k Q)] {r : ∀ Q, S →+* k Q}
+  (Z : PlaceSys A S P k r) {σ : A →+* A}
+
+theorem gU_step (hσ : ∀ a, σ (σ a) = a) (hS : ∀ a ∈ S, σ a ∈ S) {n : ℕ} (G : GL (Fin n) S)
+    (m : GL (Fin n) A) (hm : m ∈ UJ σ ((bc S.subtype G : GL (Fin n) A) : Matrix (Fin n) (Fin n) A))
+    (hscal : ∀ Q, IsScal (Z.O Q) (bc (Z.p Q) m)) {a a' : P} (ha : σ (Z.e a) = Z.e a') (hne : a ≠ a') :
+    ∃ (z : A) (m₁ : GL (Fin n) A), z * σ z = 1 ∧
+      (m : Matrix (Fin n) (Fin n) A) = z • (m₁ : Matrix (Fin n) (Fin n) A) ∧
+      m₁ ∈ UJ σ ((bc S.subtype G : GL (Fin n) A) : Matrix (Fin n) (Fin n) A) ∧
+      (∀ Q, IsScal (Z.O Q) (bc (Z.p Q) m₁)) ∧ (∀ Q, Q ≠ a → Q ≠ a' → bc (Z.p Q) m₁ = bc (Z.p Q) m) ∧
+      (∃ y : GL (Fin n) (Z.O a), bc (Z.O a).subtype y = bc (Z.p a) m₁) ∧
+      (∃ y : GL (Fin n) (Z.O a'), bc (Z.O a').subtype y = bc (Z.p a') m₁) := by
+  obtain ⟨s, hs, hsO⟩ := Z.exists_conj hS ha
+  obtain ⟨c, x, hc⟩ := hscal a
+  have hc' : (Z.p a).mapMatrix (m : Matrix (Fin n) (Fin n) A) =
+      (c : Z.K a) • ((bc (Z.O a).subtype x : GL (Fin n) (Z.K a)) : Matrix (Fin n) (Fin n) (Z.K a)) := hc
+  obtain ⟨y, hy⟩ := gU_scal_conj Z hs hsO G m hm c x hc'
+  have hsc : s c ≠ 0 := (map_ne_zero s).2 c.ne_zero
+  obtain ⟨α, hα1, hα2⟩ := Z.exists_single a ((c : Z.K a) - 1)
+  obtain ⟨β, hβ1, hβ2⟩ := Z.exists_single a' ((s c)⁻¹ - 1)
+  set z : A := 1 + α + β with hz
+  have pa : Z.p a z = c := by rw [hz, map_add (f := _), map_add (f := _), map_one, hα1, hβ2 a hne]; ring
+  have pa' : Z.p a' z = (s c)⁻¹ := by rw [hz, map_add (f := _), map_add (f := _), map_one, hα2 a' (Ne.symm hne), hβ1]; ring
+  have po : ∀ Q, Q ≠ a → Q ≠ a' → Z.p Q z = 1 := fun Q h1 h2 => by
+    rw [hz, map_add (f := _), map_add (f := _), map_one, hα2 Q h1, hβ2 Q h2]; ring
+  have σinj : ∀ u v, σ u = σ v → u = v := fun u v h => by rw [← hσ u, h, hσ]
+  have einj := Z.e_injective
+  have hzz : z * σ z = 1 := by
+    refine Z.ext' fun Q => ?_
+    obtain ⟨R, hR, t, ht⟩ := gU_comp_sigma Z hσ hS Q
+    rw [map_mul, ← ht, map_one]
+    by_cases hQa : Q = a
+    · subst hQa
+      have hRa' : R = a' := einj (σinj _ _ (by rw [hR, ← ha, hσ]))
+      subst hRa'
+      obtain ⟨w, hw⟩ := Z.surj Q c
+      have e : t (s c) = c := by rw [← hw, hs, ht, hσ]
+      rw [pa, pa', map_inv₀, e, mul_inv_cancel₀ c.ne_zero]
+    · by_cases hQa' : Q = a'
+      · subst hQa'
+        have hRa : R = a := einj (σinj _ _ (by rw [hR, ha]))
+        subst hRa
+        obtain ⟨w, hw⟩ := Z.surj R c
+        have e : t c = s c := by rw [← hw, hs, ht]
+        rw [pa', pa, e, inv_mul_cancel₀ hsc]
+      · have hR1 : R ≠ a := fun h => hQa' (einj (by rw [← hR, h, ha]))
+        have hR2 : R ≠ a' := fun h => hQa (einj (by rw [← hR, h, ← ha, hσ]))
+        rw [po Q hQa hQa', po R hR1 hR2, map_one, mul_one]
+  have hzz' : σ z * z = 1 := by rw [mul_comm]; exact hzz
+  let m₁ : GL (Fin n) A := ⟨σ z • (m : Matrix (Fin n) (Fin n) A), z • ((m⁻¹ : GL (Fin n) A) : Matrix (Fin n) (Fin n) A),
+    by rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul, hzz', one_smul, ← Units.val_mul, mul_inv_cancel, Units.val_one],
+    by rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul, hzz, one_smul, ← Units.val_mul, inv_mul_cancel, Units.val_one]⟩
+  have hm₁ : (m₁ : Matrix (Fin n) (Fin n) A) = σ z • (m : Matrix (Fin n) (Fin n) A) := rfl
+  have pm : ∀ Q, (Z.p Q).mapMatrix (m₁ : Matrix (Fin n) (Fin n) A) =
+      Z.p Q (σ z) • (Z.p Q).mapMatrix (m : Matrix (Fin n) (Fin n) A) := fun Q => by
+    rw [hm₁]; exact gU_mapMatrix_smul _ _ _
+  have pσ : ∀ Q, Z.p Q z * Z.p Q (σ z) = 1 := fun Q => by rw [← map_mul, hzz, map_one]
+  refine ⟨z, m₁, hzz, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · rw [hm₁, smul_smul, hzz, one_smul]
+  · show cT σ (m₁ : Matrix (Fin n) (Fin n) A) * _ * (m₁ : Matrix (Fin n) (Fin n) A) = _
+    have hm' : cT σ (m : Matrix (Fin n) (Fin n) A) * ((bc S.subtype G : GL (Fin n) A) : Matrix (Fin n) (Fin n) A) *
+        (m : Matrix (Fin n) (Fin n) A) = ((bc S.subtype G : GL (Fin n) A) : Matrix (Fin n) (Fin n) A) := hm
+    rw [hm₁, gU_cT_smul, hσ, Matrix.smul_mul, Matrix.smul_mul, Matrix.mul_smul, smul_smul, hzz, one_smul, hm']
+  · intro Q
+    obtain ⟨cQ, xQ, hQ⟩ := hscal Q
+    have h0 : Z.p Q (σ z) ≠ 0 := right_ne_zero_of_mul_eq_one (pσ Q)
+    refine ⟨Units.mk0 _ h0 * cQ, xQ, ?_⟩
+    show (Z.p Q).mapMatrix (m₁ : Matrix (Fin n) (Fin n) A) = _
+    rw [pm, Units.val_mul, Units.val_mk0, ← smul_smul]
+    exact congrArg _ hQ
+  · intro Q h1 h2
+    apply Units.ext
+    show (Z.p Q).mapMatrix (m₁ : Matrix (Fin n) (Fin n) A) = (Z.p Q).mapMatrix (m : Matrix (Fin n) (Fin n) A)
+    have e : Z.p Q (σ z) = 1 := by have := pσ Q; rwa [po Q h1 h2, one_mul] at this
+    rw [pm, e, one_smul]
+  · refine ⟨x, Units.ext ?_⟩
+    show _ = (Z.p a).mapMatrix (m₁ : Matrix (Fin n) (Fin n) A)
+    have e : Z.p a (σ z) = (c : Z.K a)⁻¹ := (inv_eq_of_mul_eq_one_right (by rw [← pa]; exact pσ a)).symm
+    rw [pm, e, hc', smul_smul, inv_mul_cancel₀ c.ne_zero, one_smul]
+  · refine ⟨y, Units.ext ?_⟩
+    show _ = (Z.p a').mapMatrix (m₁ : Matrix (Fin n) (Fin n) A)
+    have e : Z.p a' (σ z) = s c :=
+      (inv_eq_of_mul_eq_one_right (by rw [← pa']; exact pσ a')).symm.trans (inv_inv _)
+    rw [pm, e, hy, smul_smul, mul_inv_cancel₀ hsc, one_smul]
+
+theorem gU_ind (hσ : ∀ a, σ (σ a) = a) (hS : ∀ a ∈ S, σ a ∈ S) {n : ℕ} (G : GL (Fin n) S) (T : Finset P) :
+    ∀ (m : GL (Fin n) A), m ∈ UJ σ ((bc S.subtype G : GL (Fin n) A) : Matrix (Fin n) (Fin n) A) →
+      (∀ Q, IsScal (Z.O Q) (bc (Z.p Q) m)) →
+      (∀ Q, Q ∉ T → ∃ y : GL (Fin n) (Z.O Q), bc (Z.O Q).subtype y = bc (Z.p Q) m) →
+      ∃ (z : A) (x : GL (Fin n) S), z * σ z = 1 ∧
+        (m : Matrix (Fin n) (Fin n) A) = z • ((bc S.subtype x : GL (Fin n) A) : Matrix (Fin n) (Fin n) A) := by
+  classical
+  induction T using Finset.induction_on with
+  | empty =>
+    intro m _ _ hg
+    obtain ⟨x, hx⟩ := Z.gl_int (fun Q => hg Q (by simp))
+    exact ⟨1, x, by rw [map_one, mul_one], by rw [hx, one_smul]⟩
+  | @insert a T haT ih =>
+    intro m hm hscal hg
+    by_cases ha : ∃ y : GL (Fin n) (Z.O a), bc (Z.O a).subtype y = bc (Z.p a) m
+    · exact ih m hm hscal fun Q hQ => by
+        by_cases h : Q = a
+        · subst h; exact ha
+        · exact hg Q (by simp [h, hQ])
+    · obtain ⟨a', ha'⟩ := Z.exists_bar hσ a
+      by_cases hne : a = a'
+      · exact absurd (gU_good_self Z hS (by rw [ha', ← hne]) G m hm (hscal a)) ha
+      · obtain ⟨z, m₁, hzz, hmz, hm₁, hs₁, heq, hga, hga'⟩ := gU_step Z hσ hS G m hm hscal ha' hne
+        obtain ⟨z₂, x, hz₂, hx⟩ := ih m₁ hm₁ hs₁ fun Q hQ => by
+          by_cases h1 : Q = a
+          · subst h1; exact hga
+          by_cases h2 : Q = a'
+          · subst h2; exact hga'
+          rw [heq Q h1 h2]; exact hg Q (by simp [h1, hQ])
+        refine ⟨z * z₂, x, ?_, ?_⟩
+        · rw [map_mul, mul_mul_mul_comm, hzz, hz₂, one_mul]
+        · rw [hmz, hx, smul_smul]
+
+end GlobalTheory.LevNorm.PlaceSys
+
+namespace GlobalTheory.LevNorm.PlaceSys
+
+theorem unitary_locScal_glue : ∀ {A : Type} [CommRing A] {S : Subring A} {P : Type} {k : P → Type} [∀ Q, Field (k Q)] {r : ∀ Q, S →+* k Q} (Z : PlaceSys A S P k r) (σ : A →+* A), (∀ a, σ (σ a) = a) → (∀ a ∈ S, σ a ∈ S) → ∀ (n : ℕ) (G : GL (Fin n) S) (m : GL (Fin n) A), m ∈ UJ σ ((bc S.subtype G : GL (Fin n) A) : Matrix (Fin n) (Fin n) A) → (∀ Q, IsScal (Z.O Q) (bc (Z.p Q) m) ∨ ∃ Q', σ (Z.e Q') = Z.e Q ∧ IsScal (Z.O Q') (bc (Z.p Q') m)) → ∃ (z : A) (x : GL (Fin n) S), z * σ z = 1 ∧ (m : Matrix (Fin n) (Fin n) A) = z • ((bc S.subtype x : GL (Fin n) A) : Matrix (Fin n) (Fin n) A) := by
+  intro A _ S P k _ r Z σ hσ hS n G m hm hloc
+  have hscal : ∀ Q, IsScal (Z.O Q) (bc (Z.p Q) m) := fun Q => by
+    rcases hloc Q with h | ⟨Q', hQ', h⟩
+    · exact h
+    · obtain ⟨s, hs, hsO⟩ := Z.exists_conj hS hQ'
+      obtain ⟨c, x, hc⟩ := h
+      obtain ⟨y, hy⟩ := gU_scal_conj Z hs hsO G m hm c x hc
+      have hsc : s c ≠ 0 := (map_ne_zero s).2 c.ne_zero
+      exact ⟨(Units.mk0 _ hsc)⁻¹, y, by rw [Units.val_inv_eq_inv_val, Units.val_mk0]; exact hy⟩
+  have hfin : {Q | ¬ ∃ y : GL (Fin n) (Z.O Q), bc (Z.O Q).subtype y = bc (Z.p Q) m}.Finite := by
+    refine (Set.finite_iUnion (fun ij : Fin n × Fin n => (Z.fin ((m : Matrix (Fin n) (Fin n) A) ij.1 ij.2)).union
+      (Z.fin (((m⁻¹ : GL (Fin n) A) : Matrix (Fin n) (Fin n) A) ij.1 ij.2)))).subset ?_
+    intro Q hQ
+    by_contra hc
+    apply hQ
+    have h1 : ∀ i j, Z.p Q ((m : Matrix (Fin n) (Fin n) A) i j) ∈ Z.O Q := fun i j =>
+      by_contra fun h => hc (Set.mem_iUnion.2 ⟨(i, j), Or.inl h⟩)
+    have h2 : ∀ i j, Z.p Q (((m⁻¹ : GL (Fin n) A) : Matrix (Fin n) (Fin n) A) i j) ∈ Z.O Q := fun i j =>
+      by_contra fun h => hc (Set.mem_iUnion.2 ⟨(i, j), Or.inr h⟩)
+    obtain ⟨y, hy⟩ := gU_glO _ ((Z.p Q).mapMatrix (m : Matrix (Fin n) (Fin n) A))
+      ((Z.p Q).mapMatrix ((m⁻¹ : GL (Fin n) A) : Matrix (Fin n) (Fin n) A)) h1 h2
+      (by rw [← map_mul, ← Units.val_mul, mul_inv_cancel, Units.val_one, map_one])
+    exact ⟨y, Units.ext hy⟩
+  exact gU_ind Z hσ hS G hfin.toFinset m hm hscal fun Q hQ => by
+    by_contra h
+    exact hQ (hfin.mem_toFinset.2 h)
+
+end GlobalTheory.LevNorm.PlaceSys
+end -- clump:auto
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryScalarMulIntegralLocalToGlobal =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryScalarMulIntegralLocalToGlobalStatement =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryScalarMulIntegralLocalToGlobalStatement", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSingle\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryScalarMulIntegralLocalToGlobal\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open Matrix Formalism.UG Formalism.L2.DIV GlobalTheory.LevNorm
+
+theorem _root_.GlobalTheory.T.unitary_scalarMulIntegral_local_to_global : ∀ {A : Type} [CommRing A] {S : Subring A} {P : Type} {k : P → Type} [∀ Q, Field (k Q)] {r : ∀ Q, S →+* k Q} (Z : PlaceSys A S P k r) (σ : A →+* A), (∀ a, σ (σ a) = a) → (∀ a ∈ S, σ a ∈ S) → ∀ (n : ℕ) (G : GL (Fin n) S) (m : GL (Fin n) A), m ∈ UJ σ ((bc S.subtype G : GL (Fin n) A) : Matrix (Fin n) (Fin n) A) → (∀ Q, IsScal (Z.O Q) (bc (Z.p Q) m) ∨ ∃ Q', σ (Z.e Q') = Z.e Q ∧ IsScal (Z.O Q') (bc (Z.p Q') m)) → ∃ (z : A) (x : GL (Fin n) S), z * σ z = 1 ∧ (m : Matrix (Fin n) (Fin n) A) = z • ((bc S.subtype x : GL (Fin n) A) : Matrix (Fin n) (Fin n) A) := by
+  first | exact @GlobalTheory.LevNorm.PlaceSys.unitary_locScal_glue | exact GlobalTheory.LevNorm.PlaceSys.unitary_locScal_glue | (intros; apply GlobalTheory.LevNorm.PlaceSys.unitary_locScal_glue <;> assumption)
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryScalarMulIntegralLocalToGlobalStatement =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NormaliserCore =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NormaliserCore", "h": "module\n\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSingle\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdjoinRangeGLEqTopMatrixStatement\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdjoinUnitaryGroupHermitianLocalEqTopStatement\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsNormOneWithResiduesAtSplitPlacesStatement\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsUnitaryIntegralOfSplitPlaceComponentStatement\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsScalarMulIntegralOfConjIntegralGeneratorsStatement\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsScalarMulIntegralOfNormalizesSymmetricLevelStatement\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NormaliserUnipSymCharPatternStatement\npublic import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryScalarMulIntegralLocalToGlobalStatement\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.RingTheory.WittVector.IsPoly\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
 @[expose] public section
 
 noncomputable section
@@ -299,3 +1898,6 @@ theorem normaliser_core (hσ : ∀ a, σ (σ a) = a) (hS : ∀ a ∈ S, σ a ∈
 end GlobalTheory.LevNorm
 
 end
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NormaliserCore =====

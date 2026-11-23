@@ -2,13 +2,15 @@ module
 
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DescMk
+public import Mathlib.Topology.ContinuousMap.StoneWeierstrass
+public import Mathlib.Topology.ContinuousMap.Algebra
+public import Mathlib.Topology.ContinuousMap.Compact
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
+import Mathlib.Analysis.CStarAlgebra.ContinuousMap
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
@@ -22,6 +24,8 @@ import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Echelon.Zsqrtd
 import Mathlib.Tactic.Inclusion.Extension.Core.Core
 import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
@@ -42,7 +46,150 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
+import Mathlib.Analysis.SpecialFunctions.Bernstein
 
+-- This file was produced by scripts/clump.py from the modules listed below.
+-- Members: Development.AbelianVarietyTheory.Proofs.TwistedOperators.DescMk, Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsDescendPeriodicTrig
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.DescMk =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.TwistedOperators.DescMk", "h": "module\n\npublic import Mathlib.Analysis.CStarAlgebra.Classes\npublic import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.CStarAlgebra.ContinuousMap\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\npublic import Mathlib.Topology.ContinuousMap.StoneWeierstrass\nimport Mathlib.Topology.Sheaves.Init\npublic import Mathlib.Topology.ContinuousMap.Algebra\npublic import Mathlib.Topology.ContinuousMap.Compact\n\n"}
+section -- clump:auto
+@[expose] public section
+
+namespace GlobalTheory.QuotientDescentTwistedOperators
+
+open Topology
+
+noncomputable def desc {G : Type} [AddCommGroup G] [TopologicalSpace G] (Γ : AddSubgroup G)
+    (f : G → ℂ) (hf : Continuous f) (hΓ : ∀ γ ∈ Γ, ∀ x, f (γ + x) = f x) : C(G ⧸ Γ, ℂ) where
+  toFun := fun q => Quotient.liftOn' q f (by
+    intro a b hab
+    rw [QuotientAddGroup.leftRel_apply] at hab
+    have := hΓ _ hab a
+    rw [← this]
+    congr 1
+    abel)
+  continuous_toFun := hf.quotient_liftOn' _
+
+theorem desc_mk {G : Type} [AddCommGroup G] [TopologicalSpace G] (Γ : AddSubgroup G)
+    (f : G → ℂ) (hf : Continuous f) (hΓ : ∀ γ ∈ Γ, ∀ x, f (γ + x) = f x) (x : G) :
+    desc Γ f hf hΓ (QuotientAddGroup.mk x) = f x := rfl
+
+theorem approx : ∀ (G : Type) [inst : AddCommGroup G] [inst_1 : TopologicalSpace G] [IsTopologicalAddGroup G] [T2Space G] [LocallyCompactSpace G] [SecondCountableTopology G] [inst_6 : MeasurableSpace G] [BorelSpace G] (Γ : AddSubgroup G) [DiscreteTopology ↥Γ] (K : Set G), IsCompact K → (∀ (x : G), ∃ γ ∈ Γ, γ + x ∈ K) → ∀ (A : Type) [inst_9 : AddCommGroup A] (χ : A → G → ℂ), (∀ (a : A), Continuous (χ a)) → (∀ (a : A) (x y : G), χ a (x + y) = χ a x * χ a y) → (∀ (a b : A) (x : G), χ (a + b) x = χ a x * χ b x) → (∀ (x : G), χ (0 : A) x = (1 : ℂ)) → (∀ (a : A) (x : G), ‖χ a x‖ = (1 : ℝ)) → (∀ (x : G), (∀ (a : A), χ a x = (1 : ℂ)) ↔ x ∈ Γ) → ∀ (Φ : G → ℂ), Continuous Φ → (∀ γ ∈ Γ, ∀ (x : G), Φ (γ + x) = Φ x) → ∀ (ε : ℝ), (0 : ℝ) < ε → ∃ (s : Finset A) (c : A → ℂ), ∀ (x : G), ‖Φ x - ∑ a ∈ s, c a * χ a x‖ ≤ ε := by
+  intro G _ _ _ _ _ _ _ _ Γ _ K hK hcov A _ χ hc hmulx hadd hzero hnorm hker Φ hΦ hΦinv ε hε
+
+  have : CompactSpace (G ⧸ Γ) := by
+    refine ⟨?_⟩
+    have hU : (Set.univ : Set (G ⧸ Γ)) = QuotientAddGroup.mk '' K := by
+      ext q
+      refine QuotientAddGroup.induction_on q fun x => ?_
+      obtain ⟨γ, hγ, hk⟩ := hcov x
+      refine ⟨fun _ => ⟨γ + x, hk, ?_⟩, fun _ => Set.mem_univ _⟩
+      rw [QuotientAddGroup.eq]
+      have : -(γ + x) + x = -γ := by abel
+      rw [this]
+      exact Γ.neg_mem hγ
+    rw [hU]
+    exact hK.image continuous_quot_mk
+  have hχ0 : ∀ a, χ a 0 = 1 := fun a => (hker 0).2 Γ.zero_mem a
+  have hinv : ∀ a, ∀ γ ∈ Γ, ∀ x, χ a (γ + x) = χ a x := by
+    intro a γ hγ x
+    rw [hmulx, (hker γ).2 hγ a, one_mul]
+
+  let e : A → C(G ⧸ Γ, ℂ) := fun a => desc Γ (χ a) (hc a) (hinv a)
+  have he_apply : ∀ a x, e a (QuotientAddGroup.mk x) = χ a x := fun a x =>
+    desc_mk Γ (χ a) (hc a) (hinv a) x
+  have he_add : ∀ a b, e (a + b) = e a * e b := by
+    intro a b
+    ext q
+    refine QuotientAddGroup.induction_on q fun x => ?_
+    rw [ContinuousMap.mul_apply, he_apply, he_apply, he_apply, hadd]
+  have he_zero : e 0 = 1 := by
+    ext q
+    refine QuotientAddGroup.induction_on q fun x => ?_
+    rw [ContinuousMap.one_apply, he_apply, hzero]
+  have he_star : ∀ a, star (e a) = e (-a) := by
+    intro a
+    ext q
+    refine QuotientAddGroup.induction_on q fun x => ?_
+    rw [ContinuousMap.star_apply, he_apply, he_apply]
+    have h1 : χ (-a) x * χ a x = 1 := by rw [← hadd, neg_add_cancel, hzero]
+    have h2 : χ a x * star (χ a x) = 1 := by
+      rw [Complex.star_def, Complex.mul_conj, Complex.normSq_eq_norm_sq, hnorm]
+      norm_num
+    linear_combination (-(star (χ a x))) * h1 + χ (-a) x * h2
+
+  let S : Submodule ℂ C(G ⧸ Γ, ℂ) := Submodule.span ℂ (Set.range e)
+  have hone : (1 : C(G ⧸ Γ, ℂ)) ∈ S := he_zero ▸ Submodule.subset_span ⟨0, rfl⟩
+  have hmul : ∀ f g, f ∈ S → g ∈ S → f * g ∈ S := by
+    intro f g hf hg
+    have h := Submodule.mul_mem_mul hf hg
+    rw [Submodule.span_mul_span] at h
+    refine (Submodule.span_le.mpr ?_) h
+    rintro _ ⟨_, ⟨a, rfl⟩, _, ⟨b, rfl⟩, rfl⟩
+    exact Submodule.subset_span ⟨a + b, he_add a b⟩
+  have hstar : ∀ f ∈ S, star f ∈ S := by
+    intro f hf
+    induction hf using Submodule.span_induction with
+    | mem x hx =>
+      obtain ⟨a, rfl⟩ := hx
+      exact Submodule.subset_span ⟨-a, (he_star a).symm⟩
+    | zero => rw [star_zero]; exact S.zero_mem
+    | add x y _ _ hx hy => rw [star_add]; exact S.add_mem hx hy
+    | smul c x _ hx => rw [star_smul]; exact S.smul_mem _ hx
+  let B : StarSubalgebra ℂ C(G ⧸ Γ, ℂ) :=
+    { carrier := S
+      mul_mem' := fun {f g} hf hg => hmul f g hf hg
+      one_mem' := hone
+      add_mem' := fun hf hg => S.add_mem hf hg
+      zero_mem' := S.zero_mem
+      algebraMap_mem' := fun c => by
+        rw [Algebra.algebraMap_eq_smul_one]
+        exact S.smul_mem c hone
+      star_mem' := fun {f} hf => hstar f hf }
+
+  have hsep : B.SeparatesPoints := by
+    intro q₁ q₂
+    refine QuotientAddGroup.induction_on q₁ fun x => QuotientAddGroup.induction_on q₂ fun y => ?_
+    intro hne
+    have hex : ∃ a, χ a x ≠ χ a y := by
+      by_contra hall
+      simp only [not_exists, ne_eq, not_not] at hall
+      apply hne
+      rw [QuotientAddGroup.eq]
+      refine (hker _).1 fun a => ?_
+      rw [hmulx, ← hall a, ← hmulx, neg_add_cancel, hχ0 a]
+    obtain ⟨a, ha⟩ := hex
+    refine ⟨e a, ⟨e a, Submodule.subset_span ⟨a, rfl⟩, rfl⟩, ?_⟩
+    rwa [he_apply, he_apply]
+
+  have hB := ContinuousMap.starSubalgebra_topologicalClosure_eq_top_of_separatesPoints B hsep
+  let Φq : C(G ⧸ Γ, ℂ) := desc Γ Φ hΦ hΦinv
+  have hmem : Φq ∈ closure (B : Set C(G ⧸ Γ, ℂ)) := by
+    rw [← StarSubalgebra.topologicalClosure_coe, hB]
+    trivial
+  obtain ⟨g, hg, hdist⟩ := Metric.mem_closure_iff.mp hmem ε hε
+  obtain ⟨c, hcg⟩ := Finsupp.mem_span_range_iff_exists_finsupp.mp (show g ∈ S from hg)
+  refine ⟨c.support, c, fun x => ?_⟩
+  have hval : ∑ a ∈ c.support, c a * χ a x = g (QuotientAddGroup.mk x) := by
+    rw [← hcg, Finsupp.sum, ContinuousMap.coe_sum, Finset.sum_apply]
+    refine Finset.sum_congr rfl fun a _ => ?_
+    rw [ContinuousMap.smul_apply, he_apply, smul_eq_mul]
+  rw [hval, ← desc_mk Γ Φ hΦ hΦinv x]
+  calc ‖Φq (QuotientAddGroup.mk x) - g (QuotientAddGroup.mk x)‖
+      = ‖(Φq - g) (QuotientAddGroup.mk x)‖ := rfl
+    _ ≤ ‖Φq - g‖ := ContinuousMap.norm_coe_le_norm _ _
+    _ = dist Φq g := (dist_eq_norm _ _).symm
+    _ ≤ ε := hdist.le
+
+end GlobalTheory.QuotientDescentTwistedOperators
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.DescMk =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsDescendPeriodicTrig =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsDescendPeriodicTrig", "h": "module\n\npublic import Mathlib.Analysis.CStarAlgebra.Classes\npublic import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic\npublic import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DescMk\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
 @[expose] public section
 
 open MeasureTheory
@@ -59,3 +206,6 @@ theorem trigPoly_dense_periodic : ∀ (G : Type) [AddCommGroup G] [TopologicalSp
   | (intros; exact _root_.GlobalTheory.QuotientDescentTwistedOperators.approx ..)
 
 end GlobalTheory
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsDescendPeriodicTrig =====

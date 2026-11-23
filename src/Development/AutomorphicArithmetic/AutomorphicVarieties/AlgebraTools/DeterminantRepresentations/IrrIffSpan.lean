@@ -1,7 +1,8 @@
 module
 
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
-public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.IrrIffSpan
+public import Mathlib.RepresentationTheory.AlgebraRepresentation.Basic
+public import Mathlib.LinearAlgebra.Dual.Lemmas
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -20,7 +21,12 @@ import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.RingTheory.Coalgebra.IsFrobenius
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.HopfAlgebra.Basic
 import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
 import Mathlib.Tactic.Echelon.Zsqrtd
 import Mathlib.Tactic.Inclusion.Extension.Core.Core
 import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
@@ -28,6 +34,7 @@ import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
 import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
 import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
 import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.NormNum.Irrational
 import Mathlib.Tactic.NormNum.IsCoprime
 import Mathlib.Tactic.NormNum.IsSquare
@@ -40,8 +47,106 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Sheaves.Init
 
+-- This file was produced by scripts/clump.py from the modules listed below.
+-- Members: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.IrrIffSpan, Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.DeterminantRepresentations.IrrIffSpan
+
+-- ===== clump member: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.IrrIffSpan =====
+-- clump-header: {"m": "Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.IrrIffSpan", "h": "module\n\npublic import Mathlib.FieldTheory.IsAlgClosed.Basic\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\npublic import Mathlib.RepresentationTheory.AlgebraRepresentation.Basic\nimport Mathlib.RingTheory.Coalgebra.IsFrobenius\nimport Mathlib.RingTheory.Henselian\nimport Mathlib.RingTheory.HopfAlgebra.Basic\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.TypeStar\nimport Mathlib.Topology.Sheaves.Init\npublic import Mathlib.LinearAlgebra.Dual.Lemmas\n\n"}
+section -- clump:auto
+@[expose] public section
+
+private theorem UpperTheory.Reformulated.B.Qe4.subalgebra_eq_top {K V : Type*} [Field K] [IsAlgClosed K]
+    [AddCommGroup V] [Module K V] [FiniteDimensional K V] (S : Subalgebra K (Module.End K V))
+    (h : ∀ N : Submodule K V, (∀ s ∈ S, ∀ v ∈ N, s v ∈ N) → N = ⊥ ∨ N = ⊤) : S = ⊤ := by
+  rcases subsingleton_or_nontrivial V with hV | hV
+  · rw [eq_top_iff]
+    intro f _
+    rw [Subsingleton.elim f 0]
+    exact S.zero_mem
+  haveI : IsSimpleModule S V := by
+    refine { exists_pair_ne := ⟨⊥, ⊤, bot_ne_top⟩, eq_bot_or_eq_top := fun N => ?_ }
+    rcases h (N.restrictScalars K) (fun s hs v hv => N.smul_mem (⟨s, hs⟩ : S) hv) with h1 | h1
+    · exact Or.inl ((Submodule.restrictScalars_eq_bot_iff K S V).1 h1)
+    · exact Or.inr ((Submodule.restrictScalars_eq_top_iff K S V).1 h1)
+  rw [eq_top_iff]
+  intro f _
+  let F : Module.End (Module.End S V) V :=
+    { toFun := f
+      map_add' := f.map_add
+      map_smul' := fun φ v => by
+        obtain ⟨c, rfl⟩ := (IsSimpleModule.algebraMap_end_bijective_of_isAlgClosed K
+          (A := S) (V := V)).2 φ
+        exact f.map_smul c v }
+  classical
+  let b := Module.finBasis K V
+  obtain ⟨r, hr⟩ := jacobson_density (R := S) F (Finset.univ.image b)
+  have : f = (r : Module.End K V) :=
+    b.ext fun i => hr (b i) (Finset.mem_image_of_mem _ (Finset.mem_univ i))
+  rw [this]
+  exact r.2
+
+theorem UpperTheory.Reformulated.B.Qe4.irrIffSpan :
+    ∀ {K G ι : Type} [inst : Field K] [IsAlgClosed K] [inst_2 : Group G]
+    [inst_3 : Fintype ι] [inst_4 : DecidableEq ι] (ρ : G →* Matrix ι ι K),
+    (∀ (N : Submodule K (ι → K)), (∀ (g : G), ∀ v ∈ N, ((ρ : G → Matrix ι ι K) g).mulVec v ∈ N) → N = ⊥ ∨ N = ⊤) ↔
+      Submodule.span K (Set.range (⇑ρ : G → Matrix ι ι K)) = ⊤ := by
+  intro K G ι _ _ _ _ _ ρ
+  constructor
+  · intro h
+    have hmul : ∀ x y : Matrix ι ι K, x ∈ Submodule.span K (Set.range (⇑ρ : G → Matrix ι ι K)) →
+        y ∈ Submodule.span K (Set.range (⇑ρ : G → Matrix ι ι K)) →
+        x * y ∈ Submodule.span K (Set.range (⇑ρ : G → Matrix ι ι K)) := by
+      intro x y hx hy
+      have := Submodule.mul_mem_mul hx hy
+      rw [Submodule.span_mul_span] at this
+      refine Submodule.span_mono ?_ this
+      rintro _ ⟨_, ⟨a, rfl⟩, _, ⟨c, rfl⟩, rfl⟩
+      exact ⟨a * c, map_mul ρ a c⟩
+    let A : Subalgebra K (Matrix ι ι K) :=
+      (Submodule.span K (Set.range (⇑ρ : G → Matrix ι ι K))).toSubalgebra
+        (Submodule.subset_span ⟨1, map_one ρ⟩) hmul
+    let e : Matrix ι ι K ≃ₐ[K] Module.End K (ι → K) := Matrix.toLinAlgEquiv'
+    have hS : A.map (e : Matrix ι ι K →ₐ[K] Module.End K (ι → K)) = ⊤ := by
+      refine UpperTheory.Reformulated.B.Qe4.subalgebra_eq_top _ fun N hN => h N fun g v hv => ?_
+      exact hN (e (ρ g)) ⟨ρ g, Submodule.subset_span ⟨g, rfl⟩, rfl⟩ v hv
+    rw [eq_top_iff]
+    intro M _
+    have hM : e M ∈ A.map (e : Matrix ι ι K →ₐ[K] Module.End K (ι → K)) := by
+      rw [hS]; exact Algebra.mem_top
+    obtain ⟨x, hx, hxe⟩ := hM
+    have : x = M := e.injective hxe
+    rw [← this]
+    exact hx
+  · intro h N hN
+    have hall : ∀ M : Matrix ι ι K, ∀ v ∈ N, M.mulVec v ∈ N := by
+      intro M v hv
+      have hM : M ∈ Submodule.span K (Set.range (⇑ρ : G → Matrix ι ι K)) := by
+        rw [h]; exact Submodule.mem_top
+      induction hM using Submodule.span_induction with
+      | mem x hx => obtain ⟨g, rfl⟩ := hx; exact hN g v hv
+      | zero => rw [Matrix.zero_mulVec]; exact N.zero_mem
+      | add x y _ _ hx hy => rw [Matrix.add_mulVec]; exact N.add_mem hx hy
+      | smul c x _ hx => rw [Matrix.smul_mulVec]; exact N.smul_mem c hx
+    by_cases hb : N = ⊥
+    · exact Or.inl hb
+    right
+    obtain ⟨v, hv, hv0⟩ := (Submodule.ne_bot_iff N).1 hb
+    rw [eq_top_iff]
+    intro w _
+    obtain ⟨φ, hφ⟩ := Module.Projective.exists_dual_eq_one K hv0
+    have := hall (LinearMap.toMatrix' (φ.smulRight w)) v hv
+    rw [LinearMap.toMatrix'_mulVec] at this
+    simpa [hφ] using this
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.IrrIffSpan =====
+
+-- ===== clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.DeterminantRepresentations.IrrIffSpan =====
+-- clump-header: {"m": "Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.DeterminantRepresentations.IrrIffSpan", "h": "module\n\npublic import Mathlib.FieldTheory.IsAlgClosed.Basic\npublic import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.IrrIffSpan\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
 @[expose] public section
 
 open Polynomial Matrix
@@ -50,3 +155,6 @@ theorem UpperTheory.V.AlgebraTools.Det.irrIffSpan :
     ∀ {K G ι : Type} [Field K] [IsAlgClosed K] [Group G] [Fintype ι] [DecidableEq ι] (ρ : G →* Matrix ι ι K),
     (∀ N : Submodule K (ι → K), (∀ g, ∀ v ∈ N, ρ g *ᵥ v ∈ N) → N = ⊥ ∨ N = ⊤) ↔ Submodule.span K (Set.range ρ) = ⊤ :=
   _root_.UpperTheory.Reformulated.B.Qe4.irrIffSpan
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.DeterminantRepresentations.IrrIffSpan =====

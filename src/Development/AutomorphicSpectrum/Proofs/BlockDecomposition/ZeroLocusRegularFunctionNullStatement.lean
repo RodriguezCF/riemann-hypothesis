@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsEqnIffGeneratesAtInv
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DetJacMatCoordsEqTransitionJacobianDet
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ZeroLocusRegularFunctionNull
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChernPartOverProperClosedEqZero
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRes
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -28,6 +29,7 @@ import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
 import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
 import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
 import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.NormNum.Irrational
 import Mathlib.Tactic.NormNum.IsCoprime
 import Mathlib.Tactic.NormNum.IsSquare
@@ -45,7 +47,82 @@ import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsPullHermPullL
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsSmoothHermCombLine
 import GroundTheory.ArithmeticGeometry.SchemeCohomology.ConsCompSuccAboveZero
 import GroundTheory.ArithmeticGeometry.SchemeCohomology.ProjSpace
+import ReciprocityTheory.AnalyticForms.PotentialTheory.IsPotentialOfFun
 
+-- This file was produced by scripts/clump.py from the modules listed below.
+-- Members: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ZeroLocusRegularFunctionNull, Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ZeroLocusRegularFunctionNullStatement
+
+-- ===== clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ZeroLocusRegularFunctionNull =====
+-- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ZeroLocusRegularFunctionNull", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsEqnIffGeneratesAtInv\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.DetJacMatCoordsEqTransitionJacobianDet\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChernPartOverProperClosedEqZero\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Definitions.Divisors.NefFibOfIsNef\nimport Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsPullHermPullLine\nimport Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsSmoothHermCombLine\nimport GroundTheory.ArithmeticGeometry.SchemeCohomology.ConsCompSuccAboveZero\nimport GroundTheory.ArithmeticGeometry.SchemeCohomology.ProjSpace\nimport ReciprocityTheory.AnalyticForms.PotentialTheory.IsPotentialOfFun\npublic import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRes\n\n"}
+section -- clump:auto
+@[expose] public section
+
+set_option autoImplicit false
+open CategoryTheory AlgebraicGeometry Limits TopologicalSpace MvPolynomial MeasureTheory
+open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.Semi ReciprocityTheory.ChartRestriction.G.Geo.Tor
+open GlobalTheory.AbLaw GlobalTheory.CechPic GlobalTheory.ProjSpace GlobalTheory.CxPts GlobalTheory.Cartier GlobalTheory.ArInt GlobalTheory.Points GlobalTheory.ChartGlue
+open GroundTheory.Arith.SchemeCoh GroundTheory.Arith.SchemeCoh.ProjSpace
+open ReciprocityTheory.AnForm ReciprocityTheory.AnForm.M
+open GlobalTheory.CompanionTheory.MPDict GlobalTheory.CompanionTheory.MixZ
+open ReciprocityTheory.ChartRestriction.G.Geo (mcPts IsMultiHomog SameOrbit)
+
+theorem GlobalTheory.CompanionTheory.MixZ.volume_chart_zeroSet_fnOf : ∀ (X : Scheme.{0}) [IsIntegral X] (q : X ⟶ Sp ℤ) (σ : ℤ →+* ℂ) (D : ℕ) (c : GlobalTheory.AlgChart q σ D) (W : X.Opens)
+    (h : genericPoint X ∈ W) (g : Γ(X, W)), fnOf W h g ≠ 0 →
+    volume (c.e.target ∩ c.e.symm ⁻¹' {y | y ∈ ptsIn q σ W ∧ ev q σ W g y = 0}) = 0 := by
+  intro X _ q σ D c W h g hg
+  rcases c.e.source.eq_empty_or_nonempty with hs | ⟨y0, hy0⟩
+  · have ht : c.e.target = ∅ := by rw [← c.e.image_source_eq_target, hs, Set.image_empty]
+    simp [ht]
+  have sectionFrameQuotient := mem_ptsIn.1 (c.source_subset hy0)
+  haveI : Nonempty c.U := ⟨⟨_, sectionFrameQuotient⟩⟩
+  have hgU : genericPoint X ∈ c.U := gen_mem sectionFrameQuotient
+  haveI := functionField_isFractionRing_of_isAffineOpen X c.U c.affine
+  obtain ⟨a, b, hb, hab⟩ := IsFractionRing.div_surjective (A := Γ(X, c.U)) (fnOf W h g)
+  have hal : ∀ t : Γ(X, c.U), algebraMap Γ(X, c.U) X.functionField t = fnOf c.U hgU t :=
+    fun _ => rfl
+  rw [hal, hal] at hab
+  have hb0 : fnOf c.U hgU b ≠ 0 := fun e =>
+    nonZeroDivisors.ne_zero hb ((map_eq_zero_iff _ (fnOf_injective _ _)).1 e)
+  have ha0 : a ≠ 0 := by
+    rintro rfl
+    apply hg
+    rw [← hab, map_zero, zero_div]
+  have hrel : fnOf W h g * fnOf c.U hgU b = fnOf c.U hgU a := by
+    rw [← hab, div_mul_cancel₀ _ hb0]
+  have hI : genericPoint X ∈ W ⊓ c.U := ⟨h, hgU⟩
+  have hres : resG X (inf_le_left : W ⊓ c.U ≤ W) g * resG X (inf_le_right : W ⊓ c.U ≤ c.U) b =
+      resG X (inf_le_right : W ⊓ c.U ≤ c.U) a := by
+    apply fnOf_injective _ hI
+    rw [map_mul, fnOf_resG, fnOf_resG, fnOf_resG]
+    exact hrel
+  obtain ⟨Q, hQ, r, hQr⟩ := GlobalTheory.ChernNull.exists_poly_dvd _ c.etale a ha0
+  have hP : MvPolynomial.map σ Q ≠ 0 := fun e =>
+    hQ (MvPolynomial.map_injective σ (RingHom.injective_int σ) (by rw [e, map_zero]))
+  refine measure_mono_null ?_ (GlobalTheory.ChernNull.volume_poly_zero D _ hP)
+  rintro v ⟨hv, hyW, hyz⟩
+  have hys : c.e.symm v ∈ c.e.source := c.e.map_target hv
+  have hyU := c.source_subset hys
+  have hyI : c.e.symm v ∈ ptsIn q σ (W ⊓ c.U) := mem_ptsIn_inf.2 ⟨hyW, hyU⟩
+  have hay : ev q σ c.U a (c.e.symm v) = 0 := by
+    rw [← ev_res inf_le_right hyI, ← hres, ev_mul, ev_res inf_le_left hyI, hyz, zero_mul]
+  have hcomp : (evHom hyU).comp (MvPolynomial.eval₂Hom (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX q c.U) c.x) =
+      MvPolynomial.eval₂Hom σ (fun i => c.e (c.e.symm v) i) := by
+    refine MvPolynomial.ringHom_ext (fun i => ?_) (fun i => ?_)
+    · simp [← ev_eq hyU, ev_algX hyU]
+    · simp [← ev_eq hyU, c.apply_eq _ hys]
+  have hQy := congrArg (fun F => F Q) hcomp
+  simp only [RingHom.comp_apply] at hQy
+  show MvPolynomial.eval (fun i => v i) (MvPolynomial.map σ Q) = 0
+  rw [c.e.right_inv hv] at hQy
+  rw [MvPolynomial.eval_map, ← MvPolynomial.coe_eval₂Hom, ← hQy, hQr, map_mul, ← ev_eq hyU, hay,
+    zero_mul]
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ZeroLocusRegularFunctionNull =====
+
+-- ===== clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ZeroLocusRegularFunctionNullStatement =====
+-- clump-header: {"m": "Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ZeroLocusRegularFunctionNullStatement", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsEqnIffGeneratesAtInv\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.DetJacMatCoordsEqTransitionJacobianDet\npublic import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ZeroLocusRegularFunctionNull\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Definitions.Divisors.NefFibOfIsNef\nimport Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsPullHermPullLine\nimport Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsSmoothHermCombLine\nimport GroundTheory.ArithmeticGeometry.SchemeCohomology.ConsCompSuccAboveZero\nimport GroundTheory.ArithmeticGeometry.SchemeCohomology.ProjSpace\n\n"}
+section -- clump:auto
 @[expose] public section
 
 set_option autoImplicit false
@@ -61,3 +138,6 @@ theorem _root_.GlobalTheory.T.zero_locus_regular_function_null : ∀ (X : Scheme
     (h : genericPoint X ∈ W) (g : Γ(X, W)), fnOf W h g ≠ 0 →
     volume (c.e.target ∩ c.e.symm ⁻¹' {y | y ∈ ptsIn q σ W ∧ ev q σ W g y = 0}) = 0 := by
   first | exact @GlobalTheory.CompanionTheory.MixZ.volume_chart_zeroSet_fnOf | exact GlobalTheory.CompanionTheory.MixZ.volume_chart_zeroSet_fnOf | (intros; apply GlobalTheory.CompanionTheory.MixZ.volume_chart_zeroSet_fnOf <;> assumption)
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ZeroLocusRegularFunctionNullStatement =====

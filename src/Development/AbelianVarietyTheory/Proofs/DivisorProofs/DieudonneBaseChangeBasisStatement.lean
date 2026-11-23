@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.RedSurjective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneBaseChangeBasis
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CobOneEqZeroOfConnecting
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneRanksFieldCharP
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -15,12 +16,14 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
+import Mathlib.LinearAlgebra.Dimension.OrzechProperty
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.Tactic.Echelon.Zsqrtd
 import Mathlib.Tactic.Inclusion.Extension.Core.Core
 import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
@@ -41,6 +44,107 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 
+-- This file was produced by scripts/clump.py from the modules listed below.
+-- Members: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneBaseChangeBasis, Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneBaseChangeBasisStatement
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneBaseChangeBasis =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneBaseChangeBasis", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.RedSurjective\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CobOneEqZeroOfConnecting\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneRanksFieldCharP\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.LinearAlgebra.Dimension.OrzechProperty\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.RegularLocalRing.Defs\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open CategoryTheory TensorProduct Coalgebra Bialgebra GlobalTheory GlobalTheory.PDiv GlobalTheory.PDivGroup GlobalTheory.Dieu
+
+set_option autoImplicit false
+
+noncomputable section
+
+namespace GlobalTheory.Dieu.Base
+
+
+
+theorem exists_mem_span_red_eq (p : ℕ) [Fact p.Prime] (P : ∀ (k : Type) [CommRing k], PDivGroup p k → Prop)
+    (B : Base p P) (k k' : Type) [Field k] [CharP k p] [PerfectRing k p] [Field k'] [CharP k' p]
+    [PerfectRing k' p] [Algebra k k'] (G : PDivGroup p k) (hG : P k G) (hG' : P k' (G.baseChange k'))
+    (ι : Type) (b : Module.Basis ι (WittVector p k) (B.M G hG)) (z : (G.baseChange k').RigExt) :
+    ∃ n ∈ Submodule.span (WittVector p k') (Set.range fun i => B.smap hG' hG (G.toBase k') (b i)),
+      B.red _ hG' n = z := by
+  obtain ⟨x, rfl⟩ := G.liftSemi_rig_bijective k' (CharP.cast_eq_zero k p) (.inl inferInstance) |>.2 z
+  induction x using TensorProduct.inductionOn with
+  | add x y hx hy =>
+    obtain ⟨n, hn, h1⟩ := hx
+    obtain ⟨n', hn', h2⟩ := hy
+    refine ⟨n + n', add_mem hn hn', ?_⟩
+    rw [LinearMap.map_add (B.red _ hG') n n', h1, h2, LinearMap.map_add (f := _)]
+  | tmul r y =>
+    obtain ⟨m, rfl⟩ := B.red_surjective G hG y
+    obtain ⟨R, rfl⟩ := (WittVector.constantCoeff_surjective p : Function.Surjective
+      (WittVector.constantCoeff : WittVector p k' →+* k')) r
+    refine ⟨R • B.smap hG' hG (G.toBase k') m, Submodule.smul_mem _ _ ?_, ?_⟩
+    · set_option synthInstance.maxHeartbeats 100000 in
+      rw [← b.linearCombination_repr m, Finsupp.linearCombination_apply, Finsupp.sum, map_sum]
+      exact Submodule.sum_mem _ fun i _ => by
+        rw [B.smap_smul]
+        exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)
+    · set_option backward.isDefEq.respectTransparency false in
+      rw [liftSemi_tmul, LinearMap.map_smulₛₗ (B.red _ hG') R, B.red_smap]
+
+set_option synthInstance.maxHeartbeats 200000 in
+theorem smap_toBase_basis (p : ℕ) [Fact p.Prime] (P : ∀ (k : Type) [CommRing k], PDivGroup p k → Prop)
+    (B : Base p P) (k k' : Type) [Field k] [CharP k p] [PerfectRing k p] [Field k'] [CharP k' p]
+    [PerfectRing k' p] [Algebra k k'] (G : PDivGroup p k) (hG : P k G) (hG' : P k' (G.baseChange k'))
+    (ι : Type) [Fintype ι] (b : Module.Basis ι (WittVector p k) (B.M G hG)) :
+    ∃ b' : Module.Basis ι (WittVector p k') (B.M (G.baseChange k') hG'),
+      ∀ i, b' i = B.smap hG' hG (G.toBase k') (b i) := by
+  have := B.free G hG
+  have := B.finite G hG
+  have := B.free _ hG'
+  have := B.finite _ hG'
+  have hp : (p : k) = 0 := CharP.cast_eq_zero k p
+  have hp' : (p : k') = 0 := CharP.cast_eq_zero k' p
+  obtain ⟨-, hr⟩ := finrank_eq_of_semilinear_surjective (WittVector.constantCoeff_surjective p) hp
+    (B.red G hG) (B.red_surjective G hG) fun m h => (B.red_eq_zero G hG m).1 h
+  obtain ⟨-, hr'⟩ := finrank_eq_of_semilinear_surjective (WittVector.constantCoeff_surjective p) hp'
+    (B.red _ hG') (B.red_surjective _ hG') fun m h => (B.red_eq_zero _ hG' m).1 h
+  change Module.finrank k G.RigExt = _ at hr
+  change Module.finrank k' (G.baseChange k').RigExt = _ at hr'
+  have hrank : Module.finrank k' (G.baseChange k').RigExt = Module.finrank k G.RigExt := by
+    rw [← (LinearEquiv.ofBijective _ (G.liftSemi_rig_bijective k' hp (.inl inferInstance))).finrank_eq,
+      Module.finrank_baseChange]
+  have hmax : (p : WittVector p k') ∈ IsLocalRing.maximalIdeal (WittVector p k') := by
+    rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
+    intro hu
+    have := hu.map (WittVector.constantCoeff : WittVector p k' →+* k')
+    rw [map_natCast, hp'] at this
+    exact not_isUnit_zero this
+  have hjac : Ideal.span {(p : WittVector p k')} ≤ Ring.jacobson (WittVector p k') := by
+    rw [IsLocalRing.ringJacobson_eq_maximalIdeal]
+    exact Ideal.span_le.2 (Set.singleton_subset_iff.2 hmax)
+  have hspan : ⊤ ≤ Submodule.span (WittVector p k')
+      (Set.range fun i => B.smap hG' hG (G.toBase k') (b i)) := by
+    refine Submodule.le_of_le_smul_of_le_jacobson Module.Finite.fg_top hjac fun m _ => ?_
+    obtain ⟨n, hn, h1⟩ := exists_mem_span_red_eq p P B k k' G hG hG' ι b (B.red _ hG' m)
+    obtain ⟨q, hq⟩ := (B.red_eq_zero _ hG' (m - n)).1 (by
+      rw [LinearMap.map_sub (B.red _ hG') m n, h1, sub_self])
+    have hm : m = n + (p : WittVector p k') • q := by
+      rw [← Nat.cast_smul_eq_nsmul (WittVector p k')] at hq
+      rw [← hq, add_sub_cancel]
+    rw [hm]
+    exact Submodule.add_mem_sup hn (Submodule.smul_mem_smul (Ideal.mem_span_singleton_self _)
+      Submodule.mem_top)
+  have hcard : Fintype.card ι = Module.finrank (WittVector p k') (B.M (G.baseChange k') hG') := by
+    rw [← hr', hrank, hr, Module.finrank_eq_card_basis b]
+  exact ⟨Module.Basis.mk (linearIndependent_of_top_le_span_of_card_eq_finrank hspan hcard) hspan,
+    fun i => Module.Basis.mk_apply _ _ i⟩
+
+end GlobalTheory.Dieu.Base
+end -- clump:auto
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneBaseChangeBasis =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneBaseChangeBasisStatement =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneBaseChangeBasisStatement", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.Divisors.RedSurjective\npublic import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneBaseChangeBasis\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\n\n"}
+section -- clump:auto
 @[expose] public section
 
 open GlobalTheory
@@ -57,3 +161,6 @@ theorem _root_.GlobalTheory.T.dieudonne_baseChange_basis :
       ∃ b' : Module.Basis ι (WittVector p k') (B.M (G.baseChange k') hG'),
         ∀ i, b' i = B.smap hG' hG (G.toBase k') (b i) :=
   @GlobalTheory.Dieu.Base.smap_toBase_basis
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneBaseChangeBasisStatement =====

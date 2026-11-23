@@ -1,7 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.PerpendicularEmbedding
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HermitianNormFibreMeasureFiniteInvariant
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsBorelSectionUnitaryOrbitQuadric
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.IsFibreFamilyEqAtContinuityPoint
+public import Mathlib.RingTheory.Complex
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UpqLocallyCompactGroup
+import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -20,7 +24,10 @@ import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
+import Mathlib.Order.CompletePartialOrder
 import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.TotallySplit
 import Mathlib.Tactic.Echelon.Zsqrtd
 import Mathlib.Tactic.Inclusion.Extension.Core.Core
 import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
@@ -28,6 +35,8 @@ import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
 import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
 import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
 import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.NormNum.Irrational
 import Mathlib.Tactic.NormNum.IsCoprime
 import Mathlib.Tactic.NormNum.IsSquare
@@ -41,8 +50,203 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
+import Mathlib.Topology.UniformSpace.Uniformizable
 import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ContinuousMatrixEntryAbsSum
 
+-- This file was produced by scripts/clump.py from the modules listed below.
+-- Members: Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HermitianNormFibreMeasureFiniteInvariant, Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HermitianNormFibreMeasureFiniteInvariantStatement
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HermitianNormFibreMeasureFiniteInvariant =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HermitianNormFibreMeasureFiniteInvariant", "h": "module\n\npublic import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.PerpendicularEmbedding\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsBorelSectionUnitaryOrbitQuadric\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.IsFibreFamilyEqAtContinuityPoint\nimport Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UpqLocallyCompactGroup\nimport Mathlib.Algebra.Module.StablyFree.Basic\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.Order.CompletePartialOrder\npublic import Mathlib.RingTheory.Complex\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.RingTheory.SimpleRing.Principal\nimport Mathlib.RingTheory.TotallySplit\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Mathlib.Topology.UniformSpace.Uniformizable\n\n"}
+section -- clump:auto
+@[expose] public section
+
+noncomputable section
+
+open MeasureTheory Matrix Filter Topology Formalism.BasicNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes GlobalTheory.IndefiniteRowSideFullHecke.PerpendicularEmbedding
+open scoped ENNReal NNReal
+
+namespace GlobalTheory.FibreInvariance
+
+variable {P Q : ℕ}
+
+theorem qf_continuous : Continuous (qf : Sp P Q → ℝ) := by
+  unfold qf
+  fun_prop
+
+theorem qf_act (g : UpqT P Q) (x : Sp P Q) : qf (act g x) = qf x := by
+  have hu := GlobalTheory.UpqTopology.mat_unitary g
+  apply Complex.ofReal_injective
+  rw [← GlobalTheory.QuadricSection.form_self, ← GlobalTheory.QuadricSection.form_self]
+  show star (UpqT.mat g *ᵥ x) ⬝ᵥ (Formalism.UG.Jpq P Q *ᵥ (UpqT.mat g *ᵥ x)) = _
+  rw [star_mulVec, ← dotProduct_mulVec, mulVec_mulVec, mulVec_mulVec, hu]
+
+theorem normSq_det (g : UpqT P Q) : Complex.normSq (UpqT.mat g).det = 1 := by
+  have h := congrArg Matrix.det (GlobalTheory.UpqTopology.mat_unitary g)
+  have hJ : (Formalism.UG.Jpq P Q).det ≠ 0 := by
+    intro h0
+    have h1 := congrArg Matrix.det (GlobalTheory.UpqTopology.jpq_sq (P := P) (Q := Q))
+    rw [det_mul, h0, zero_mul, det_one] at h1
+    exact zero_ne_one h1
+  rw [det_mul, det_mul, det_conjTranspose] at h
+  have h2 : star (UpqT.mat g).det * (UpqT.mat g).det = 1 := by
+    apply mul_right_cancel₀ hJ
+    linear_combination h
+  apply Complex.ofReal_injective
+  rw [Complex.normSq_eq_conj_mul_self, starRingEnd_apply, h2, Complex.ofReal_one]
+
+theorem map_volume_act (g : UpqT P Q) :
+    (volume : Measure (Sp P Q)).map (act g) = volume := by
+  have hdetC : LinearMap.det (Matrix.mulVecLin (UpqT.mat g)) = (UpqT.mat g).det :=
+    LinearMap.det_toLin' _
+  have hdet : LinearMap.det ((Matrix.mulVecLin (UpqT.mat g)).restrictScalars ℝ) = 1 := by
+    rw [LinearMap.det_restrictScalars, Algebra.norm_complex_apply, hdetC, normSq_det]
+  have hmap := Measure.map_linearMap_addHaar_eq_smul_addHaar (volume : Measure (Sp P Q))
+    (f := (Matrix.mulVecLin (UpqT.mat g)).restrictScalars ℝ) (by rw [hdet]; exact one_ne_zero)
+  rw [hdet, inv_one, abs_one, ENNReal.ofReal_one, one_smul] at hmap
+  exact hmap
+
+theorem continuous_act (g : UpqT P Q) : Continuous (act g : Sp P Q → Sp P Q) :=
+  continuous_const.matrix_mulVec continuous_id
+
+private lemma UpqT_mat_mul' (a b : UpqT P Q) : UpqT.mat (a * b) = UpqT.mat a * UpqT.mat b := rfl
+
+private lemma UpqT_mat_one' : UpqT.mat (1 : UpqT P Q) = 1 := rfl
+
+theorem act_inv_act (g : UpqT P Q) (x : Sp P Q) : act g⁻¹ (act g x) = x := by
+  show UpqT.mat g⁻¹ *ᵥ (UpqT.mat g *ᵥ x) = x
+  rw [mulVec_mulVec, ← UpqT_mat_mul', inv_mul_cancel, UpqT_mat_one', one_mulVec]
+
+def actHomeo (g : UpqT P Q) : Sp P Q ≃ₜ Sp P Q where
+  toFun := act g
+  invFun := act g⁻¹
+  left_inv := act_inv_act g
+  right_inv x := by simpa using act_inv_act g⁻¹ x
+  continuous_toFun := continuous_act g
+  continuous_invFun := continuous_act g⁻¹
+
+theorem act_ne_zero_iff (g : UpqT P Q) (x : Sp P Q) : act g x ≠ 0 ↔ x ≠ 0 := by
+  constructor
+  · rintro h rfl
+    exact h (mulVec_zero _)
+  · intro hx h
+    apply hx
+    rw [← act_inv_act g x, h]
+    exact mulVec_zero _
+
+theorem isDxDq_map {fib : ℝ → Measure (Sp P Q)} (h : IsDxDq fib) (g : UpqT P Q) :
+    IsDxDq fun t => (fib t).map (act g) := by
+  have hm : Measurable (act g) := (continuous_act g).measurable
+  have hO : IsOpen {x : Sp P Q | x ≠ 0} := isOpen_ne
+  have hU : act g ⁻¹' {x : Sp P Q | x ≠ 0} = {x | x ≠ 0} := by
+    ext x
+    exact act_ne_zero_iff g x
+  have hpre : ∀ t : ℝ, act g ⁻¹' (qf ⁻¹' {id t} ∩ {x : Sp P Q | x ≠ 0}) =
+      qf ⁻¹' {id t} ∩ {x | x ≠ 0} := by
+    intro t
+    rw [Set.preimage_inter, hU, ← Set.preimage_comp]
+    congr 1
+    ext x
+    simp only [Set.mem_preimage, Function.comp_apply, qf_act]
+  have hS : ∀ t : ℝ, MeasurableSet (qf ⁻¹' {id t} ∩ {x : Sp P Q | x ≠ 0}) := fun t =>
+    (qf_continuous.measurable (measurableSet_singleton _)).inter hO.measurableSet
+  have h' : IsFibreFamily (dx P Q) qf id {x | x ≠ 0} volume Set.univ fib := h
+  obtain ⟨h1, h2, h3⟩ := h'
+  show IsFibreFamily (dx P Q) qf id {x | x ≠ 0} volume Set.univ fun t => (fib t).map (act g)
+  refine ⟨fun t => ?_, fun φ hφ => ?_, fun φ hφc hφs hφU => ?_⟩
+  · dsimp only
+    rw [Measure.map_apply hm (hS t).compl, Set.preimage_compl, hpre t]
+    exact h1 t
+  · dsimp only
+    simp_rw [lintegral_map hφ hm]
+    rw [← h2 (fun v => φ (act g v)) (hφ.comp hm)]
+    have hdx : (dx P Q).map (act g) = dx P Q := by
+      unfold dx
+      rw [Measure.map_smul, map_volume_act]
+      exact hm.aemeasurable
+    conv_lhs => rw [← hdx]
+    rw [setLIntegral_map hO.measurableSet hφ hm, hU]
+  · have hc : Continuous (φ ∘ act g) := hφc.comp (continuous_act g)
+    have hs : HasCompactSupport (φ ∘ act g) := hφs.comp_homeomorph (actHomeo g)
+    have hU' : tsupport (φ ∘ act g) ⊆ {x | x ≠ 0} := by
+      intro x hx
+      exact (act_ne_zero_iff g x).1 (hφU (tsupport_comp_subset_preimage φ (continuous_act g) hx))
+    obtain ⟨hi, hcont⟩ := h3 _ hc hs hU'
+    refine ⟨fun b hb => ?_, ?_⟩
+    · exact (integrable_map_measure hφc.aestronglyMeasurable hm.aemeasurable).2 (hi b hb)
+    · have he : (fun b => ∫ v, φ v ∂((fib b).map (act g))) = fun b => ∫ v, (φ ∘ act g) v ∂(fib b) := by
+        funext b
+        exact integral_map hm.aemeasurable hφc.aestronglyMeasurable
+      dsimp only
+      rw [he]
+      exact hcont
+
+theorem fibre_finite_invariant : ∀ (P Q : ℕ) (fib : ℝ → Measure (Sp P Q)) (β : ℝ), IsDxDq fib →
+    β ≠ 0 → IsFiniteMeasureOnCompacts (fib β) ∧
+      ∀ g : UpqT P Q, (fib β).map (act g) = fib β := by
+  intro P Q fib β h hβ
+  have hq : Continuous (qf : Sp P Q → ℝ) := qf_continuous
+  have hO : IsOpen {x : Sp P Q | x ≠ 0} := isOpen_ne
+  have hz : qf (0 : Sp P Q) = 0 := by simp [qf]
+  have hqO : qf ⁻¹' {β} ⊆ {x : Sp P Q | x ≠ 0} := by
+    rintro x hx rfl
+    apply hβ
+    rw [← (hx : qf (0 : Sp P Q) = β), hz]
+  refine ⟨⟨fun K hK => ?_⟩, fun g => ?_⟩
+  · have h' : IsFibreFamily (dx P Q) qf id {x | x ≠ 0} volume Set.univ fib := h
+    obtain ⟨h1, -, h3⟩ := h'
+    have hb : 0 < |β| := abs_pos.mpr hβ
+    have hK' : IsCompact (K ∩ qf ⁻¹' {β}) := hK.inter_right (isClosed_singleton.preimage hq)
+    have hT : IsClosed {x : Sp P Q | |qf x| ≤ |β| / 2} :=
+      isClosed_le (continuous_abs.comp hq) continuous_const
+    have hdisj : Disjoint (K ∩ qf ⁻¹' {β}) {x : Sp P Q | |qf x| ≤ |β| / 2} := by
+      rw [Set.disjoint_left]
+      rintro x ⟨-, hx⟩ hx2
+      have hx' : qf x = β := hx
+      rw [Set.mem_ofPred_eq, hx'] at hx2
+      linarith
+    obtain ⟨φ, hφ1, hφ0, hφs, -⟩ := exists_continuous_one_zero_of_isCompact hK' hT hdisj
+    have hsupp : tsupport φ ⊆ {x : Sp P Q | x ≠ 0} := by
+      have hcl : tsupport φ ⊆ {x : Sp P Q | |β| / 2 ≤ |qf x|} := by
+        apply closure_minimal _ (isClosed_le continuous_const (continuous_abs.comp hq))
+        intro x hx
+        by_contra hc
+        have hc' : ¬ (|β| / 2 ≤ |qf x|) := hc
+        exact hx (hφ0 (show |qf x| ≤ |β| / 2 from le_of_lt (not_le.mp hc')))
+      intro x hx hx0
+      have hx2 := hcl hx
+      rw [Set.mem_ofPred_eq, hx0, hz, abs_zero] at hx2
+      linarith
+    obtain ⟨hint, -⟩ := h3 φ φ.continuous hφs hsupp
+    have hfin := (hint β (Set.mem_univ β)).lintegral_lt_top
+    have hnull : fib β (qf ⁻¹' {β} ∩ {x | x ≠ 0})ᶜ = 0 := h1 β
+    have hmeas : Measurable fun x => ENNReal.ofReal (φ x) :=
+      ENNReal.measurable_ofReal.comp φ.continuous.measurable
+    calc fib β K ≤ fib β ((K ∩ qf ⁻¹' {β}) ∪ (qf ⁻¹' {β} ∩ {x | x ≠ 0})ᶜ) := by
+          apply measure_mono
+          intro x hx
+          by_cases hxS : qf x = β
+          · exact Or.inl ⟨hx, hxS⟩
+          · exact Or.inr fun hx' => hxS hx'.1
+      _ ≤ fib β (K ∩ qf ⁻¹' {β}) + fib β (qf ⁻¹' {β} ∩ {x | x ≠ 0})ᶜ := measure_union_le _ _
+      _ = ∫⁻ _ in K ∩ qf ⁻¹' {β}, 1 ∂(fib β) := by rw [hnull, add_zero, setLIntegral_one]
+      _ ≤ ∫⁻ x in K ∩ qf ⁻¹' {β}, ENNReal.ofReal (φ x) ∂(fib β) :=
+          setLIntegral_mono hmeas fun x hx => by rw [hφ1 hx]; simp
+      _ ≤ ∫⁻ x, ENNReal.ofReal (φ x) ∂(fib β) := setLIntegral_le_lintegral _ _
+      _ < ⊤ := hfin
+  · exact GlobalTheory.IsFibreFamily_eq_at (dx P Q) qf {x | x ≠ 0} {x | x ≠ 0} {x | x ≠ 0} Set.univ
+      Set.univ _ fib β hq.measurable hO subset_rfl subset_rfl hqO isOpen_univ isOpen_univ
+      (Set.mem_univ β) (Set.mem_univ β) (isDxDq_map h g) h
+
+end GlobalTheory.FibreInvariance
+end -- clump:auto
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HermitianNormFibreMeasureFiniteInvariant =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HermitianNormFibreMeasureFiniteInvariantStatement =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HermitianNormFibreMeasureFiniteInvariantStatement", "h": "module\n\npublic import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.PerpendicularEmbedding\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HermitianNormFibreMeasureFiniteInvariant\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ContinuousMatrixEntryAbsSum\n\n"}
+section -- clump:auto
 @[expose] public section
 
 open MeasureTheory Matrix Filter Topology Formalism.BasicNotions Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes GlobalTheory.IndefiniteRowSideFullHecke.PerpendicularEmbedding GlobalTheory.CompactDualQuot
@@ -50,3 +254,6 @@ open scoped ENNReal NNReal
 
 theorem _root_.GlobalTheory.T.hermitianNormFibreMeasure_finite_invariant : ∀ (P Q : ℕ) (fib : ℝ → Measure (Sp P Q)) (β : ℝ), IsDxDq fib → β ≠ 0 → IsFiniteMeasureOnCompacts (fib β) ∧ ∀ g : UpqT P Q, (fib β).map (act g) = fib β := by
   first | exact @GlobalTheory.FibreInvariance.fibre_finite_invariant | exact GlobalTheory.FibreInvariance.fibre_finite_invariant | (intros; apply GlobalTheory.FibreInvariance.fibre_finite_invariant <;> assumption)
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HermitianNormFibreMeasureFiniteInvariantStatement =====

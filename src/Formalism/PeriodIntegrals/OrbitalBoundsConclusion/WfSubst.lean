@@ -1,7 +1,7 @@
 module
 
 public import Formalism.PeriodIntegrals.WfSubst
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.WittSubstitution.CoeffMapMem
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ExponentialIntegrality.InvNatMemWf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -41,6 +41,71 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 
+-- This file was produced by scripts/clump.py from the modules listed below.
+-- Members: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.WittSubstitution.CoeffMapMem, Formalism.PeriodIntegrals.OrbitalBoundsConclusion.WfSubst
+
+-- ===== clump member: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.WittSubstitution.CoeffMapMem =====
+-- clump-header: {"m": "Formalism.PeriodIntegrals.UnitaryGroupMassFormula.WittSubstitution.CoeffMapMem", "h": "module\n\npublic import Formalism.PeriodIntegrals.WfSubst\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ExponentialIntegrality.InvNatMemWf\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
+@[expose] public section
+
+noncomputable section
+
+namespace PI.WfSubstProof
+
+theorem exists_lift {A : Type} [CommRing A] (S : Subring A) {σ : Type} (f : MvPowerSeries σ A)
+    (h : ∀ e, MvPowerSeries.coeff e f ∈ S) :
+    ∃ g : MvPowerSeries σ S, MvPowerSeries.map S.subtype g = f := by
+  let g : MvPowerSeries σ S := fun e => ⟨MvPowerSeries.coeff e f, h e⟩
+  refine ⟨g, ?_⟩
+  ext e
+  rw [MvPowerSeries.coeff_map]
+  rfl
+
+theorem coeff_map_mem {A : Type} [CommRing A] (S : Subring A) {σ : Type} (g : MvPowerSeries σ S)
+    (e : σ →₀ ℕ) : MvPowerSeries.coeff e (MvPowerSeries.map S.subtype g) ∈ S := by
+  rw [MvPowerSeries.coeff_map]
+  exact (MvPowerSeries.coeff e g).2
+
+theorem substSub : PI.SubstSub := by
+  intro A _ S σ f a hf ha ha0 n
+  have hf' : ∀ e : Unit →₀ ℕ, MvPowerSeries.coeff e f ∈ S := fun e => by
+    have he : e = Finsupp.single () (e ()) := by
+      ext
+      simp
+    rw [he]
+    exact hf (e ())
+  obtain ⟨fS, rfl⟩ := exists_lift S f hf'
+  obtain ⟨aS, rfl⟩ := exists_lift S a ha
+  have haS0 : MvPowerSeries.constantCoeff aS = 0 := by
+    have h0 := ha0
+    rw [MvPowerSeries.constantCoeff_map] at h0
+    exact Subtype.val_injective h0
+  have hsub : PowerSeries.HasSubst aS := PowerSeries.HasSubst.of_constantCoeff_zero haS0
+  have key : PowerSeries.subst (MvPowerSeries.map S.subtype aS) (MvPowerSeries.map S.subtype fS : PowerSeries A) =
+      MvPowerSeries.map S.subtype (PowerSeries.subst aS fS) :=
+    (PowerSeries.map_subst hsub fS).symm
+  rw [key]
+  exact coeff_map_mem S _ n
+
+theorem wfSubst : PI.WfSubst := by
+  intro p _ σ f a hf ha ha0 n
+  have h := substSub ℂ_[p] (ExpIntWProof.Wf p) σ f a (fun m => ExpIntWProof.mem_Wf.2 (hf _))
+    (fun m => ExpIntWProof.mem_Wf.2 (ha m)) ha0
+  exact ExpIntWProof.mem_Wf.1 (h n)
+
+end PI.WfSubstProof
+end -- clump:auto
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Formalism.PeriodIntegrals.UnitaryGroupMassFormula.WittSubstitution.CoeffMapMem =====
+
+-- ===== clump member: Formalism.PeriodIntegrals.OrbitalBoundsConclusion.WfSubst =====
+-- clump-header: {"m": "Formalism.PeriodIntegrals.OrbitalBoundsConclusion.WfSubst", "h": "module\n\npublic import Formalism.PeriodIntegrals.WfSubst\npublic import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.WittSubstitution.CoeffMapMem\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
 @[expose] public section
 
 theorem witt_substitution : PI.WfSubst := PI.WfSubstProof.wfSubst
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Formalism.PeriodIntegrals.OrbitalBoundsConclusion.WfSubst =====

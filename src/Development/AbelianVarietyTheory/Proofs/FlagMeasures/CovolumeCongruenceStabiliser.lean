@@ -2,12 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.OfRoots
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsCoveringSetExpLieLatticeRootGroup
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsCoveringSetExpLieLatticeRootGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExponentialUnipotentStabilizerStatement
+public import Mathlib.RingTheory.Nilpotent.Exp
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramUnipotentLieLatticeDomainVolumeBound
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramUnipotentLieLatticeDomainVolumeBoundStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramUnipotentStabilizerBruhatCellConjRoot
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramUnipotentStabilizerBruhatCellConjRootStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramUnipotentStabilizerBruhatCellConjRoot
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -24,8 +21,6 @@ import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Radical.NatInt
-import Mathlib.Tactic.Basify
-import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Echelon.Zsqrtd
 import Mathlib.Tactic.Inclusion.Extension.Core.Core
 import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
@@ -33,8 +28,6 @@ import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp
 import Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses
 import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic
 import Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses
-import Mathlib.Tactic.Lemma
-import Mathlib.Tactic.Linter.HaveILetI
 import Mathlib.Tactic.NormNum.Irrational
 import Mathlib.Tactic.NormNum.IsCoprime
 import Mathlib.Tactic.NormNum.IsSquare
@@ -47,10 +40,417 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
+import Mathlib.Topology.Sheaves.Init
+import Mathlib.RingTheory.PiTensorProduct
+import Mathlib.Tactic.Basify
+import Mathlib.Tactic.ENatToNat
+import Mathlib.Tactic.Linter.Style
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-import Mathlib.Topology.Sheaves.Init
+import Std.Tactic.BVDecide.Normalize.Prop
+import Mathlib.Tactic.Lemma
+import Mathlib.Tactic.Linter.HaveILetI
 
+-- This file was produced by scripts/clump.py from the modules listed below.
+-- Members: Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsCoveringSetExpLieLatticeRootGroupStatement, Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExponentialUnipotentStabilizer, Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExponentialUnipotentStabilizerStatement, Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramUnipotentLieLatticeDomainVolumeBoundStatement, Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramUnipotentStabilizerBruhatCellConjRootStatement, Development.AbelianVarietyTheory.Proofs.FlagMeasures.CovolumeCongruenceStabiliser
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsCoveringSetExpLieLatticeRootGroupStatement =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsCoveringSetExpLieLatticeRootGroupStatement", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.OfRoots\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsCoveringSetExpLieLatticeRootGroup\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open NumberField Module Matrix Formalism.MainNotions.S GlobalTheory.LoopV
+open scoped ENNReal Classical
+
+theorem _root_.GlobalTheory.T.exists_covering_set_exp_lie_lattice_rootGroup : ∀ (ι : Type) [Fintype ι] (N : ℕ) (R : Finset (Fin N × Fin N)) (Λ : Submodule ℤ (ι → R → ℂ)) (Ω₀ : Set (ι → R → ℂ)), (∀ q ∈ R, q.1 < q.2) → (∀ a b c : Fin N, (a, b) ∈ R → (b, c) ∈ R → (a, c) ∈ R) → MeasurableSet Ω₀ → MeasureTheory.IsAddFundamentalDomain Λ Ω₀ MeasureTheory.volume → MeasureTheory.volume Ω₀ ≠ ⊤ → DiscreteTopology Λ → (∀ x ∈ Λ, ∀ y ∈ Λ, ∃ z ∈ Λ, ∀ v, expT (ofRoots R (x v) - 1) * expT (ofRoots R (y v) - 1) = expT (ofRoots R (z v) - 1)) → ∃ Ω : Set (ι → R → ℂ), MeasurableSet Ω ∧ MeasureTheory.volume Ω = MeasureTheory.volume Ω₀ ∧ ∀ c : ι → R → ℂ, ∃ x ∈ Λ, (fun v (q : R) => (expT (ofRoots R (x v) - 1) * ofRoots R (c v) : Matrix (Fin N) (Fin N) ℂ) q.1.1 q.1.2) ∈ Ω := by
+  first | exact @GlobalTheory.LoopV.Cover.cover | exact GlobalTheory.LoopV.Cover.cover | (intros; apply GlobalTheory.LoopV.Cover.cover <;> assumption)
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsCoveringSetExpLieLatticeRootGroupStatement =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExponentialUnipotentStabilizer =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExponentialUnipotentStabilizer", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.OfRoots\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\npublic import Mathlib.RingTheory.Nilpotent.Exp\nimport Mathlib.RingTheory.PiTensorProduct\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Linter.Style\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open NumberField Module Matrix Formalism.MainNotions.S GlobalTheory.LoopV
+open scoped ENNReal Classical
+
+namespace GlobalTheory.LoopV.ExpGroup
+
+variable {K : Type} [Field K] {N : ℕ}
+
+def fil (K : Type) [Field K] (N n : ℕ) : Submodule K (Matrix (Fin N) (Fin N) K) where
+  carrier := {x | ∀ i j : Fin N, (j : ℕ) < i + n → x i j = 0}
+  add_mem' := fun {a b} ha hb i j h => by simp [ha i j h, hb i j h]
+  zero_mem' := fun i j _ => rfl
+  smul_mem' := fun c a ha i j h => by simp [ha i j h]
+
+theorem fil_mul {n m : ℕ} {x y : Matrix (Fin N) (Fin N) K} (hx : x ∈ fil K N n)
+    (hy : y ∈ fil K N m) : x * y ∈ fil K N (n + m) := by
+  intro i j h
+  rw [Matrix.mul_apply]
+  refine Finset.sum_eq_zero fun k _ => ?_
+  rcases Nat.lt_or_ge (k : ℕ) (i + n) with hk | hk
+  · rw [hx i k hk, zero_mul]
+  · rw [hy k j (by omega), mul_zero]
+
+theorem fil_mono {n m : ℕ} (h : n ≤ m) {x : Matrix (Fin N) (Fin N) K} (hx : x ∈ fil K N m) :
+    x ∈ fil K N n := by
+  intro i j hij
+  exact hx i j (by omega)
+
+theorem eq_zero_of_fil {n : ℕ} (h : N ≤ n) {x : Matrix (Fin N) (Fin N) K} (hx : x ∈ fil K N n) :
+    x = 0 := by
+  ext i j
+  rw [Matrix.zero_apply]
+  exact hx i j (by have := j.isLt; omega)
+
+theorem strUp_iff {x : Matrix (Fin N) (Fin N) K} : StrUp x ↔ x ∈ fil K N 1 := by
+  constructor
+  · intro h i j hij
+    exact h i j (Fin.le_iff_val_le_val.mpr (by omega))
+  · intro h i j hij
+    exact h i j (by have := Fin.le_iff_val_le_val.mp hij; omega)
+
+theorem fil_pow {x : Matrix (Fin N) (Fin N) K} (hx : x ∈ fil K N 1) (k : ℕ) :
+    x ^ (k + 1) ∈ fil K N (k + 1) := by
+  induction k with
+  | zero => simpa using hx
+  | succ k ih =>
+    rw [pow_succ]
+    exact fil_mul ih hx
+
+theorem pow_eq_zero {x : Matrix (Fin N) (Fin N) K} (hx : x ∈ fil K N 1) {k : ℕ} (hk : N ≤ k) :
+    x ^ k = 0 := by
+  cases k with
+  | zero =>
+    obtain rfl : N = 0 := by omega
+    ext i j
+    exact i.elim0
+  | succ k => exact eq_zero_of_fil hk (fil_pow hx k)
+
+theorem expT_eq {x : Matrix (Fin N) (Fin N) K} (hx : x ∈ fil K N 1) :
+    expT x = 1 + x + ∑ k ∈ Finset.range N, (((k + 2).factorial : K))⁻¹ • x ^ (k + 2) := by
+  have h0 : ∀ i, N ≤ i → ((i.factorial : K))⁻¹ • x ^ i = 0 := fun i hi => by
+    rw [pow_eq_zero hx hi, smul_zero]
+  have e : ∑ i ∈ Finset.range (N + 2), ((i.factorial : K))⁻¹ • x ^ i
+      = ∑ i ∈ Finset.range N, ((i.factorial : K))⁻¹ • x ^ i := by
+    rw [Finset.sum_range_succ, Finset.sum_range_succ, h0 N le_rfl, h0 (N + 1) (Nat.le_succ N),
+      add_zero, add_zero]
+  show _ = 1 + x + ∑ k ∈ Finset.range N, (((k + 1 + 1).factorial : K))⁻¹ • x ^ (k + 1 + 1)
+  rw [expT, ← e, Finset.sum_range_succ', Finset.sum_range_succ']
+  simp only [Nat.factorial_zero, Nat.factorial_one, Nat.cast_one, inv_one, one_smul, pow_zero,
+    zero_add, pow_one]
+  abel
+
+private theorem expT_eq_exp_of_mem_fil_one [CharZero K] {x : Matrix (Fin N) (Fin N) K}
+    (hx : x ∈ fil K N 1) : expT x = IsNilpotent.exp x := by
+  rw [IsNilpotent.exp_eq_sum (pow_eq_zero hx le_rfl), expT]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  rw [← Rat.cast_smul_eq_qsmul K]
+  push_cast
+  rfl
+
+theorem expT_mul_neg [CharZero K] {x : Matrix (Fin N) (Fin N) K} (hx : x ∈ fil K N 1) :
+    expT x * expT (-x) = 1 := by
+  have hn : -x ∈ fil K N 1 := neg_mem hx
+  rw [expT_eq_exp_of_mem_fil_one hx, expT_eq_exp_of_mem_fil_one hn]
+  exact IsNilpotent.exp_mul_exp_neg_self ⟨N, pow_eq_zero hx le_rfl⟩
+
+theorem expT_add_sub {n : ℕ} {z d : Matrix (Fin N) (Fin N) K} (hz : z ∈ fil K N 1)
+    (hd : d ∈ fil K N (n + 1)) : expT (z + d) - expT z - d ∈ fil K N (n + 2) := by
+  have hd1 : d ∈ fil K N 1 := fil_mono (by omega) hd
+  have hzd : z + d ∈ fil K N 1 := add_mem hz hd1
+  have key : ∀ k : ℕ, (z + d) ^ (k + 1) - z ^ (k + 1) ∈ fil K N (n + 1 + k) := by
+    intro k
+    induction k with
+    | zero => simpa using hd
+    | succ k ih =>
+      have e : (z + d) ^ (k + 1 + 1) - z ^ (k + 1 + 1)
+          = ((z + d) ^ (k + 1) - z ^ (k + 1)) * (z + d) + z ^ (k + 1) * d := by
+        rw [pow_succ (z + d) (k + 1), pow_succ z (k + 1)]
+        noncomm_ring
+      rw [e]
+      exact add_mem (fil_mono (by omega) (fil_mul ih hzd)) (fil_mono (by omega) (fil_mul (fil_pow hz k) hd))
+  have e2 : expT (z + d) - expT z - d = ∑ k ∈ Finset.range N,
+      ((k + 2).factorial : K)⁻¹ • ((z + d) ^ (k + 2) - z ^ (k + 2)) := by
+    rw [expT_eq hzd, expT_eq hz]
+    simp only [smul_sub, Finset.sum_sub_distrib]
+    abel
+  rw [e2]
+  exact Submodule.sum_mem _ fun k _ => Submodule.smul_mem _ _ (fil_mono (by omega) (key (k + 1)))
+
+def lieSub (Z : Matrix (Fin N) (Fin N) K) : Submodule K (Matrix (Fin N) (Fin N) K) where
+  carrier := lieU Z
+  add_mem' := fun {a b} ha hb => ⟨fun i j h => by simp [ha.1 i j h, hb.1 i j h],
+    fun i j h => by
+      rw [Matrix.mul_add, Matrix.add_mul, Matrix.add_apply, ha.2 i j h, hb.2 i j h, add_zero]⟩
+  zero_mem' := ⟨fun i j _ => rfl, fun i j _ => by simp⟩
+  smul_mem' := fun c a ha => ⟨fun i j h => by simp [ha.1 i j h],
+    fun i j h => by
+      rw [Matrix.mul_smul, Matrix.smul_mul, Matrix.smul_apply, ha.2 i j h, smul_zero]⟩
+
+theorem lie_mul {Z x y : Matrix (Fin N) (Fin N) K} (hZ : Z.det ≠ 0) (hx : x ∈ lieSub Z)
+    (hy : y ∈ lieSub Z) : x * y ∈ lieSub Z := by
+  have hx' : StrUp x ∧ StrLo (Z * x * Z.adjugate) := hx
+  have hy' : StrUp y ∧ StrLo (Z * y * Z.adjugate) := hy
+  show StrUp (x * y) ∧ StrLo (Z * (x * y) * Z.adjugate)
+  constructor
+  · exact strUp_iff.mpr (fil_mono (by omega) (fil_mul (strUp_iff.mp hx'.1) (strUp_iff.mp hy'.1)))
+  · have key : (Z * x * Z.adjugate) * (Z * y * Z.adjugate) = Z.det • (Z * (x * y) * Z.adjugate) := by
+      calc (Z * x * Z.adjugate) * (Z * y * Z.adjugate)
+          = Z * x * (Z.adjugate * Z) * y * Z.adjugate := by simp only [Matrix.mul_assoc]
+        _ = Z.det • (Z * (x * y) * Z.adjugate) := by
+          rw [Matrix.adjugate_mul, Matrix.mul_smul, Matrix.mul_one, Matrix.smul_mul, Matrix.smul_mul]
+          simp only [Matrix.mul_assoc]
+    intro i j hij
+    have h1 := congrFun (congrFun key i) j
+    rw [Matrix.smul_apply, smul_eq_mul, Matrix.mul_apply] at h1
+    have h2 : ∑ k, (Z * x * Z.adjugate) i k * (Z * y * Z.adjugate) k j = 0 :=
+      Finset.sum_eq_zero fun k _ => by
+        rcases le_or_gt i k with hk | hk
+        · rw [hx'.2 i k hk, zero_mul]
+        · rw [hy'.2 k j (hk.le.trans hij), mul_zero]
+    rw [h2] at h1
+    exact (mul_eq_zero.mp h1.symm).resolve_left hZ
+
+theorem lie_pow {Z x : Matrix (Fin N) (Fin N) K} (hZ : Z.det ≠ 0) (hx : x ∈ lieSub Z) (k : ℕ) :
+    x ^ (k + 1) ∈ lieSub Z := by
+  induction k with
+  | zero => simpa using hx
+  | succ k ih =>
+    rw [pow_succ]
+    exact lie_mul hZ ih hx
+
+theorem lie_expT {Z x : Matrix (Fin N) (Fin N) K} (hZ : Z.det ≠ 0) (hx : x ∈ lieSub Z) :
+    expT x - 1 ∈ lieSub Z := by
+  have hx' : StrUp x ∧ StrLo (Z * x * Z.adjugate) := hx
+  have hx1 : x ∈ fil K N 1 := strUp_iff.mp hx'.1
+  rw [expT_eq hx1, show ∀ p q r : Matrix (Fin N) (Fin N) K, p + q + r - p = q + r from
+    fun p q r => by abel]
+  exact add_mem hx (Submodule.sum_mem _ fun k _ => Submodule.smul_mem _ _ (lie_pow hZ hx (k + 1)))
+
+variable [NumberField K]
+
+def ent (K : Type) [Field K] [NumberField K] (N : ℕ) (J : Ideal (𝓞 K)) :
+    AddSubgroup (Matrix (Fin N) (Fin N) K) where
+  carrier := {x | EntIn J x}
+  add_mem' := fun {a b} ha hb i j => by
+    obtain ⟨o, ho, e⟩ := ha i j
+    obtain ⟨o', ho', e'⟩ := hb i j
+    exact ⟨o + o', add_mem ho ho', by simp [← e, ← e']⟩
+  zero_mem' := fun i j => ⟨0, zero_mem _, by simp⟩
+  neg_mem' := fun {a} ha i j => by
+    obtain ⟨o, ho, e⟩ := ha i j
+    exact ⟨-o, neg_mem ho, by simp [← e]⟩
+
+theorem ent_mul {J J' : Ideal (𝓞 K)} {x y : Matrix (Fin N) (Fin N) K} (hx : x ∈ ent K N J)
+    (hy : y ∈ ent K N J') : x * y ∈ ent K N J := by
+  have hx' : ∀ i j, ∃ o ∈ J, ((o : 𝓞 K) : K) = x i j := hx
+  have hy' : ∀ i j, ∃ o ∈ J', ((o : 𝓞 K) : K) = y i j := hy
+  choose a ha ea using hx'
+  choose b hb eb using hy'
+  show ∀ i j, ∃ o ∈ J, ((o : 𝓞 K) : K) = (x * y) i j
+  intro i j
+  refine ⟨∑ k, a i k * b k j, Ideal.sum_mem _ fun k _ => Ideal.mul_mem_right _ _ (ha i k), ?_⟩
+  simp [Matrix.mul_apply, ← ea, ← eb]
+
+theorem ent_pow {J : Ideal (𝓞 K)} {x : Matrix (Fin N) (Fin N) K} (hx : x ∈ ent K N J) (k : ℕ) :
+    x ^ (k + 1) ∈ ent K N J := by
+  induction k with
+  | zero => simpa using hx
+  | succ k ih =>
+    rw [pow_succ]
+    exact ent_mul ih hx
+
+theorem ent_div {I : Ideal (𝓞 K)} {c : ℕ} {x : Matrix (Fin N) (Fin N) K}
+    (hx : x ∈ ent K N (Ideal.span {(c : 𝓞 K)} * I)) : ∃ x' ∈ ent K N I, x = c • x' := by
+  have hx' : ∀ i j, ∃ o ∈ Ideal.span {(c : 𝓞 K)} * I, ((o : 𝓞 K) : K) = x i j := hx
+  choose o ho eo using hx'
+  have h2 : ∀ i j, ∃ w ∈ I, (c : 𝓞 K) * w = o i j := fun i j =>
+    Ideal.mem_span_singleton_mul.mp (ho i j)
+  choose w hw ew using h2
+  refine ⟨fun i j => ((w i j : 𝓞 K) : K), ?_, ?_⟩
+  · show ∀ i j, ∃ o ∈ I, ((o : 𝓞 K) : K) = ((w i j : 𝓞 K) : K)
+    exact fun i j => ⟨w i j, hw i j, rfl⟩
+  · ext i j
+    show x i j = c • ((w i j : 𝓞 K) : K)
+    rw [nsmul_eq_mul, ← eo, ← ew]
+    simp
+
+theorem ent_expT {I : Ideal (𝓞 K)} {x : Matrix (Fin N) (Fin N) K} (hu : x ∈ fil K N 1)
+    (hx : x ∈ ent K N (Ideal.span {(N.factorial : 𝓞 K)} * I)) :
+    expT x - 1 ∈ ent K N (Ideal.span {(N.factorial : 𝓞 K)} * I) := by
+  obtain ⟨a, ha, hxa⟩ := ent_div hx
+  rw [expT_eq hu, show ∀ p q r : Matrix (Fin N) (Fin N) K, p + q + r - p = q + r from
+    fun p q r => by abel]
+  refine add_mem hx (AddSubgroup.sum_mem _ fun k _ => ?_)
+  rcases Nat.lt_or_ge (k + 2) N with hk | hk
+  · obtain ⟨m, hm⟩ := Nat.factorial_dvd_factorial hk.le
+    have hp : a ^ (k + 1 + 1) ∈ ent K N I := ent_pow ha (k + 1)
+    have hp' : ∀ i j, ∃ o ∈ I, ((o : 𝓞 K) : K) = (a ^ (k + 2)) i j := hp
+    show ∀ i j, ∃ o ∈ Ideal.span {(N.factorial : 𝓞 K)} * I,
+      ((o : 𝓞 K) : K) = (((k + 2).factorial : K)⁻¹ • x ^ (k + 2)) i j
+    intro i j
+    obtain ⟨b, hb, eb⟩ := hp' i j
+    refine ⟨(N.factorial : 𝓞 K) * ((m : 𝓞 K) * (N.factorial : 𝓞 K) ^ k * b),
+      Ideal.mem_span_singleton_mul.mpr ⟨_, I.mul_mem_left _ hb, rfl⟩, ?_⟩
+    have hf : ((k + 2).factorial : K) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero _)
+    have hxa' : x = (N.factorial : K) • a := by
+      ext i' j'
+      rw [hxa]
+      show N.factorial • a i' j' = (N.factorial : K) * a i' j'
+      rw [nsmul_eq_mul]
+    rw [hxa', smul_pow]
+    show _ = ((k + 2).factorial : K)⁻¹ * ((N.factorial : K) ^ (k + 2) * (a ^ (k + 2)) i j)
+    rw [← eb, hm]
+    push_cast
+    field_simp
+    ring
+  · rw [pow_eq_zero hu hk, smul_zero]
+    exact zero_mem _
+
+theorem exists_expT {I : Ideal (𝓞 K)} {Z u : Matrix (Fin N) (Fin N) K} (hZ : Z.det ≠ 0)
+    (hu : u ∈ lieSub Z) (hu' : u ∈ ent K N (Ideal.span {(N.factorial : 𝓞 K)} * I)) :
+    ∃ z ∈ lieSub Z, z ∈ ent K N (Ideal.span {(N.factorial : 𝓞 K)} * I) ∧ 1 + u = expT z := by
+  have hu0 : StrUp u ∧ StrLo (Z * u * Z.adjugate) := hu
+  have hu1 : u ∈ fil K N 1 := strUp_iff.mp hu0.1
+  have step : ∀ n : ℕ, ∃ z ∈ lieSub Z, z ∈ ent K N (Ideal.span {(N.factorial : 𝓞 K)} * I) ∧
+      z ∈ fil K N 1 ∧ 1 + u - expT z ∈ fil K N (n + 1) := by
+    intro n
+    induction n with
+    | zero =>
+      refine ⟨0, zero_mem _, zero_mem _, zero_mem _, ?_⟩
+      rw [expT_eq (zero_mem _)]
+      simpa using hu1
+    | succ n ih =>
+      obtain ⟨z, hzl, hze, hzf, hd⟩ := ih
+      have e : 1 + u - expT z = u - (expT z - 1) := by abel
+      refine ⟨z + (1 + u - expT z), add_mem hzl ?_, add_mem hze ?_,
+        add_mem hzf (fil_mono (by omega) hd), ?_⟩
+      · rw [e]
+        exact sub_mem hu (lie_expT hZ hzl)
+      · rw [e]
+        exact sub_mem hu' (ent_expT hzf hze)
+      · have h := expT_add_sub hzf hd
+        have e2 : 1 + u - expT (z + (1 + u - expT z))
+            = -(expT (z + (1 + u - expT z)) - expT z - (1 + u - expT z)) := by abel
+        rw [e2]
+        exact neg_mem h
+  obtain ⟨z, hzl, hze, -, hz⟩ := step N
+  exact ⟨z, hzl, hze, sub_eq_zero.mp (eq_zero_of_fil (by omega) hz)⟩
+
+omit [NumberField K] in
+theorem one_add_mem_stabU {Z u : Matrix (Fin N) (Fin N) K} (hZ : Z.det ≠ 0) (hu : u ∈ lieSub Z) :
+    1 + u ∈ stabU Z := by
+  have hu' : StrUp u ∧ StrLo (Z * u * Z.adjugate) := hu
+  have hZu : IsUnit Z.det := isUnit_iff_ne_zero.mpr hZ
+  have e : Z * (1 + u) * Z⁻¹ = 1 + (Z.det)⁻¹ • (Z * u * Z.adjugate) := by
+    rw [Matrix.mul_add, Matrix.add_mul, Matrix.mul_one, Matrix.mul_nonsing_inv _ hZu,
+      Matrix.inv_def, Ring.inverse_eq_inv', Matrix.mul_smul]
+  show IsUpUni (1 + u) ∧ IsLoUni (Z * (1 + u) * Z⁻¹)
+  constructor
+  · intro i j
+    constructor
+    · intro h
+      rw [Matrix.add_apply, Matrix.one_apply_ne h.ne', hu'.1 i j h.le, add_zero]
+    · rintro rfl
+      rw [Matrix.add_apply, Matrix.one_apply_eq, hu'.1 i i le_rfl, add_zero]
+  · rw [e]
+    intro i j
+    constructor
+    · intro h
+      rw [Matrix.add_apply, Matrix.smul_apply, hu'.2 i j h.le, smul_zero, Matrix.one_apply_ne h.ne,
+        add_zero]
+    · rintro rfl
+      rw [Matrix.add_apply, Matrix.smul_apply, hu'.2 i i le_rfl, smul_zero, Matrix.one_apply_eq,
+        add_zero]
+
+theorem exp_group : ∀ (K : Type) [Field K] [NumberField K] (N : ℕ) (Z : Matrix (Fin N) (Fin N) K) (I : Ideal (𝓞 K)), Z.det ≠ 0 → (∀ x ∈ lieU Z, EntIn (Ideal.span {(N.factorial : 𝓞 K)} * I) x → expT x ∈ stabU Z ∧ EntIn I (expT x - 1) ∧ expT x * expT (-x) = 1) ∧ ∀ x ∈ lieU Z, ∀ y ∈ lieU Z, EntIn (Ideal.span {(N.factorial : 𝓞 K)} * I) x → EntIn (Ideal.span {(N.factorial : 𝓞 K)} * I) y → ∃ z ∈ lieU Z, EntIn (Ideal.span {(N.factorial : 𝓞 K)} * I) z ∧ expT x * expT y = expT z := by
+  intro K _ _ N Z I hZ
+  refine ⟨fun x hx hxe => ?_, fun x hx y hy hxe hye => ?_⟩
+  · have hxl : x ∈ lieSub Z := hx
+    have hx' : StrUp x ∧ StrLo (Z * x * Z.adjugate) := hx
+    have hxe' : x ∈ ent K N (Ideal.span {(N.factorial : 𝓞 K)} * I) := hxe
+    have hx1 : x ∈ fil K N 1 := strUp_iff.mp hx'.1
+    refine ⟨?_, ?_, expT_mul_neg hx1⟩
+    · have h := one_add_mem_stabU hZ (lie_expT hZ hxl)
+      rwa [show 1 + (expT x - 1) = expT x by abel] at h
+    · have h : ∀ i j, ∃ o ∈ Ideal.span {(N.factorial : 𝓞 K)} * I,
+          ((o : 𝓞 K) : K) = (expT x - 1) i j := ent_expT hx1 hxe'
+      intro i j
+      obtain ⟨o, ho, e⟩ := h i j
+      have hle : Ideal.span {(N.factorial : 𝓞 K)} * I ≤ I := Ideal.mul_le_right
+      exact ⟨o, hle ho, e⟩
+  · have hxl : x ∈ lieSub Z := hx
+    have hyl : y ∈ lieSub Z := hy
+    have hx' : StrUp x ∧ StrLo (Z * x * Z.adjugate) := hx
+    have hy' : StrUp y ∧ StrLo (Z * y * Z.adjugate) := hy
+    have hxe' : x ∈ ent K N (Ideal.span {(N.factorial : 𝓞 K)} * I) := hxe
+    have hye' : y ∈ ent K N (Ideal.span {(N.factorial : 𝓞 K)} * I) := hye
+    have hx1 : x ∈ fil K N 1 := strUp_iff.mp hx'.1
+    have hy1 : y ∈ fil K N 1 := strUp_iff.mp hy'.1
+    have ex := lie_expT hZ hxl
+    have ey := lie_expT hZ hyl
+    have fx := ent_expT hx1 hxe'
+    have fy := ent_expT hy1 hye'
+    have e : expT x * expT y
+        = 1 + ((expT x - 1) + (expT y - 1) + (expT x - 1) * (expT y - 1)) := by noncomm_ring
+    obtain ⟨z, hzl, hze, hz⟩ := exists_expT hZ (add_mem (add_mem ex ey) (lie_mul hZ ex ey))
+      (add_mem (add_mem fx fy) (ent_mul fx fy))
+    exact ⟨z, hzl, hze, e.trans hz⟩
+
+end GlobalTheory.LoopV.ExpGroup
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExponentialUnipotentStabilizer =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExponentialUnipotentStabilizerStatement =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExponentialUnipotentStabilizerStatement", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.OfRoots\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExponentialUnipotentStabilizer\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open NumberField Module Matrix Formalism.MainNotions.S GlobalTheory.LoopV
+open scoped ENNReal Classical
+
+theorem _root_.GlobalTheory.T.exponential_unipotent_stabilizer : ∀ (K : Type) [Field K] [NumberField K] (N : ℕ) (Z : Matrix (Fin N) (Fin N) K) (I : Ideal (𝓞 K)), Z.det ≠ 0 → (∀ x ∈ lieU Z, EntIn (Ideal.span {(N.factorial : 𝓞 K)} * I) x → expT x ∈ stabU Z ∧ EntIn I (expT x - 1) ∧ expT x * expT (-x) = 1) ∧ ∀ x ∈ lieU Z, ∀ y ∈ lieU Z, EntIn (Ideal.span {(N.factorial : 𝓞 K)} * I) x → EntIn (Ideal.span {(N.factorial : 𝓞 K)} * I) y → ∃ z ∈ lieU Z, EntIn (Ideal.span {(N.factorial : 𝓞 K)} * I) z ∧ expT x * expT y = expT z := by
+  first | exact @GlobalTheory.LoopV.ExpGroup.exp_group | exact GlobalTheory.LoopV.ExpGroup.exp_group | (intros; apply GlobalTheory.LoopV.ExpGroup.exp_group <;> assumption)
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExponentialUnipotentStabilizerStatement =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramUnipotentLieLatticeDomainVolumeBoundStatement =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramUnipotentLieLatticeDomainVolumeBoundStatement", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.OfRoots\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramUnipotentLieLatticeDomainVolumeBound\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open NumberField Module Matrix Formalism.MainNotions.S GlobalTheory.LoopV
+open scoped ENNReal Classical
+
+theorem _root_.GlobalTheory.T.gramUnipotentLieLattice_domain_volume_bound : ∀ (K : Type) [Field K] [NumberField K] [StarRing K] (ι : Type) [Fintype ι] (τ : ι → (K →+* ℂ)) (N : ℕ) (L U : Matrix (Fin N) (Fin N) K) (p : Point K N) (B : ℝ) (Bv : ι → ℝ), (∀ v a, τ v (star a) = starRingEnd ℂ (τ v a)) → (∀ w : InfinitePlace K, ∃! v, InfinitePlace.mk (τ v) = w) → finrank ℚ K = 2 * Fintype.card ι → IsLoUni L → IsUpUni U → EntIn ⊤ (L * ptMat p * U) → 1 ≤ B → (∀ (t : ℕ) (I J : Fin t → Fin N) (v : ι), ‖τ v (((L * ptMat p * U).submatrix I J).det)‖ ≤ Bv v) → ∏ v, max 1 (Bv v) ≤ B → ∀ Λ : Submodule ℤ (ι → roots (ptMat p) → ℂ), (∀ c, c ∈ Λ ↔ ∃ x ∈ lieU (L * ptMat p * U), EntIn ⊤ x ∧ ∀ v (q : roots (ptMat p)), c v q = τ v ((U * x * U⁻¹) q.1.1 q.1.2)) → ∃ Ω : Set (ι → roots (ptMat p) → ℂ), MeasurableSet Ω ∧ MeasureTheory.IsAddFundamentalDomain Λ Ω MeasureTheory.volume ∧ MeasureTheory.volume Ω ≤ ENNReal.ofReal ((|(discr K : ℝ)| ^ (1 / 2 : ℝ)) ^ (N ^ 2) * ((4 * (N : ℝ) ^ 2) ^ (Fintype.card ι) * B ^ 4) ^ (N ^ 2)) := by
+  first | exact @GlobalTheory.LieCovol.lie_lattice_domain | exact GlobalTheory.LieCovol.lie_lattice_domain | (intros; apply GlobalTheory.LieCovol.lie_lattice_domain <;> assumption)
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramUnipotentLieLatticeDomainVolumeBoundStatement =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramUnipotentStabilizerBruhatCellConjRootStatement =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramUnipotentStabilizerBruhatCellConjRootStatement", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.OfRoots\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramUnipotentStabilizerBruhatCellConjRoot\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
+@[expose] public section
+
+open NumberField Module Matrix Formalism.MainNotions.S GlobalTheory.LoopV
+open scoped ENNReal Classical
+
+theorem _root_.GlobalTheory.T.gramUnipotentStabilizer_bruhatCell_conj_root : ∀ (K : Type) [Field K] (N : ℕ) (L U : Matrix (Fin N) (Fin N) K) (p : Point K N), IsLoUni L → IsUpUni U → (∀ a, a ∈ stabU (L * ptMat p * U) ↔ U * a * U⁻¹ ∈ stabU (ptMat p)) ∧ (∀ x, x ∈ lieU (L * ptMat p * U) ↔ U * x * U⁻¹ ∈ lieU (ptMat p)) ∧ (∀ a, a ∈ stabU (ptMat p) ↔ IsUpUni a ∧ ∀ i j, i < j → (i, j) ∉ roots (ptMat p) → a i j = 0) ∧ (∀ x, x ∈ lieU (ptMat p) ↔ ∀ i j, (i, j) ∉ roots (ptMat p) → x i j = 0) := by
+  first | exact @GlobalTheory.LoopV.Cell.stab_cell | exact GlobalTheory.LoopV.Cell.stab_cell | (intros; apply GlobalTheory.LoopV.Cell.stab_cell <;> assumption)
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramUnipotentStabilizerBruhatCellConjRootStatement =====
+
+-- ===== clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.CovolumeCongruenceStabiliser =====
+-- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.FlagMeasures.CovolumeCongruenceStabiliser", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.OfRoots\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsCoveringSetExpLieLatticeRootGroup\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsCoveringSetExpLieLatticeRootGroupStatement\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExponentialUnipotentStabilizerStatement\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramUnipotentLieLatticeDomainVolumeBound\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramUnipotentLieLatticeDomainVolumeBoundStatement\nimport Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramUnipotentStabilizerBruhatCellConjRoot\npublic import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramUnipotentStabilizerBruhatCellConjRootStatement\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.ENatToNat\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.Lemma\nimport Mathlib.Tactic.Linter.HaveILetI\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Tactic.Polynomial.Basic\nimport Mathlib.Tactic.ReduceModChar\nimport Mathlib.Topology.Sheaves.Init\n\n"}
+section -- clump:auto
 @[expose] public section
 
 open NumberField Module Matrix Formalism.MainNotions.S GlobalTheory.LoopV
@@ -472,3 +872,6 @@ theorem covolume_congruence_stabiliser : ∀ (K : Type) [Field K] [NumberField K
     exact hxΩ
 
 end GlobalTheory.LoopV.Cov
+end -- clump:auto
+end -- clump:auto
+-- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.CovolumeCongruenceStabiliser =====
