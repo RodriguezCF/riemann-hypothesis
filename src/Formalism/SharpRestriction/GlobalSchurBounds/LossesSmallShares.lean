@@ -65,11 +65,30 @@ def LossFS (Fm : FamP eps) (eL : ℝ) : Prop :=
 
 
 
-theorem linkCore (Fm : FamP eps) (Cabs CH eL C5 c6 : ℝ) (hCabs : 0 ≤ Cabs) (hCH : 0 ≤ CH) (heL : 0 ≤ eL) (hc6 : 0 < c6)
+/-- Common frame bounds with extra information at the same scale and parameters. -/
+def FrameFWith (Fm : FamP eps) (CH : ℝ) (extra : ℝ → ℝ → ℝ → Prop) : Prop :=
+  ∃ x0 : ℝ, ∀ x ≥ x0, ∃ etaB eB : ℝ, 0 ≤ etaB ∧ 0 ≤ eB ∧ eB ≤ 1 / 4 ∧
+    (etaB + 4 * Real.sqrt eB) * x ^ CH ≤ 6 ∧ extra x etaB eB ∧
+    ∀ i : Fm.Ix x, Frame_at (Fm.D x i) etaB eB
+
+/-- The additional conclusion on the model constructed by the family link. -/
+def LinkCoreFinish (Fm : FamP eps) (CH : ℝ) (extra : ℝ → ℝ → ℝ → Prop)
+    (tail : ChainTiedTail Fm) : Prop :=
+  ∀ (x : ℝ) (M : Mod Fm x) (N : ℕ) (K eK etaB eB : ℝ) (ηv ev : M.e.A → ℝ)
+    (C : Consts) (Xpp : ℝ) (ell : AddChar (E0 × M.e.A) ℂ → ℂ),
+    1 ≤ x → extra x etaB eB → (etaB + 4 * Real.sqrt eB) * x ^ CH ≤ 6 →
+    M.TT.Nonempty → (Fm.L x M.i0).logDerivativeAtOne = (ell chC).re →
+    Formalism.LFunctionChainParameters.LChain.SizeData₂ (M.data N CH etaB eB ηv ev) C Xpp →
+    ErrWindows (M.data N CH etaB eB ηv ev) C Xpp eK K →
+    C.cHH = CH →
+    ∀ rest : Prop, rest →
+      tail x K eK M.i0 (pt := M.pt) (M.data N CH etaB eB ηv ev) C ell N M.TT M.a M.w rest
+
+theorem linkCoreWith (Fm : FamP eps) (extra : ℝ → ℝ → ℝ → Prop) (tail : ChainTiedTail Fm) (Cabs CH eL C5 c6 : ℝ) (hCabs : 0 ≤ Cabs) (hCH : 0 ≤ CH) (heL : 0 ≤ eL) (hc6 : 0 < c6)
     (hCount : CountF Fm) (hSM : SlopesMF Fm) (hSN : SlopesNF Fm) (hLat : LatF Fm) (hNodes : NodesF Fm)
-    (hFr : FrameF Fm CH) (hLoss : LossFS Fm eL) (hChar : CharF Fm) (hWin : WinF Fm)
-    (cTT : ChosenTT Fm) (cQD : ChosenQD Fm C5) (cTh : ChosenThin Fm c6) (lI : LinkIRR Fm) (lD : LinkDIV Fm Cabs CH) :
-    ∃ K cHH eK CL x0 : ℝ, ∀ x ≥ x0, x ∈ Fm.Win → ChainTied Fm Cabs eL K cHH eK CL x := by
+    (hFr : FrameFWith Fm CH extra) (hLoss : LossFS Fm eL) (hChar : CharF Fm) (hWin : WinF Fm)
+    (cTT : ChosenTT Fm) (cQD : ChosenQD Fm C5) (cTh : ChosenThin Fm c6) (lI : LinkIRR Fm) (lD : LinkDIV Fm Cabs CH) (finish : LinkCoreFinish Fm CH extra tail) :
+    ∃ K cHH eK CL x0 : ℝ, ∀ x ≥ x0, x ∈ Fm.Win → ChainTiedWith Fm Cabs eL K cHH eK CL x tail := by
   obtain ⟨xQD, hQD⟩ := cQD
   obtain ⟨xTh, hTh⟩ := cTh
   obtain ⟨Cc, xC, hCc, hC⟩ := hCount
@@ -123,7 +142,7 @@ theorem linkCore (Fm : FamP eps) (Cabs CH eL C5 c6 : ℝ) (hCabs : 0 ≤ Cabs) (
   have iq : Fact M.q.Prime := ⟨(Fm.D x i0).host.hyp.1⟩
   have id : Fact M.d.Prime := ⟨(Fm.D x i0).host.hyp.2.1⟩
 
-  obtain ⟨etaB, eB, hη0, he0, he4, h6, hFa⟩ := hF x hxF
+  obtain ⟨etaB, eB, hη0, he0, he4, h6, hextra, hFa⟩ := hF x hxF
   have hFa' : ∀ u0 : M.e.A, Frame_at (Fm.D x (M.pt u0)) etaB eB := fun u0 => hFa (M.pt u0)
   unfold Frame_at at hFa'
   choose ηv ev hηv0 hηvB hev0 hevB hfr using hFa'
@@ -317,13 +336,39 @@ theorem linkCore (Fm : FamP eps) (Cabs CH eL C5 c6 : ℝ) (hCabs : 0 ≤ Cabs) (
     · rw [hcardH]; exact h1
     · rw [hcardH, M.card_thick_set_model_eq]; exact w15
     · rw [hcardH]; exact w14
-  exact ⟨i0, M.m, M.f, M.pt, av, bv, ↥(Fm.TTn x), inferInstance,
+  have hTTpos : M.TT.Nonempty := by
+    apply Finset.card_pos.mp
+    rw [M.card_TT']
+    have h : 1 ≤ Fintype.card ↥(Fm.TTn x) := by exact_mod_cast hnT
+    omega
+  refine ⟨i0, M.m, M.f, M.pt, av, bv, ↥(Fm.TTn x), inferInstance,
     M.data ⌈2 * (Fm.L x i0).sc.a⌉₊ CH etaB eB ηv ev, mkC (max Cd 0) Cabs Cc Cs C1 Cl eL CH,
     (Fm.L x i0).sc.X'' (Fm.D x i0).R.n, ell, ⌈2 * (Fm.L x i0).sc.a⌉₊, M.TT, M.T2, M.a, M.w, M.eT, M.eP,
     (Fm.L x i0).etaSz, (Fm.L x i0).sc.X', Real.exp (-(c6 * x ^ (eps / 8))),
     M.tiePts, M.tieGlobal hx1 _ _ _ _ _ _, M.tieLocal _ _ _ _ _ _, M.tieArith ell hell1, rfl, rfl, le_refl _, le_refl _,
     le_refl _, M.ident _ _ _ _ _ _ ell hell2,
-    ⟨L1, L2, L3, L4, L5, L6, L7, L8, liftZP_newton, ParameterUpperBound, liftZP_unit⟩, E1, B1, R1, W1, S1⟩
+    ⟨L1, L2, L3, L4, L5, L6, L7, L8, liftZP_newton, ParameterUpperBound, liftZP_unit⟩, E1, B1, R1, W1, ?_⟩
+  exact finish x M _ _ _ etaB eB ηv ev _ _ ell hx1' hextra h6 hTTpos hell2
+    ⟨L1, L2, L3, L4, L5, L6, L7, L8, liftZP_newton, ParameterUpperBound, liftZP_unit⟩ E1 rfl _ S1
+
+theorem linkCore (Fm : FamP eps) (Cabs CH eL C5 c6 : ℝ) (hCabs : 0 ≤ Cabs) (hCH : 0 ≤ CH) (heL : 0 ≤ eL) (hc6 : 0 < c6)
+    (hCount : CountF Fm) (hSM : SlopesMF Fm) (hSN : SlopesNF Fm) (hLat : LatF Fm) (hNodes : NodesF Fm)
+    (hFr : FrameF Fm CH) (hLoss : LossFS Fm eL) (hChar : CharF Fm) (hWin : WinF Fm)
+    (cTT : ChosenTT Fm) (cQD : ChosenQD Fm C5) (cTh : ChosenThin Fm c6) (lI : LinkIRR Fm) (lD : LinkDIV Fm Cabs CH) :
+    ∃ K cHH eK CL x0 : ℝ, ∀ x ≥ x0, x ∈ Fm.Win → ChainTied Fm Cabs eL K cHH eK CL x := by
+  let tail : ChainTiedTail Fm := by
+    intro x K eK i0 m f pt Top inst Dd C ell N TT a w rest
+    exact rest
+  unfold ChainTied
+  refine linkCoreWith Fm (fun _ _ _ => True) tail
+    Cabs CH eL C5 c6 hCabs hCH heL hc6 hCount hSM hSN hLat hNodes
+    ?_ hLoss hChar hWin cTT cQD cTh lI lD ?_
+  · obtain ⟨x0, hF⟩ := hFr
+    refine ⟨x0, fun x hx => ?_⟩
+    obtain ⟨etaB, eB, hη, he, he4, h6, hFrame⟩ := hF x hx
+    exact ⟨etaB, eB, hη, he, he4, h6, trivial, hFrame⟩
+  · intro _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ rest hrest
+    exact hrest
 
 def LossesSmallShares (Fm : FamP eps) : Prop :=
   ∃ C x0 : ℝ, 0 ≤ C ∧ ∀ x ≥ x0, ∀ i : Fm.Ix x, ChW_at (Fm.Gx x i) Fm.GK → Loss_at (Fm.L x i) C 0

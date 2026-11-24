@@ -132,7 +132,17 @@ def TieArith (pt : φ.A → Fm.Ix x) (av : ℕ → ℤ) (D : ArithData φ.A) (el
 
 end
 
-def ChainTied {eps : ℝ} (Fm : FamP eps) (eD eL K cHH eK CL x : ℝ) : Prop :=
+/-- An extension of the conclusion for the witnesses chosen by the family link. -/
+abbrev ChainTiedTail {eps : ℝ} (Fm : FamP eps) :=
+  ∀ (x : ℝ) (_K _eK : ℝ) (i0 : Fm.Ix x) {m f : ℕ}
+    {pt : (Fm.D x i0).R.A → Fm.Ix x} {Top : Type} [Fintype Top],
+    Data (Fm.D x i0).R.A (fun u => (Fm.D x (pt u)).what₂.Word) Top m f →
+    Consts → (AddChar (E0 × (Fm.D x i0).R.A) ℂ → ℂ) → ℕ → Finset (Fm.D x i0).R.A →
+    ((Fm.D x i0).R.A → ℝ) → ((Fm.D x i0).R.A → Fin m → E0 × (Fm.D x i0).R.A → ℝ) →
+    Prop → Prop
+
+def ChainTiedWith {eps : ℝ} (Fm : FamP eps) (eD eL K cHH eK CL x : ℝ)
+    (tail : ChainTiedTail Fm) : Prop :=
   ∃ (i0 : Fm.Ix x) (m f : ℕ) (pt : (Fm.D x i0).R.A → Fm.Ix x) (av bv : ℕ → ℤ)
     (Top : Type) (_ : Fintype Top)
     (Dd : Data (Fm.D x i0).R.A (fun u0 => (Fm.D x (pt u0)).what₂.Word) Top m f) (C : Consts) (Xpp : ℝ)
@@ -149,7 +159,11 @@ def ChainTied {eps : ℝ} (Fm : FamP eps) (eD eL K cHH eK CL x : ℝ) : Prop :=
     BNBounds Dd T2 ∧
     GrowthInequalityRemainingHyps (arithOf (Fm.D x i0).host.toHostRaw) ell N TT T2 a w x eps Dd.b Dd.b' η X' θ CL ∧
     CostWindows x (fPl (Fm.D x i0).R.A) Dd.b η θ ∧
-    RestSize eps x (Fintype.card (Fm.D x i0).R.A) TT.card T2.card m Dd.b Dd.k Dd.a
+    tail x K eK i0 (pt := pt) Dd C ell N TT a w
+      (RestSize eps x (Fintype.card (Fm.D x i0).R.A) TT.card T2.card m Dd.b Dd.k Dd.a)
+
+def ChainTied {eps : ℝ} (Fm : FamP eps) (eD eL K cHH eK CL x : ℝ) : Prop :=
+  ChainTiedWith Fm eD eL K cHH eK CL x (by intro x K eK i0 m f pt Top inst Dd C ell N TT a w rest; exact rest)
 
 end Formalism.MainNotions
 
